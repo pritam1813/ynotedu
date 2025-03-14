@@ -29,9 +29,9 @@ import Tabs from '@/components/uiElements/Tabs'
 import Tooltips from '@/components/uiElements/Tooltips'
 import Typography from '@/components/uiElements/Typography'
 export const metadata = {
-  title: 'UI elements || Educrat - Professional LMS Online Education Course NextJS Template',
+  title: 'UI elements || ynotedu - Professional LMS Online Education Course NextJS Template',
   description:
-    'Elevate your e-learning content with Educrat, the most impressive LMS template for online courses, education and LMS platforms.',
+    'Elevate your e-learning content with ynotedu, the most impressive LMS template for online courses, education and LMS platforms.',
   
 }
 import React from 'react'

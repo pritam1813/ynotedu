@@ -60,7 +60,7 @@ export default function FooterFour() {
           <div className="row justify-between y-gap-20">
             <div className="col-md-6">
               <div className="footer-footer__copyright">
-                © {new Date().getFullYear()} Educrat. All Right Reserved.
+                © {new Date().getFullYear()} ynotedu. All Right Reserved.
               </div>
             </div>
 

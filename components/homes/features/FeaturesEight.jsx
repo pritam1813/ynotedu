@@ -9,7 +9,7 @@ export default function FeaturesEight() {
         <div className="row justify-center text-center">
           <div className="col-xl-6 col-lg-7">
             <div className="sectionTitle ">
-              <h2 className="sectionTitle__title ">What is Educrat?</h2>
+              <h2 className="sectionTitle__title ">What is ynotedu?</h2>
 
               <p className="sectionTitle__text ">
                 Learn the data skills you need online at your own pace—from

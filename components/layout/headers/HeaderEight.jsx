@@ -43,7 +43,7 @@ export default function HeaderEight() {
                 </div>
                 <div className="d-flex items-center text-dark-1">
                   <div className="icon-email mr-10"></div>
-                  <div className="text-13 lh-1">hello@educrat.com</div>
+                  <div className="text-13 lh-1">hello@ynotedu.com</div>
                 </div>
               </div>
             </div>

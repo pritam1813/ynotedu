@@ -58,7 +58,7 @@ export default function About() {
 
             <div className="col-lg-5">
               <h2 className="text-30 lh-16">
-                Welcome to Educrat Enhance your skills with best Online courses
+                Welcome to ynotedu Enhance your skills with best Online courses
               </h2>
               <p className="text-dark-1 mt-30">
                 You can start and finish one of these popular courses in under a

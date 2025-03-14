@@ -54,7 +54,7 @@ export default function FooterSeven() {
               <div className="">
                 <div className="">Need live support?</div>
                 <div className="text-18 lh-1 fw-500 text-dark-1 mt-5">
-                  hi@educrat.comv
+                  hi@ynotedu.comv
                 </div>
               </div>
             </div>
@@ -113,7 +113,7 @@ export default function FooterSeven() {
           <div className="row justify-between items-center y-gap-20">
             <div className="col-auto">
               <div className="d-flex items-center h-100">
-                © {new Date().getFullYear()} Educrat. All Right Reserved.
+                © {new Date().getFullYear()} ynotedu. All Right Reserved.
               </div>
             </div>
 

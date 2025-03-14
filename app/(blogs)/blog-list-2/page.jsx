@@ -14,9 +14,9 @@ import Header from '@/components/layout/headers/Header'
 import React from 'react'
 
 export const metadata = {
-  title: 'Blog-list-2 || Educrat - Professional LMS Online Education Course NextJS Template',
+  title: 'Blog-list-2 || ynotedu - Professional LMS Online Education Course NextJS Template',
   description:
-    'Elevate your e-learning content with Educrat, the most impressive LMS template for online courses, education and LMS platforms.',
+    'Elevate your e-learning content with ynotedu, the most impressive LMS template for online courses, education and LMS platforms.',
   
 }
 

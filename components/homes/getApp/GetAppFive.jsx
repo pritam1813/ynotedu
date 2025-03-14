@@ -28,7 +28,7 @@ export default function GetAppFive() {
                 <br /> <span>Anywhere</span>
               </h2>
               <p className="app-content__text" data-aos="fade-up">
-                Take classes on the go with the educrat app. Stream or download
+                Take classes on the go with the ynotedu app. Stream or download
                 to watch on the plane, the subway, or wherever you learn best.
               </p>
               <div className="app-content__buttons">

@@ -34,12 +34,12 @@
     "react-modal-video": "^2.0.1",
     "react-particles": "^2.10.1",
     "recharts": "^2.7.2",
-    "sass": "^1.63.4",
+    "sass": "1.85.1",
     "sharp": "^0.32.4",
     "svg": "^0.1.0",
     "swiper": "^8.0.0",
     "tsparticles": "^2.11.0",
-    "zustand": "^5.0.3"
+    "zustand": "5.0.3"
   },
   "devDependencies": {
     "@types/node": "22.13.10",

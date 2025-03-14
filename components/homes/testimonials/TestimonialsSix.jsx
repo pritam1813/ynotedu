@@ -23,7 +23,7 @@ export default function TestimonialsSix() {
         <div className="row y-gap-30 items-center">
           <div className="col-lg-6 col-md-10">
             <h2 className="text-30 lh-15 text-white">
-              People Love To Learn With Educrat
+              People Love To Learn With ynotedu
             </h2>
             <p className="text-white mt-10">
               Lorem ipsum dolor sit amet, consectetur.

@@ -29,7 +29,7 @@ export default function FooterThree() {
             <div className="mt-30 pr-20">
               <div className="lh-17">
                 329 Queensberry Street, North Melbourne VIC 3051, Australia.
-                hi@educrat.com
+                hi@ynotedu.com
               </div>
             </div>
 
@@ -53,7 +53,7 @@ export default function FooterThree() {
           <div className="row justify-between items-center y-gap-20">
             <div className="col-auto">
               <div className="footer-footer__copyright d-flex items-center h-100">
-                © {new Date().getFullYear()} Educrat. All Right Reserved.
+                © {new Date().getFullYear()} ynotedu. All Right Reserved.
               </div>
             </div>
 
