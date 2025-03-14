@@ -10,7 +10,7 @@ import HeaderDashboard from '@/components/layout/headers/HeaderDashboard'
 import React from 'react'
 import Preloader from '@/components/common/Preloader'
 export const metadata = {
-  title: 'Dashboard-single || ynotedu - Professional LMS Online Education Course NextJS Template',
+  title: 'Dashboard-single || ynotedu - Professional LMS Online Education ',
   description:
     'Elevate your e-learning content with ynotedu, the most impressive LMS template for online courses, education and LMS platforms.',
   

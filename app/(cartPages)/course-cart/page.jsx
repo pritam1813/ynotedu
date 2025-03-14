@@ -16,7 +16,7 @@ import React from 'react'
 
 import CourseCart from '../../../components/cartsAndCheckout/CourseCart'
 export const metadata = {
-  title: 'Course-cart || ynotedu - Professional LMS Online Education Course NextJS Template',
+  title: 'Course-cart || ynotedu - Professional LMS Online Education ',
   description:
     'Elevate your e-learning content with ynotedu, the most impressive LMS template for online courses, education and LMS platforms.',
   

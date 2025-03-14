@@ -19,7 +19,7 @@ import SignUpForm from '@/components/others/SignUpForm'
 import Terms from '@/components/terms/Terms'
 import React from 'react'
 export const metadata = {
-  title: 'Sign up || ynotedu - Professional LMS Online Education Course NextJS Template',
+  title: 'Sign up || ynotedu - Professional LMS Online Education ',
   description:
     'Elevate your e-learning content with ynotedu, the most impressive LMS template for online courses, education and LMS platforms.',
   

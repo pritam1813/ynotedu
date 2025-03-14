@@ -8,7 +8,7 @@ import React from "react";
 
 export const metadata = {
   title:
-    "Contact-1 || ynotedu - Professional LMS Online Education Course NextJS Template",
+    "Contact-1 || ynotedu - Professional LMS Online Education ",
   description:
     "Elevate your e-learning content with ynotedu, the most impressive LMS template for online courses, education and LMS platforms.",
 };
