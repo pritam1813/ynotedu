@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useContextElement } from "@/context/Context";
+import { useStore } from "@/store/useStore";
 import ModalVideoComponent from "../common/ModalVideo";
 import Image from "next/image";
+
 export default function PinContent({ pageItem }) {
-  const { isAddedToCartCourses, addCourseToCart } = useContextElement();
+ 
+  const { isAddedToCartCourses, addCourseToCart } = useStore();
   const [isOpen, setIsOpen] = useState(false);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   // useEffect hook to update the screen width when the window is resized

@@ -16,7 +16,8 @@ import Star from "../common/Star";
 
 import Image from "next/image";
 import Link from "next/link";
-import { useContextElement } from "@/context/Context";
+// import { useContextElement } from "@/context/Context";
+import { useStore } from "@/store/useStore";
 import PaginationTwo from "../common/PaginationTwo";
 
 export default function CourseListOne() {
@@ -28,7 +29,8 @@ export default function CourseListOne() {
   const [openLanguage, setOpenLanguage] = useState(true);
   const [durationOpen, setDurationOpen] = useState(true);
   const [filterOpen, setFilterOpen] = useState(false);
-  const { isAddedToCartCourses, addCourseToCart } = useContextElement();
+  // const { isAddedToCartCourses, addCourseToCart } = useContextElement();
+  const { isAddedToCartCourses, addCourseToCart } = useStore();
 
   const [filterCategories, setFilterCategories] = useState([]);
   const [filterRatingRange, setFilterRatingRange] = useState([]);

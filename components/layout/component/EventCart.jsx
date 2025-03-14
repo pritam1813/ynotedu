@@ -3,23 +3,25 @@
 import React from "react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { useContextElement } from "@/context/Context";
+import { useStore } from "@/store/useStore";
 import Link from "next/link";
+
 const EventCart = () => {
-  const { cartEvents, setCartEvents } = useContextElement();
+  const { cartEvents, setCartEvents } = useStore();
   const [totalPrice, setTotalPrice] = useState(0);
 
   const handleRemoveCart = (index) => {
     const item = cartEvents[index];
-
-    setCartEvents((pre) => [...pre.filter((elm) => elm !== item)]);
+    setCartEvents(cartEvents.filter((elm) => elm !== item));
   };
+
   useEffect(() => {
     const sum = cartEvents.reduce((accumulator, currentValue) => {
       return accumulator + currentValue.price * currentValue.quantity;
     }, 0);
     setTotalPrice(sum);
   }, [cartEvents]);
+
   return (
     <div className="header-cart bg-white -dark-bg-dark-1 rounded-8">
       <div
@@ -53,68 +55,71 @@ const EventCart = () => {
               </div>
             </Link>
 
-            <div className="col-auto" onClick={() => handleRemoveCart(i)}>
-              <button>
-                <Image
-                  width={12}
-                  height={12}
-                  src="/assets/img/menus/close.svg"
-                  alt="icon"
-                />
-              </button>
+            <div className="col-auto">
+              <div
+                onClick={() => handleRemoveCart(i)}
+                className="icon-close text-dark-1"
+              ></div>
             </div>
           </div>
         ))}
-
-        {!cartEvents.length && (
-          <div className="p-20 pb-30 text-18 text-dark-1">
-            Your Event Cart Is Empty
-          </div>
-        )}
       </div>
 
-      <div className="px-30 pt-20 pb-30 border-top-light">
-        <div className="d-flex justify-between">
-          <div className="text-18 lh-12 text-dark-1 fw-500">Total:</div>
-          <div className="text-18 lh-12 text-dark-1 fw-500">${totalPrice}</div>
+      <div className="px-30 py-20 border-top-light">
+        <div className="row y-gap-10 justify-between items-center">
+          <div className="col-auto">
+            <div className="text-18 lh-12 fw-500 text-dark-1">Total</div>
+          </div>
+
+          <div className="col-auto">
+            <div className="text-18 lh-12 fw-500 text-dark-1">
+              ${totalPrice}
+            </div>
+          </div>
         </div>
 
-        <div className="row x-gap-20 y-gap-10 pt-30">
-          {cartEvents.length && (
-            <>
-              <Link
-                href={"/event-cart"}
-                style={{ textDecoration: "none" }}
-                className="col-sm-6"
-              >
-                <button className="button py-20 -dark-1 text-white -dark-button-white col-12">
-                  View Cart
-                </button>
-              </Link>
-              <Link
-                href={"/event-checkout"}
-                style={{ textDecoration: "none" }}
-                className="col-sm-6"
-              >
-                <button className="button py-20 -purple-1 text-white col-12">
-                  Checkout
-                </button>
-              </Link>
-            </>
-          )}
-          {!cartEvents.length && (
-            <>
-              <Link
-                href={"/event-list-1"}
-                style={{ textDecoration: "none" }}
-                className="col-12"
-              >
-                <button className="button py-20 -purple-1 text-white col-12">
-                  Continue Buying
-                </button>
-              </Link>
-            </>
-          )}
+        <div className="row y-gap-10 justify-between items-center mt-10">
+          <div className="col-auto">
+            <div className="text-14 lh-16 text-light-1">Shipping</div>
+          </div>
+
+          <div className="col-auto">
+            <div className="text-14 lh-16 text-light-1">
+              ${cartEvents.length * 10}
+            </div>
+          </div>
+        </div>
+
+        <div className="row y-gap-10 justify-between items-center mt-10">
+          <div className="col-auto">
+            <div className="text-18 lh-12 fw-500 text-dark-1">Total</div>
+          </div>
+
+          <div className="col-auto">
+            <div className="text-18 lh-12 fw-500 text-dark-1">
+              ${totalPrice + cartEvents.length * 10}
+            </div>
+          </div>
+        </div>
+
+        <div className="row y-gap-20 items-center justify-between pt-20 mt-20 border-top-light">
+          <div className="col-auto">
+            <Link
+              className="button h-50 px-24 -dark-bg-dark-2 -dark-text-white text-dark-1"
+              href="/events/cart"
+            >
+              View Cart
+            </Link>
+          </div>
+
+          <div className="col-auto">
+            <Link
+              className="button h-50 px-24 -dark-bg-dark-2 -dark-text-white text-dark-1"
+              href="/events/checkout"
+            >
+              Checkout
+            </Link>
+          </div>
         </div>
       </div>
     </div>
