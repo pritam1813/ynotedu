@@ -124,7 +124,7 @@ export const menuList = [
       {
         title: "About Us",
         links: [
-          { href: "/about-1", label: "About 1" },
+          { href: "/about", label: "About 1" },
           { href: "/about-2", label: "About 2" },
         ],
       },

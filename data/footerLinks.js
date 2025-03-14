@@ -2,7 +2,7 @@ export const footerLinks = [
   {
     title: "ABOUT",
     links: [
-      { href: "/about-1", label: "About Us" },
+      { href: "/about", label: "About Us" },
       { href: "/blog-list-1", label: "Learner Stories" },
       { href: "/instructor-become", label: "Careers" },
       { href: "/blog-list-1", label: "Press" },
