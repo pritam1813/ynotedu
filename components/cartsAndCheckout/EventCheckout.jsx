@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useContextElement } from "@/context/Context";
+import { useStore } from "@/store/useStore";
 import Link from "next/link";
 export default function EventCheckOut() {
-  const { cartEvents } = useContextElement();
+  
+  const { cartEvents } = useStore();
   const [totalPrice, setTotalPrice] = useState(0);
   const [shiping, setShiping] = useState(0);
   useEffect(() => {

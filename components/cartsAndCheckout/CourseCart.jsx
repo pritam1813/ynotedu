@@ -4,11 +4,13 @@ import React, { useState, useEffect } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus, faX } from "@fortawesome/free-solid-svg-icons";
-import { useContextElement } from "@/context/Context";
+
+import { useStore } from "@/store/useStore";
 import Link from "next/link";
 
 export default function CourseCart() {
-  const { cartCourses, setCartCourses } = useContextElement();
+  
+  const { cartCourses, setCartCourses } = useStore();
   const [totalPrice, setTotalPrice] = useState(0);
 
   const handleSubmit = (e) => {

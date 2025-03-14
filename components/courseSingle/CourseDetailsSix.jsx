@@ -11,7 +11,7 @@ import React, { useState, useEffect } from "react";
 import ModalVideo from "react-modal-video";
 import ModalVideoComponent from "../common/ModalVideo";
 import Image from "next/image";
-import { useContextElement } from "@/context/Context";
+import { useStore } from "@/store/useStore";
 const menuItems = [
   { id: 1, href: "#overview", text: "Overview", isActive: true },
   { id: 2, href: "#course-content", text: "Course Content", isActive: false },
@@ -22,7 +22,7 @@ export default function CourseDetailsSix({ id }) {
   const [pageItem, setPageItem] = useState(coursesData[0]);
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(1);
-  const { isAddedToCartCourses, addCourseToCart } = useContextElement();
+  const { isAddedToCartCourses, addCourseToCart } = useStore();
   useEffect(() => {
     setPageItem(coursesData.filter((elm) => elm.id == id)[0] || coursesData[0]);
   }, []);

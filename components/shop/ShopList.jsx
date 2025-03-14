@@ -8,10 +8,10 @@ import { faEye, faHeart } from "@fortawesome/free-regular-svg-icons";
 import Slider from "@mui/material/Slider";
 import Pagination from "../common/Pagination";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { useContextElement } from "@/context/Context";
+import { useStore } from "@/store/useStore";
 import Link from "next/link";
 export default function ShopList() {
-  const { addProductToCart, isAddedToCartProducts } = useContextElement();
+  const { addProductToCart, isAddedToCartProducts } = useStore();
 
   const [value, setValue] = useState([200, 1500]);
   const [pageData, setpageData] = useState();

@@ -8,10 +8,9 @@ import Socials from "../common/Socials";
 import { instractorsNine } from "@/data/instractors";
 import Star from "../common/Star";
 import Link from "next/link";
-import { useContextElement } from "@/context/Context";
+import { useStore } from "@/store/useStore";
 export default function EventDetails({ id }) {
-  const {         addEventToCart,
-    isAddedToCartEvents } = useContextElement();
+  const { addEventToCart, isAddedToCartEvents } = useStore();
   const data = events.filter((elm) => elm.id == id)[0] || events[0];
   const handleSubmit = (e) => {
     e.preventDefault();

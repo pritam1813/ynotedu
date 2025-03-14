@@ -8,9 +8,9 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import ImageLightBox from "./ImageLightBox";
-import { useContextElement } from "@/context/Context";
+import { useStore } from "@/store/useStore";
 export default function ProductDetails({ id }) {
-  const { addProductToCart, isAddedToCartProducts } = useContextElement();
+  const { addProductToCart, isAddedToCartProducts } = useStore();
   const swiperRef = useRef(null);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [showSlider, setShowSlider] = useState(false);

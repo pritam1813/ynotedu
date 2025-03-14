@@ -4,9 +4,9 @@ import React, { useState, useEffect } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
-import { useContextElement } from "@/context/Context";
+import { useStore } from "@/store/useStore";
 export default function ShopOrder() {
-  const { cartProducts } = useContextElement();
+  const { cartProducts } = useStore();
   const [totalPrice, setTotalPrice] = useState(0);
   const [shiping, setShiping] = useState(0);
   useEffect(() => {

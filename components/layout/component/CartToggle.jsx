@@ -2,7 +2,6 @@
 import { menuList } from "@/data/menu";
 import { usePathname } from "next/navigation";
 import React from "react";
-// import { useContextElement } from "@/context/Context";
 import { useState, useEffect } from "react";
 import ShopCart from "./ShopCart";
 import CourseCart from "./CourseCart";
@@ -10,7 +9,6 @@ import EventCart from "./EventCart";
 import { useStore } from "@/store/useStore";
 
 const CartToggle = ({ allClasses, parentClassess }) => {
-  // const { cartProducts, cartCourses, cartEvents } = useContextElement();
   const { cartProducts, cartCourses, cartEvents } = useStore();
   const [activeCart, setActiveCart] = useState(false);
   const [menuItem, setMenuItem] = useState("");

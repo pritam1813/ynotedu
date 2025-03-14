@@ -3,12 +3,11 @@ import React from "react";
 import { productData } from "@/data/products";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faHeart } from "@fortawesome/free-solid-svg-icons";
-import { useContextElement } from "@/context/Context";
-
+import { useStore } from "@/store/useStore";
 import Image from "next/image";
 import Link from "next/link";
 export default function RelatedProducts() {
-  const { addProductToCart, isAddedToCartProducts } = useContextElement();
+  const { addProductToCart, isAddedToCartProducts } = useStore();
   return (
     <section className="layout-pt-md layout-pb-lg">
       <div className="container">

@@ -3,10 +3,10 @@
 import React, { useState } from "react";
 
 import ModalVideoComponent from "../common/ModalVideo";
-import { useContextElement } from "@/context/Context";
+import { useStore } from "@/store/useStore";
 import Image from "next/image";
 export default function PinInactiveContent({ pageItem }) {
-  const { isAddedToCartCourses, addCourseToCart } = useContextElement();
+  const { isAddedToCartCourses, addCourseToCart } = useStore();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
