@@ -24,21 +24,21 @@ export const metadata = {
     "Elevate your e-learning content with Educrat, the most impressive LMS template for online courses, education and LMS platforms.",
 };
 
-export default function HomePage() {
+export default function HomePage(): JSX.Element {
   return (
     <>
       <Preloader />
       <Header />
 
-      <div className="content-wrapper  js-content-wrapper overflow-hidden">
+      <div className="content-wrapper js-content-wrapper overflow-hidden">
         <HomeHero />
-        <Brands />
+        <Brands backgroundColorComponent={null} brandsTwo={null} />
         <Categories />
         <Courses />
         <TestimonialsOne />
         <FeaturesOne />
         <WhyCourse />
-        <Instructors />
+        <Instructors backgroundColor={null} />
         <GetApp />
         <Blog />
         <Join />

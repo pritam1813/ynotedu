@@ -10,8 +10,9 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
 import Context from "@/context/Context";
+import { ReactNode } from "react";
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   useEffect(() => {
     // if (typeof window !== "undefined") {
     //   // Import the script only on the client side
