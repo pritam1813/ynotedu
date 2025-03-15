@@ -1,12 +1,10 @@
-
-
-
+import React from 'react'
 import InstractorSingle from '@/components/aboutCourses/instractors/InstractorSingle'
 import PageLinks from '@/components/common/PageLinks'
 import Preloader from '@/components/common/Preloader'
 import FooterOne from '@/components/layout/footers/FooterOne'
 import Header from '@/components/layout/headers/Header'
-import React from 'react'
+
 
 export const metadata = {
   title: 'Instractors-single || ynotedu - Professional LMS Online Education ',
@@ -14,16 +12,19 @@ export const metadata = {
     'Elevate your e-learning content with ynotedu, the most impressive LMS template for online courses, education and LMS platforms.',
   
 }
-export default function page() {
+export default async function Page() {
+  // Using a default instructor ID (1)
+  const defaultId = "25";
+  
   return (
-    <div  className="main-content  ">
+    <div className="main-content">
       <Preloader/>
-        <Header/>
-        <div  className="content-wrapper  js-content-wrapper overflow-hidden">
-            <PageLinks/>
-            <InstractorSingle/>
-            <FooterOne/>
-        </div>
+      <Header/>
+      <div className="content-wrapper js-content-wrapper overflow-hidden">
+        <PageLinks/>
+        <InstractorSingle id={defaultId}/>
+        <FooterOne/>
+      </div>
     </div>
   )
 }
