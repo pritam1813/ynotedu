@@ -14,7 +14,7 @@ datasource db {
 }
 
 model Instructor {
-  id            Int             @id @default(autoincrement())
+  id            Int                  @id @default(autoincrement())
   name          String
   image         String
   role          String
@@ -22,9 +22,10 @@ model Instructor {
   reviews       Int
   students      Int
   courses       Int
+  categories    CategoryInstructor[]
   socialProfile SocialProfile[]
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
 }
 
 model SocialProfile {
@@ -33,4 +34,19 @@ model SocialProfile {
   url          String
   instructorId Int
   instructor   Instructor @relation(fields: [instructorId], references: [id], onDelete: Cascade)
+}
+
+model Category {
+  id          Int                  @id @default(autoincrement())
+  label       String               @unique
+  instructors CategoryInstructor[]
+}
+
+model CategoryInstructor {
+  category     Category   @relation(fields: [categoryId], references: [id])
+  categoryId   Int
+  instructor   Instructor @relation(fields: [instructorId], references: [id])
+  instructorId Int
+
+  @@id([categoryId, instructorId])
 }
