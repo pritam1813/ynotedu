@@ -10,7 +10,7 @@ interface InstructorWithSocialProfile extends Instructor {
   socialProfile: SocialProfile[];
 }
 
-export default async function InstractorSingle({ id }) {
+export default async function InstractorSingle({ id }: { id: string }) {
   const data = await fetch(`http://localhost:3000/api/instructors/${id}`);
   const instructor: InstructorWithSocialProfile = await data.json();
   // Check if instructor was not found
