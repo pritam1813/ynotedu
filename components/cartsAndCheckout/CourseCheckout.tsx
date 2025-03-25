@@ -3,10 +3,12 @@
 import React, { useState, useEffect } from "react";
 import { useStore } from "@/store/useStore";
 import Link from "next/link";
+
 export default function CourseCheckOut() {
   const { cartCourses } = useStore();
   const [totalPrice, setTotalPrice] = useState(0);
   const [shiping, setShiping] = useState(0);
+
   useEffect(() => {
     const sum = cartCourses.reduce((accumulator, currentValue) => {
       return accumulator + currentValue.discountedPrice * currentValue.quantity;
@@ -17,9 +19,11 @@ export default function CourseCheckOut() {
     setShiping(sumQuantity * 10);
     setTotalPrice(sum);
   }, [cartCourses]);
-  const handleSubmit = (e) => {
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
+
   return (
     <>
       <section className="page-header -type-1">
@@ -33,7 +37,7 @@ export default function CourseCheckOut() {
 
                 <div>
                   <p className="page-header__text">
-                    We’re on a mission to deliver engaging, curated courses at a
+                    We're on a mission to deliver engaging, curated courses at a
                     reasonable price.
                   </p>
                 </div>
@@ -94,10 +98,10 @@ export default function CourseCheckOut() {
                       Country / Region *
                     </label>
                     <select className="selectize wide js-selectize">
-                      <option value="USA">USA</option>
+                      <option value="India">India</option>
                       <option value="Germany">Germany</option>
                       <option value="France">France</option>
-                      <option value="Greece">Greece</option>
+                      <option value="USA">USA</option>
                     </select>
                   </div>
 
@@ -198,7 +202,7 @@ export default function CourseCheckOut() {
                       required
                       name="notes"
                       id="form_notes"
-                      rows="8"
+                      rows={8}
                       placeholder="Order notes (optional)"
                     ></textarea>
                   </div>
@@ -224,12 +228,13 @@ export default function CourseCheckOut() {
                       }  px-30`}
                     >
                       <div className="py-15 text-grey">
-                      <Link
+                        <Link
                           className="linkCustom"
                           href={`/courses/${elm.id}`}
                         >
                           {elm.title}{" "}
-                        </Link> x {elm.quantity}
+                        </Link>{" "}
+                        x {elm.quantity}
                       </div>
                       <div className="py-15 text-grey">
                         $
@@ -265,7 +270,11 @@ export default function CourseCheckOut() {
                   <div className="mt-30">
                     <div className="form-radio d-flex items-center">
                       <div className="radio">
-                        <input type="radio" name="radio" checked="checked" />
+                        <input
+                          type="radio"
+                          name="radio"
+                          defaultChecked={true}
+                        />
                         <div className="radio__mark">
                           <div className="radio__icon"></div>
                         </div>
@@ -285,7 +294,11 @@ export default function CourseCheckOut() {
                   <div className="mt-30">
                     <div className="form-radio d-flex items-center">
                       <div className="radio">
-                        <input type="radio" name="radio" checked="checked" />
+                        <input
+                          type="radio"
+                          name="radio"
+                          defaultChecked={true}
+                        />
                         <div className="radio__mark">
                           <div className="radio__icon"></div>
                         </div>
@@ -299,7 +312,11 @@ export default function CourseCheckOut() {
                   <div className="mt-30">
                     <div className="form-radio d-flex items-center">
                       <div className="radio">
-                        <input type="radio" name="radio" checked="checked" />
+                        <input
+                          type="radio"
+                          name="radio"
+                          defaultChecked={true}
+                        />
                         <div className="radio__mark">
                           <div className="radio__icon"></div>
                         </div>
@@ -313,7 +330,11 @@ export default function CourseCheckOut() {
                   <div className="mt-30">
                     <div className="form-radio d-flex items-center">
                       <div className="radio">
-                        <input type="radio" name="radio" checked="checked" />
+                        <input
+                          type="radio"
+                          name="radio"
+                          defaultChecked={true}
+                        />
                         <div className="radio__mark">
                           <div className="radio__icon"></div>
                         </div>

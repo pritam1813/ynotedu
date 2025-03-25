@@ -9,15 +9,14 @@ import { useStore } from "@/store/useStore";
 import Link from "next/link";
 
 export default function CourseCart() {
-  
   const { cartCourses, setCartCourses } = useStore();
   const [totalPrice, setTotalPrice] = useState(0);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
 
-  const handleIncrease = (index) => {
+  const handleIncrease = (index: number) => {
     const item = cartCourses[index];
 
     item.quantity += 1;
@@ -26,7 +25,7 @@ export default function CourseCart() {
 
     setCartCourses(updated);
   };
-  const handleDecrease = (index) => {
+  const handleDecrease = (index: number) => {
     const item = cartCourses[index];
 
     if (item.quantity > 1) {
@@ -38,10 +37,10 @@ export default function CourseCart() {
     }
   };
 
-  const handleRemoveCart = (index) => {
+  const handleRemoveCart = (index: number) => {
     const item = cartCourses[index];
 
-    setCartCourses((pre) => [...pre.filter((elm) => elm !== item)]);
+    setCartCourses(cartCourses.filter((elm) => elm !== item));
   };
   useEffect(() => {
     const sum = cartCourses.reduce((accumulator, currentValue) => {
@@ -114,12 +113,12 @@ export default function CourseCart() {
                           ></div>
                         </div>
                         <div className="fw-500 text-dark-1 ml-30">
-                        <Link
-                          className="linkCustom"
-                          href={`/courses/${elm.id}`}
-                        >
-                          {elm.title}{" "}
-                        </Link>
+                          <Link
+                            className="linkCustom"
+                            href={`/courses/${elm.id}`}
+                          >
+                            {elm.title}{" "}
+                          </Link>
                         </div>
                       </div>
                     </div>
