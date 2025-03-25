@@ -152,7 +152,7 @@ export default function EventDetails({ id }) {
                 <h4 className="text-20 mb-30">Our Speakers</h4>
                 <div className="row y-gap-30">
                   {instractorsNine.slice(0, 4).map((elm, i) => (
-                    <div className="col-lg-3 col-md-6">
+                    <div key={i} className="col-lg-3 col-md-6">
                       <div className="text-center">
                         <Image
                           width={180}
@@ -293,7 +293,7 @@ export default function EventDetails({ id }) {
                 <div className="mt-30">
                   <h4 className="text-16 fw-500">What is it like to Course?</h4>
                   <div className="d-flex x-gap-10 pt-10">
-                    <Star textSize={"text-14"} star={5} />
+                    <Star textSize={"text-14"} star={5} textColor={undefined} />
                   </div>
                 </div>
 
@@ -320,7 +320,7 @@ export default function EventDetails({ id }) {
                       required
                       name="comment"
                       placeholder="Message"
-                      rows="8"
+                      rows={8}
                     ></textarea>
                   </div>
                   <Link href={"/login"} className="col-12">
@@ -369,12 +369,10 @@ export default function EventDetails({ id }) {
                 </div>
 
                 <div
-                 onClick={() => addEventToCart(data.id)}
+                  onClick={() => addEventToCart(data.id)}
                   className="button -md col-12 -purple-1 text-white mt-30 cursor"
                 >
-                  {isAddedToCartEvents(data.id)
-                ? "Booked"
-                : "Book Now"}
+                  {isAddedToCartEvents(data.id) ? "Booked" : "Book Now"}
                 </div>
 
                 <div className="d-flex justify-center pt-25">
@@ -382,6 +380,7 @@ export default function EventDetails({ id }) {
                     componentsClass={
                       "d-flex justify-center items-center size-50 rounded-full"
                     }
+                    textSize={undefined}
                   />
                 </div>
               </div>
