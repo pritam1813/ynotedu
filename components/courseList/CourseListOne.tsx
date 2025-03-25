@@ -61,25 +61,25 @@ export default function CourseListOne() {
 
     if (filterInstractors.length > 0) {
       const filtered = refItems.filter((elm) =>
-        filterInstractors.includes(elm.authorName),
+        filterInstractors.includes(elm.authorName)
       );
       filteredArrays = [...filteredArrays, filtered];
     }
     if (filterCategories.length > 0) {
       const filtered = refItems.filter((elm) =>
-        filterCategories.includes(elm.category),
+        filterCategories.includes(elm.category)
       );
       filteredArrays = [...filteredArrays, filtered];
     }
     if (filterLevels.length > 0) {
       const filtered = refItems.filter((elm) =>
-        filterLevels.includes(elm.level),
+        filterLevels.includes(elm.level)
       );
       filteredArrays = [...filteredArrays, filtered];
     }
     if (filterlanguange.length > 0) {
       const filtered = refItems.filter((elm) =>
-        filterlanguange.includes(elm.languange),
+        filterlanguange.includes(elm.languange)
       );
       filteredArrays = [...filteredArrays, filtered];
     }
@@ -87,21 +87,20 @@ export default function CourseListOne() {
       const filtered = refItems.filter(
         (elm) =>
           elm.rating >= filterRatingRange[0] &&
-          elm.rating <= filterRatingRange[1],
+          elm.rating <= filterRatingRange[1]
       );
       filteredArrays = [...filteredArrays, filtered];
     }
     if (filterDuration.length > 0) {
       const filtered = refItems.filter(
         (elm) =>
-          elm.duration >= filterDuration[0] &&
-          elm.duration <= filterDuration[1],
+          elm.duration >= filterDuration[0] && elm.duration <= filterDuration[1]
       );
       filteredArrays = [...filteredArrays, filtered];
     }
 
     const commonItems = refItems.filter((item) =>
-      filteredArrays.every((array) => array.includes(item)),
+      filteredArrays.every((array) => array.includes(item))
     );
     setFilteredData(commonItems);
     setPageNumber(1);
@@ -120,27 +119,27 @@ export default function CourseListOne() {
       setSortedFilteredData(filteredData);
     } else if (currentSortingOption == "Rating (asc)") {
       setSortedFilteredData(
-        [...filteredData].sort((a, b) => a.rating - b.rating),
+        [...filteredData].sort((a, b) => a.rating - b.rating)
       );
     } else if (currentSortingOption == "Rating (dsc)") {
       setSortedFilteredData(
-        [...filteredData].sort((a, b) => b.rating - a.rating),
+        [...filteredData].sort((a, b) => b.rating - a.rating)
       );
     } else if (currentSortingOption == "Price (asc)") {
       setSortedFilteredData(
-        [...filteredData].sort((a, b) => a.discountedPrice - b.discountedPrice),
+        [...filteredData].sort((a, b) => a.discountedPrice - b.discountedPrice)
       );
     } else if (currentSortingOption == "Price (dsc)") {
       setSortedFilteredData(
-        [...filteredData].sort((a, b) => b.discountedPrice - a.discountedPrice),
+        [...filteredData].sort((a, b) => b.discountedPrice - a.discountedPrice)
       );
     } else if (currentSortingOption == "Duration (asc)") {
       setSortedFilteredData(
-        [...filteredData].sort((a, b) => a.duration - b.duration),
+        [...filteredData].sort((a, b) => a.duration - b.duration)
       );
     } else if (currentSortingOption == "Duration (dsc)") {
       setSortedFilteredData(
-        [...filteredData].sort((a, b) => b.duration - a.duration),
+        [...filteredData].sort((a, b) => b.duration - a.duration)
       );
     }
   }, [currentSortingOption, filteredData]);
@@ -247,7 +246,7 @@ export default function CourseListOne() {
                                 <div className="form-checkbox">
                                   <input
                                     type="checkbox"
-                                    checked={
+                                    defaultChecked={
                                       filterCategories.length ? false : true
                                     }
                                   />
@@ -272,7 +271,7 @@ export default function CourseListOne() {
                                   <div className="form-checkbox">
                                     <input
                                       type="checkbox"
-                                      checked={
+                                      defaultChecked={
                                         filterCategories.includes(elm.title)
                                           ? true
                                           : false
@@ -290,7 +289,7 @@ export default function CourseListOne() {
                                     (
                                     {
                                       coursesData.filter(
-                                        (itm) => itm.category == elm.title,
+                                        (itm) => itm.category == elm.title
                                       ).length
                                     }
                                     )
@@ -346,10 +345,8 @@ export default function CourseListOne() {
                                   <div className="radio">
                                     <input
                                       type="radio"
-                                      checked={
+                                      defaultChecked={
                                         filterRatingRange.length < 1
-                                          ? "checked"
-                                          : ""
                                       }
                                     />
                                     <div className="radio__mark">
@@ -359,7 +356,11 @@ export default function CourseListOne() {
                                 </div>
                                 <div className="sidebar-checkbox__title d-flex items-center">
                                   <div className="d-flex x-gap-5 pr-10">
-                                    <Star star={5} textSize={"text-11"} />
+                                    <Star
+                                      star={5}
+                                      textSize={"text-11"}
+                                      textColor={undefined}
+                                    />
                                   </div>
                                   All
                                 </div>
@@ -377,11 +378,9 @@ export default function CourseListOne() {
                                     <div className="radio">
                                       <input
                                         type="radio"
-                                        checked={
-                                          filterRatingRange.join(" ").trim() ==
+                                        defaultChecked={
+                                          filterRatingRange.join(" ").trim() ===
                                           elm.range.join(" ").trim()
-                                            ? "checked"
-                                            : ""
                                         }
                                       />
                                       <div className="radio__mark">
@@ -391,7 +390,11 @@ export default function CourseListOne() {
                                   </div>
                                   <div className="sidebar-checkbox__title d-flex items-center">
                                     <div className="d-flex x-gap-5 pr-10">
-                                      <Star star={5} textSize={"text-11"} />
+                                      <Star
+                                        star={5}
+                                        textSize={"text-11"}
+                                        textColor={undefined}
+                                      />
                                     </div>
                                     {elm.text}
                                   </div>
@@ -401,7 +404,7 @@ export default function CourseListOne() {
                                       coursesData.filter(
                                         (itm) =>
                                           itm.rating >= elm.range[0] &&
-                                          itm.rating <= elm.range[1],
+                                          itm.rating <= elm.range[1]
                                       ).length
                                     }
                                     )
@@ -447,7 +450,7 @@ export default function CourseListOne() {
                                 <div className="form-checkbox">
                                   <input
                                     type="checkbox"
-                                    checked={
+                                    defaultChecked={
                                       filterInstractors.length ? false : true
                                     }
                                   />
@@ -472,7 +475,7 @@ export default function CourseListOne() {
                                   <div className="form-checkbox">
                                     <input
                                       type="checkbox"
-                                      checked={
+                                      defaultChecked={
                                         filterInstractors.includes(elm.title)
                                           ? true
                                           : false
@@ -490,7 +493,7 @@ export default function CourseListOne() {
                                     (
                                     {
                                       coursesData.filter(
-                                        (itm) => itm.authorName == elm.title,
+                                        (itm) => itm.authorName == elm.title
                                       ).length
                                     }
                                     )
@@ -547,10 +550,8 @@ export default function CourseListOne() {
                                     <div className="radio">
                                       <input
                                         type="radio"
-                                        checked={
+                                        defaultChecked={
                                           filterPrice == elm.title
-                                            ? "checked"
-                                            : ""
                                         }
                                       />
                                       <div className="radio__mark">
@@ -612,7 +613,7 @@ export default function CourseListOne() {
                                 <div className="form-checkbox">
                                   <input
                                     type="checkbox"
-                                    checked={
+                                    defaultChecked={
                                       filterLevels.length < 1 ? true : false
                                     }
                                   />
@@ -635,7 +636,7 @@ export default function CourseListOne() {
                                   <div className="form-checkbox">
                                     <input
                                       type="checkbox"
-                                      checked={
+                                      defaultChecked={
                                         filterLevels.includes(elm.title)
                                           ? true
                                           : false
@@ -698,7 +699,7 @@ export default function CourseListOne() {
                                 <div className="form-checkbox">
                                   <input
                                     type="checkbox"
-                                    checked={
+                                    defaultChecked={
                                       filterlanguange.length ? false : true
                                     }
                                   />
@@ -722,7 +723,7 @@ export default function CourseListOne() {
                                   <div className="form-checkbox">
                                     <input
                                       type="checkbox"
-                                      checked={
+                                      defaultChecked={
                                         filterlanguange.includes(elm.title)
                                           ? true
                                           : false
@@ -739,7 +740,7 @@ export default function CourseListOne() {
                                     (
                                     {
                                       coursesData.filter(
-                                        (itm) => itm.languange == elm.title,
+                                        (itm) => itm.languange == elm.title
                                       ).length
                                     }
                                     )
@@ -793,7 +794,7 @@ export default function CourseListOne() {
                                 <div className="form-checkbox">
                                   <input
                                     type="checkbox"
-                                    checked={
+                                    defaultChecked={
                                       filterDuration.length ? false : true
                                     }
                                   />
@@ -817,7 +818,7 @@ export default function CourseListOne() {
                                   <div className="form-checkbox">
                                     <input
                                       type="checkbox"
-                                      checked={
+                                      defaultChecked={
                                         filterDuration.toString() ==
                                         elm.range.toString()
                                           ? true
@@ -837,7 +838,7 @@ export default function CourseListOne() {
                                       coursesData.filter(
                                         (itm) =>
                                           itm.duration >= elm.range[0] &&
-                                          itm.duration <= elm.range[1],
+                                          itm.duration <= elm.range[1]
                                       ).length
                                     }
                                     )
@@ -913,7 +914,7 @@ export default function CourseListOne() {
                                       key={i}
                                       onClick={() => {
                                         setCurrentSortingOption((pre) =>
-                                          pre == elm ? "Default" : elm,
+                                          pre == elm ? "Default" : elm
                                         );
                                         document
                                           .getElementById("dd41button")
@@ -972,7 +973,7 @@ export default function CourseListOne() {
                                 <div className="form-checkbox">
                                   <input
                                     type="checkbox"
-                                    checked={
+                                    defaultChecked={
                                       filterCategories.length ? false : true
                                     }
                                   />
@@ -997,7 +998,7 @@ export default function CourseListOne() {
                                   <div className="form-checkbox">
                                     <input
                                       type="checkbox"
-                                      checked={
+                                      defaultChecked={
                                         filterCategories.includes(item.title)
                                           ? true
                                           : false
@@ -1015,7 +1016,7 @@ export default function CourseListOne() {
                                     (
                                     {
                                       coursesData.filter(
-                                        (itm) => itm.category == item.title,
+                                        (itm) => itm.category == item.title
                                       ).length
                                     }
                                     )
@@ -1046,10 +1047,8 @@ export default function CourseListOne() {
                                   <div className="radio">
                                     <input
                                       type="radio"
-                                      checked={
+                                      defaultChecked={
                                         filterRatingRange.length < 1
-                                          ? "checked"
-                                          : ""
                                       }
                                     />
                                     <div className="radio__mark">
@@ -1075,11 +1074,9 @@ export default function CourseListOne() {
                                     <div className="radio">
                                       <input
                                         type="radio"
-                                        checked={
-                                          filterRatingRange.join(" ").trim() ==
+                                        defaultChecked={
+                                          filterRatingRange.join(" ").trim() ===
                                           item.range.join(" ").trim()
-                                            ? "checked"
-                                            : ""
                                         }
                                       />
                                       <div className="radio__mark">
@@ -1092,6 +1089,7 @@ export default function CourseListOne() {
                                       <Star
                                         star={item.star}
                                         textSize={"text-11"}
+                                        textColor={undefined}
                                       />
                                     </div>
                                     {item.text}
@@ -1102,7 +1100,7 @@ export default function CourseListOne() {
                                       coursesData.filter(
                                         (itm) =>
                                           itm.rating >= item.range[0] &&
-                                          itm.rating <= item.range[1],
+                                          itm.rating <= item.range[1]
                                       ).length
                                     }
                                     )
@@ -1124,7 +1122,7 @@ export default function CourseListOne() {
                                 <div className="form-checkbox">
                                   <input
                                     type="checkbox"
-                                    checked={
+                                    defaultChecked={
                                       filterInstractors.length ? false : true
                                     }
                                   />
@@ -1149,7 +1147,7 @@ export default function CourseListOne() {
                                   <div className="form-checkbox">
                                     <input
                                       type="checkbox"
-                                      checked={
+                                      defaultChecked={
                                         filterInstractors.includes(item.title)
                                           ? true
                                           : false
@@ -1167,7 +1165,7 @@ export default function CourseListOne() {
                                     (
                                     {
                                       coursesData.filter(
-                                        (itm) => itm.authorName == item.title,
+                                        (itm) => itm.authorName == item.title
                                       ).length
                                     }
                                     )
@@ -1200,10 +1198,10 @@ export default function CourseListOne() {
                                     <div className="radio">
                                       <input
                                         type="radio"
-                                        checked={
+                                        defaultChecked={
                                           filterPrice == item.title
-                                            ? "checked"
-                                            : ""
+                                            ? true
+                                            : false
                                         }
                                       />
                                       <div className="radio__mark">
@@ -1242,7 +1240,7 @@ export default function CourseListOne() {
                                 <div className="form-checkbox">
                                   <input
                                     type="checkbox"
-                                    checked={
+                                    defaultChecked={
                                       filterLevels.length < 1 ? true : false
                                     }
                                   />
@@ -1265,7 +1263,7 @@ export default function CourseListOne() {
                                   <div className="form-checkbox">
                                     <input
                                       type="checkbox"
-                                      checked={
+                                      defaultChecked={
                                         filterLevels.includes(item.title)
                                           ? true
                                           : false
@@ -1283,7 +1281,7 @@ export default function CourseListOne() {
                                     (
                                     {
                                       coursesData.filter(
-                                        (itm) => itm.level == item.title,
+                                        (itm) => itm.level == item.title
                                       ).length
                                     }
                                     )
@@ -1305,7 +1303,7 @@ export default function CourseListOne() {
                                 <div className="form-checkbox">
                                   <input
                                     type="checkbox"
-                                    checked={
+                                    defaultChecked={
                                       filterlanguange.length ? false : true
                                     }
                                   />
@@ -1330,7 +1328,7 @@ export default function CourseListOne() {
                                   <div className="form-checkbox">
                                     <input
                                       type="checkbox"
-                                      checked={
+                                      defaultChecked={
                                         filterlanguange.includes(item.title)
                                           ? true
                                           : false
@@ -1348,7 +1346,7 @@ export default function CourseListOne() {
                                     (
                                     {
                                       coursesData.filter(
-                                        (itm) => itm.languange == item.title,
+                                        (itm) => itm.languange == item.title
                                       ).length
                                     }
                                     )
@@ -1378,7 +1376,7 @@ export default function CourseListOne() {
                                 <div className="form-checkbox">
                                   <input
                                     type="checkbox"
-                                    checked={
+                                    defaultChecked={
                                       filterDuration.length ? false : true
                                     }
                                   />
@@ -1402,7 +1400,7 @@ export default function CourseListOne() {
                                   <div className="form-checkbox">
                                     <input
                                       type="checkbox"
-                                      checked={
+                                      defaultChecked={
                                         filterDuration.toString() ==
                                         item.range.toString()
                                           ? true
@@ -1422,7 +1420,7 @@ export default function CourseListOne() {
                                       coursesData.filter(
                                         (itm) =>
                                           itm.duration >= item.range[0] &&
-                                          itm.duration <= item.range[1],
+                                          itm.duration <= item.range[1]
                                       ).length
                                     }
                                     )
@@ -1487,7 +1485,11 @@ export default function CourseListOne() {
                               {elm.rating}
                             </div>
                             <div className="d-flex x-gap-5 items-center">
-                              <Star star={elm.rating} />
+                              <Star
+                                star={elm.rating}
+                                textSize={undefined}
+                                textColor={undefined}
+                              />
                             </div>
                             <div className="text-13 lh-1 ml-10">
                               ({elm.ratingCount})
@@ -1528,7 +1530,7 @@ export default function CourseListOne() {
                                 />
                               </div>
                               <div className="text-14 lh-1">{`${Math.floor(
-                                elm.duration / 60,
+                                elm.duration / 60
                               )}h ${Math.floor(elm.duration % 60)}m`}</div>
                             </div>
 
@@ -1605,7 +1607,7 @@ export default function CourseListOne() {
                                   alt="icon"
                                 />
                                 <div className="text-14 lh-1">{`${Math.floor(
-                                  elm.duration / 60,
+                                  elm.duration / 60
                                 )}h ${Math.floor(elm.duration % 60)}m`}</div>
                               </div>
                             </div>
