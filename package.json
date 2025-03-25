@@ -27,7 +27,7 @@
     "eslint-config-next": "14.2.13",
     "gsap": "^3.12.1",
     "leaflet": "^1.9.4",
-    "next": "15.2.2",
+    "next": "^15.2.4",
     "prop-types": "15.6.0",
     "react": "^18.2.0",
     "react-calendar": "^4.3.0",
