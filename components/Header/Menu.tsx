@@ -4,7 +4,8 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import MobileFooter from "./MobileFooter";
 
-import { menuList } from "@/data/menu";
+// import { menuList } from "@/data/menu";
+import { menuItems } from "@/data/headermenu";
 import { usePathname } from "next/navigation";
 
 export default function Menu() {
@@ -13,7 +14,7 @@ export default function Menu() {
   const pathname = usePathname();
 
   useEffect(() => {
-    menuList.forEach((elm) => {
+    menuItems.forEach((elm) => {
       elm?.links?.forEach((elm2) => {
         if (elm2.href?.split("/")[1] == pathname.split("/")[1]) {
           setMenuItem(elm.title);
@@ -54,38 +55,19 @@ export default function Menu() {
             <li className="menu-item-has-children">
               <Link
                 data-barba
-                href="#"
-                className={menuItem == "Home" ? "activeMenu" : ""}
+                href="/"
+                className={pathname == "/" ? "activeMenu" : ""}
               >
-                Home <i className="icon-chevron-right text-13 ml-10"></i>
+                Home
+                {/* <i className="icon-chevron-right text-13 ml-10"></i> */}
               </Link>
-
-              <ul className="subnav">
-                <li className="menu__backButton js-nav-list-back">
-                  <Link href="#">
-                    <i className="icon-chevron-left text-13 mr-10"></i> Home
-                  </Link>
-                </li>
-
-                {menuList[0].links.map((elm, i) => (
-                  <li
-                    key={i}
-                    className={
-                      pathname.split("/")[1] == elm.href.split("/")[1]
-                        ? "activeMenu"
-                        : "inActiveMenu"
-                    }
-                  >
-                    <Link href={elm.href}>{elm.label}</Link>
-                  </li>
-                ))}
-              </ul>
             </li>
 
             <li className="menu-item-has-children -has-mega-menu">
               <Link
                 data-barba
                 href="#"
+                scroll={false}
                 className={menuItem == "Courses" ? "activeMenu" : ""}
               >
                 Courses <i className="icon-chevron-right text-13 ml-10"></i>
@@ -94,114 +76,30 @@ export default function Menu() {
               <div className="mega xl:d-none">
                 <div className="mega__menu">
                   <div className="row x-gap-40">
-                    <div className="col">
-                      <h4 className="text-17 fw-500 mb-20">
-                        Course List Layouts
-                      </h4>
+                    {menuItems[1].links.map((coursecategory, i) => (
+                      <div className="col" key={i}>
+                        <h4 className="text-17 fw-500 mb-20">
+                          {coursecategory.title}
+                        </h4>
 
-                      <ul className="mega__list">
-                        {menuList[1].links[0].links.map((elm, i) => (
-                          <li
-                            key={i}
-                            className={
-                              pathname.split("/")[1] == elm.href.split("/")[1]
-                                ? "activeMenu"
-                                : "inActiveMegaMenu"
-                            }
-                          >
-                            <Link data-barba href={elm.href}>
-                              {elm.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className="col">
-                      <h4 className="text-17 fw-500 mb-20">
-                        Course Single Layouts
-                      </h4>
-
-                      <ul className="mega__list">
-                        {menuList[1].links[1].links.map((elm, i) => (
-                          <li
-                            key={i}
-                            className={
-                              pathname.split("/")[1] == elm.href.split("/")[1]
-                                ? "activeMenu"
-                                : "inActiveMegaMenu"
-                            }
-                          >
-                            <Link data-barba href={elm.href}>
-                              {elm.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className="col">
-                      <h4 className="text-17 fw-500 mb-20">About Courses</h4>
-
-                      <ul className="mega__list">
-                        {menuList[1].links[2].links.map((elm, i) => (
-                          <li
-                            key={i}
-                            className={
-                              pathname.split("/")[1] == elm.href.split("/")[1]
-                                ? "activeMenu"
-                                : "inActiveMegaMenu"
-                            }
-                          >
-                            <Link data-barba href={elm.href}>
-                              {elm.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className="col">
-                      <h4 className="text-17 fw-500 mb-20">Dashboard Pages</h4>
-
-                      <ul className="mega__list">
-                        {menuList[1].links[3].links.map((elm, i) => (
-                          <li
-                            key={i}
-                            className={
-                              pathname.split("/")[1] == elm.href.split("/")[1]
-                                ? "activeMenu"
-                                : "inActiveMegaMenu"
-                            }
-                          >
-                            <Link data-barba href={elm.href}>
-                              {elm.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className="col">
-                      <h4 className="text-17 fw-500 mb-20">Popular Courses</h4>
-
-                      <ul className="mega__list">
-                        {menuList[1].links[4].links.map((elm, i) => (
-                          <li
-                            key={i}
-                            className={
-                              pathname.split("/")[1] == elm.href.split("/")[1]
-                                ? "activeMenu"
-                                : "inActiveMegaMenu"
-                            }
-                          >
-                            <Link data-barba href={elm.href}>
-                              {elm.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                        <ul className="mega__list">
+                          {coursecategory.links.map((course, index) => (
+                            <li
+                              key={index}
+                              className={
+                                course.href == pathname
+                                  ? "activeMenu"
+                                  : "inActiveMegaMenu"
+                              }
+                            >
+                              <Link data-barba href={course.href}>
+                                {course.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
                   </div>
 
                   <div className="mega-banner bg-purple-1 ml-40">
@@ -212,7 +110,7 @@ export default function Menu() {
                       worldwide
                     </div>
                     <Link
-                      href="#"
+                      href="/"
                       className="button -md -green-1 text-dark-1 fw-500 col-12"
                     >
                       Start Learning For Free
@@ -226,6 +124,7 @@ export default function Menu() {
               <Link
                 data-barba
                 href="#"
+                scroll={false}
                 className={menuItem == "Events" ? "activeMenu" : ""}
               >
                 Events <i className="icon-chevron-right text-13 ml-10"></i>
@@ -237,7 +136,7 @@ export default function Menu() {
                   </Link>
                 </li>
 
-                {menuList[2].links.map((elm, i) => (
+                {menuItems[2].links.map((elm, i) => (
                   <li
                     key={i}
                     className={
@@ -257,33 +156,12 @@ export default function Menu() {
             <li className="menu-item-has-children">
               <Link
                 data-barba
-                href="#"
+                href="/blogs"
                 className={menuItem == "Blogs" ? "activeMenu" : ""}
               >
-                Blog <i className="icon-chevron-right text-13 ml-10"></i>
+                Blog
+                {/* <i className="icon-chevron-right text-13 ml-10"></i> */}
               </Link>
-              <ul className="subnav">
-                <li className="menu__backButton js-nav-list-back">
-                  <Link href="#">
-                    <i className="icon-chevron-left text-13 mr-10"></i> Blog
-                  </Link>
-                </li>
-
-                {menuList[3].links.map((elm, i) => (
-                  <li
-                    key={i}
-                    className={
-                      pathname.split("/")[1] == elm.href.split("/")[1]
-                        ? "activeMenu"
-                        : "inActiveMenu"
-                    }
-                  >
-                    <Link data-barba href={elm.href}>
-                      {elm.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
             </li>
 
             <li className="menu-item-has-children">
@@ -297,113 +175,44 @@ export default function Menu() {
 
               <ul className="subnav">
                 <li className="menu__backButton js-nav-list-back">
-                  <Link href="#">
+                  <Link href="#" scroll={false}>
                     <i className="icon-chevron-left text-13 mr-10"></i> Pages
                   </Link>
                 </li>
                 <li className="menu-item-has-children">
                   <Link
-                    href="#"
+                    href="/about"
                     className={
                       submenu == "About Us" ? "activeMenu" : "inActiveMenu"
                     }
                   >
-                    About Us<div className="icon-chevron-right text-11"></div>
+                    About Us
+                    {/* <div className="icon-chevron-right text-11"></div> */}
                   </Link>
 
                   <ul className="subnav">
                     <li className="menu__backButton js-nav-list-back">
-                      <Link href="#">
+                      <Link href="/about">
                         <i className="icon-chevron-left text-13 mr-10"></i>
                         About Us
                       </Link>
                     </li>
-
-                    {menuList[4].links[0].links.map((elm, i) => (
-                      <li
-                        key={i}
-                        className={
-                          pathname.split("/")[1] == elm.href.split("/")[1]
-                            ? "activeMenu"
-                            : "inActiveMenu"
-                        }
-                      >
-                        <Link key={i} data-barba href={elm.href}>
-                          {elm.label}
-                        </Link>
-                      </li>
-                    ))}
                   </ul>
                 </li>
 
                 <li className="menu-item-has-children">
                   <Link
-                    href="#"
+                    href="/contact"
                     className={
                       submenu == "Contact" ? "activeMenu" : "inActiveMenu"
                     }
                   >
-                    Contact<div className="icon-chevron-right text-11"></div>
+                    Contact
+                    {/* <div className="icon-chevron-right text-11"></div> */}
                   </Link>
-                  <ul className="subnav">
-                    <li className="menu__backButton js-nav-list-back">
-                      <Link href="#">
-                        <i className="icon-chevron-left text-13 mr-10"></i>
-                        Contact
-                      </Link>
-                    </li>
-
-                    {menuList[4].links[1].links.map((elm, i) => (
-                      <li
-                        key={i}
-                        className={
-                          pathname.split("/")[1] == elm.href.split("/")[1]
-                            ? "activeMenu"
-                            : "inActiveMenu"
-                        }
-                      >
-                        <Link key={i} data-barba href={elm.href}>
-                          {elm.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
                 </li>
 
-                <li className="menu-item-has-children">
-                  <Link
-                    href="#"
-                    className={
-                      submenu == "Shop" ? "activeMenu" : "inActiveMenu"
-                    }
-                  >
-                    Shop<div className="icon-chevron-right text-11"></div>
-                  </Link>
-                  <ul className="subnav">
-                    <li className="menu__backButton js-nav-list-back">
-                      <Link href="#">
-                        <i className="icon-chevron-left text-13 mr-10"></i> Shop
-                      </Link>
-                    </li>
-
-                    {menuList[4].links[2].links.map((elm, i) => (
-                      <li
-                        key={i}
-                        className={
-                          pathname.split("/")[1] == elm.href.split("/")[1]
-                            ? "activeMenu"
-                            : "inActiveMenu"
-                        }
-                      >
-                        <Link key={i} data-barba href={elm.href}>
-                          {elm.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-
-                {menuList[4].links
+                {/* {menuItems[4].links
                   .filter((el) => el.href)
                   .map((elm, i) => (
                     <li
@@ -418,16 +227,16 @@ export default function Menu() {
                         {elm.label}
                       </Link>
                     </li>
-                  ))}
+                  ))} */}
               </ul>
             </li>
 
             <li>
               <Link
                 data-barba
-                href="/contact-1"
+                href="/contact"
                 className={
-                  pathname == "/contact-1" ? "activeMenu" : "inActiveMenuTwo"
+                  pathname == "/contact" ? "activeMenu" : "inActiveMenuTwo"
                 }
               >
                 Contact

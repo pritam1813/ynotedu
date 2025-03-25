@@ -1,10 +1,6 @@
+import React from "react";
 import NotFound from "@/components/not-found/NotFound";
 import PageLinks from "@/components/common/PageLinks";
-import Preloader from "@/components/common/Preloader";
-
-import FooterOne from "@/components/layout/footers/FooterOne";
-import Header from "@/components/layout/headers/Header";
-import React from "react";
 
 export const metadata = {
   title: "Page not found || ynotedu - Professional LMS Online Education ",
@@ -12,15 +8,15 @@ export const metadata = {
     "Elevate your e-learning content with ynotedu, the most impressive LMS template for online courses, education and LMS platforms.",
 };
 
-export default function NotFoundPage(): JSX.Element {
+export default function NotFoundPage() {
   return (
     <div className="main-content">
-      <Preloader />
-      <Header />
+      {/* <Preloader />
+      <Header /> */}
       <div className="content-wrapper js-content-wrapper overflow-hidden">
         <PageLinks dark={false} />
         <NotFound />
-        <FooterOne />
+        {/* <FooterOne /> */}
       </div>
     </div>
   );

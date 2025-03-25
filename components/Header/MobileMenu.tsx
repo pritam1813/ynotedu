@@ -6,7 +6,8 @@ import Link from "next/link";
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { menuList } from "@/data/menu";
+// import { menuList } from "@/data/menu";
+import { menuItems } from "@/data/headermenu";
 import SearchToggle from "./SearchToggle";
 import CartToggle from "./CartToggle";
 
@@ -18,7 +19,7 @@ export default function MobileMenu() {
   const [activeMobileMenu, setActiveMobileMenu] = useState(false);
 
   useEffect(() => {
-    menuList.forEach((elm) => {
+    menuItems.forEach((elm) => {
       elm?.links?.forEach((elm2) => {
         if (elm2.href?.split("/")[1] == pathname?.split("/")[1]) {
           setMenuItem(elm.title);
@@ -68,18 +69,18 @@ export default function MobileMenu() {
 
           {showMenu && activeMobileMenu && (
             <div className="mobileMenu text-dark-1">
-              {menuList.map((elm, i) => {
-                if (elm.title) {
-                  return (
-                    <div key={i} className="submenuOne">
-                      <div
-                        className="title"
-                        onClick={() =>
-                          setMenuNesting((pre) =>
-                            pre[0] == elm.title ? [] : [elm.title]
-                          )
-                        }
-                      >
+              {menuItems.map((elm, i) => (
+                <div key={i} className="submenuOne">
+                  <div
+                    className="title"
+                    onClick={() =>
+                      setMenuNesting((pre) =>
+                        pre[0] == elm.title ? [] : [elm.title]
+                      )
+                    }
+                  >
+                    {elm.href ? (
+                      <Link href={elm.href}>
                         <span
                           className={
                             elm.title == menuItem
@@ -89,100 +90,110 @@ export default function MobileMenu() {
                         >
                           {elm.title}
                         </span>
-                        <i
-                          className={
-                            menuNesting[0] == elm.title
-                              ? "icon-chevron-right text-13 ml-10 active"
-                              : "icon-chevron-right text-13 ml-10"
-                          }
-                        ></i>
-                      </div>
+                      </Link>
+                    ) : (
+                      <span
+                        className={
+                          elm.title == menuItem ? "activeMenu" : "inActiveMenu"
+                        }
+                      >
+                        {elm.title}
+                      </span>
+                    )}
 
-                      {elm.links &&
-                        elm.links.map((itm, index) => (
-                          <div
-                            key={index}
+                    {elm.links && (
+                      <i
+                        className={
+                          menuNesting[0] == elm.title
+                            ? "icon-chevron-right text-13 ml-10 active"
+                            : "icon-chevron-right text-13 ml-10"
+                        }
+                      ></i>
+                    )}
+                  </div>
+
+                  {elm.links &&
+                    elm.links.map((itm, index) => (
+                      <div
+                        key={index}
+                        className={
+                          menuNesting[0] == elm.title
+                            ? "toggle active"
+                            : "toggle"
+                        }
+                      >
+                        {itm.href && (
+                          <Link
+                            key={i}
                             className={
-                              menuNesting[0] == elm.title
-                                ? "toggle active"
-                                : "toggle"
+                              pathname?.split("/")[1] == itm.href?.split("/")[1]
+                                ? "activeMenu link"
+                                : "link inActiveMenu"
                             }
+                            href={itm.href}
                           >
-                            {itm.href && (
-                              <Link
-                                key={i}
-                                className={
-                                  pathname?.split("/")[1] ==
-                                  itm.href?.split("/")[1]
-                                    ? "activeMenu link"
-                                    : "link inActiveMenu"
-                                }
-                                href={itm.href}
-                              >
-                                {itm.label}
-                              </Link>
-                            )}
+                            {itm.label}
+                          </Link>
+                        )}
 
-                            {itm.links && (
-                              <div className="submenuTwo">
-                                <div
-                                  className="title"
-                                  onClick={() =>
-                                    setMenuNesting((pre) =>
-                                      pre[1] == itm.title
-                                        ? [pre[0]]
-                                        : [pre[0], itm.title]
-                                    )
-                                  }
-                                >
-                                  <span
+                        {itm.links && (
+                          <div className="submenuTwo">
+                            <div
+                              className="title"
+                              onClick={() =>
+                                setMenuNesting((pre) =>
+                                  pre[1] == itm.title
+                                    ? [pre[0]]
+                                    : [pre[0], itm.title]
+                                )
+                              }
+                            >
+                              <span
+                                className={
+                                  itm.title == submenu
+                                    ? "activeMenu"
+                                    : "inActiveMenu"
+                                }
+                              >
+                                {itm.title && itm.title}
+                              </span>
+                              <i
+                                className={
+                                  menuNesting[1] == itm.title
+                                    ? "icon-chevron-right text-13 ml-10 active"
+                                    : "icon-chevron-right text-13 ml-10"
+                                }
+                              ></i>
+                            </div>
+                            <div
+                              className={
+                                menuNesting[1] == itm.title
+                                  ? "toggle active"
+                                  : "toggle"
+                              }
+                            >
+                              {itm.links &&
+                                itm.links.map((itm2, index3) => (
+                                  <Link
+                                    key={index3}
                                     className={
-                                      itm.title == submenu
-                                        ? "activeMenu"
-                                        : "inActiveMenu"
+                                      pathname?.split("/")[1] ==
+                                      itm2.href?.split("/")[1]
+                                        ? "activeMenu link"
+                                        : "link inActiveMenu"
                                     }
+                                    href={itm2.href}
                                   >
-                                    {itm.title && itm.title}
-                                  </span>
-                                  <i
-                                    className={
-                                      menuNesting[1] == itm.title
-                                        ? "icon-chevron-right text-13 ml-10 active"
-                                        : "icon-chevron-right text-13 ml-10"
-                                    }
-                                  ></i>
-                                </div>
-                                <div
-                                  className={
-                                    menuNesting[1] == itm.title
-                                      ? "toggle active"
-                                      : "toggle"
-                                  }
-                                >
-                                  {itm.links &&
-                                    itm.links.map((itm2, index3) => (
-                                      <Link
-                                        key={index3}
-                                        className={
-                                          pathname?.split("/")[1] ==
-                                          itm2.href?.split("/")[1]
-                                            ? "activeMenu link"
-                                            : "link inActiveMenu"
-                                        }
-                                        href={itm2.href}
-                                      >
-                                        {itm2.label}
-                                      </Link>
-                                    ))}
-                                </div>
-                              </div>
-                            )}
+                                    {itm2.label}
+                                  </Link>
+                                ))}
+                            </div>
                           </div>
-                        ))}
-                    </div>
-                  );
-                }
-              })}
+                        )}
+                      </div>
+                    ))}
+                </div>
+              ))}
             </div>
           )}
 
