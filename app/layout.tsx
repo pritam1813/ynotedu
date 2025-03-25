@@ -7,6 +7,7 @@ import "../public/assets/sass/animations.scss";
 import Header from "@/components/Header";
 // import FooterOne from "@/components/layout/footers/FooterOne";
 import Footer from "@/components/Footer";
+import { ClerkProvider } from "@clerk/nextjs";
 // config.autoAddCss = false;
 
 export default function RootLayout({
@@ -15,12 +16,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>
-        <Header />
-        <main>{children}</main>
-        <Footer />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

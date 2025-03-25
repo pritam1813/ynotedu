@@ -15,7 +15,7 @@ export default function SignUpForm() {
             <div className="px-50 py-50 md:px-25 md:py-25 bg-white shadow-1 rounded-16">
               <h3 className="text-30 lh-13">Sign Up</h3>
               <p className="mt-10">
-                Already have an account?
+                Already have an account?{" "}
                 <Link href="/login" className="text-purple-1">
                   Log in
                 </Link>
