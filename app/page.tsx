@@ -12,7 +12,7 @@ import Blog from "@/components/homes/blogs/Blog";
 import Join from "@/components/homes/join/Join";
 
 export const metadata = {
-  title: "Home-1 || ynotedu - Professional LMS Online Education ",
+  title: "Home || ynotedu - Professional LMS Online Education ",
   description:
     "Elevate your e-learning content with ynotedu, the most impressive LMS template for online courses, education and LMS platforms.",
 };
