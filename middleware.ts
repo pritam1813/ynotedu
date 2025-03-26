@@ -1,13 +1,29 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-const isProtectedRoute = createRouteMatcher(["/dashboard(.*)"]);
+// Updated route pattern to match both dashboard and all dshb-* routes
+const isProtectedRoute = createRouteMatcher([
+  "/dashboard(.*)",
+  "/dshb-(.*)dashboard(.*)",
+  "/dshb-(.*)courses(.*)",
+  "/dshb-(.*)settings(.*)",
+  "/dshb-(.*)survey(.*)",
+  "/dshb-(.*)reviews(.*)",
+  "/dshb-(.*)quiz(.*)",
+  "/dshb-(.*)participants(.*)",
+  "/dshb-(.*)messages(.*)",
+  "/dshb-(.*)listing(.*)",
+  "/dshb-(.*)grades(.*)",
+  "/dshb-(.*)forums(.*)",
+  "/dshb-(.*)dictionary(.*)",
+  "/dshb-(.*)calendar(.*)",
+  "/dshb-(.*)bookmarks(.*)",
+  "/dshb-(.*)assignment(.*)",
+  "/dshb-(.*)administration(.*)",
+]);
 
-export default clerkMiddleware(
-  async (auth, req) => {
-    if (isProtectedRoute(req)) await auth.protect();
-  },
-  { debug: true }
-);
+export default clerkMiddleware(async (auth, req) => {
+  if (isProtectedRoute(req)) await auth.protect();
+});
 
 export const config = {
   matcher: [

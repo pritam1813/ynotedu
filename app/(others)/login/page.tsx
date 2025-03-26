@@ -1,20 +1,27 @@
-import Preloader from "@/components/common/Preloader";
-import HeaderAuth from "@/components/layout/headers/HeaderAuth";
+import React from "react";
+// import Preloader from "@/components/common/Preloader";
+// import HeaderAuth from "@/components/layout/headers/HeaderAuth";
 import AuthImageMove from "@/components/others/AuthImageMove";
 import LoginForm from "@/components/others/LoginForm";
-import React from "react";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
+
 export const metadata = {
-  title:
-    "Login || ynotedu - Professional LMS Online Education ",
+  title: "Login || ynotedu - Professional LMS Online Education ",
   description:
     "Elevate your e-learning content with ynotedu, the most impressive LMS template for online courses, education and LMS platforms.",
 };
-export default function page() {
+
+export default async function LogIn() {
+  const { userId } = await auth();
+  if (userId) {
+    redirect("/dashboard");
+  }
   return (
     <div className="main-content  ">
-      <Preloader />
+      {/* <Preloader />
 
-      <HeaderAuth />
+      <HeaderAuth /> */}
       <div className="content-wrapper js-content-wrapper overflow-hidden">
         <section className="form-page js-mouse-move-container">
           <AuthImageMove />
@@ -22,16 +29,16 @@ export default function page() {
 
           <>
             {/* Button trigger modal */}
-            <button
+            {/* <button
               type="button"
               className="btn btn-primary"
               data-bs-toggle="modal"
               data-bs-target="#exampleModal"
             >
               Launch demo modal
-            </button>
+            </button> */}
             {/* Modal */}
-            <div
+            {/* <div
               className="modal fade"
               id="exampleModal"
               tabIndex={-1}
@@ -66,7 +73,7 @@ export default function page() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </>
         </section>
       </div>
