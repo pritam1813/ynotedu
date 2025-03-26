@@ -14,18 +14,19 @@ datasource db {
 }
 
 model Instructor {
-  id            Int                  @id @default(autoincrement())
-  name          String
-  image         String
-  role          String
-  rating        Float
-  reviews       Int
-  students      Int
-  courses       Int
-  categories    CategoryInstructor[]
-  socialProfile SocialProfile[]
-  createdAt     DateTime             @default(now())
-  updatedAt     DateTime             @updatedAt
+  id             Int                  @id @default(autoincrement())
+  name           String
+  image          String
+  role           String
+  rating         Float
+  reviews        Int
+  students       Int
+  courses        Int
+  categories     CategoryInstructor[]
+  socialProfile  SocialProfile[]
+  coursesCreated Course[]             @relation("InstructorCourses")
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
 }
 
 model SocialProfile {
@@ -40,6 +41,7 @@ model Category {
   id          Int                  @id @default(autoincrement())
   label       String               @unique
   instructors CategoryInstructor[]
+  courses     Course[]             @relation("CategoryCourses")
 }
 
 model CategoryInstructor {
@@ -49,4 +51,27 @@ model CategoryInstructor {
   instructorId Int
 
   @@id([categoryId, instructorId])
+}
+
+model Course {
+  id           Int        @id @default(autoincrement())
+  title        String
+  description  String
+  instructorId Int
+  instructor   Instructor @relation("InstructorCourses", fields: [instructorId], references: [id], onDelete: Cascade)
+  categoryId   Int
+  category     Category   @relation("CategoryCourses", fields: [categoryId], references: [id])
+  level        String
+  rating       Float
+  reviews      Int
+  language     String
+  duration     Int // duration in minutes
+  price        Float
+  thumbnail    String
+  isPopular    Boolean    @default(false)
+  isFeatured   Boolean    @default(false)
+  lessons      Int
+  students     Int
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 }
