@@ -1,7 +1,7 @@
 // @import "../../../node_modules/bootstrap/scss/bootstrap";
-@import "../css/vendors.css";
-@import "../css/main.css";
-@import "./custom.scss";
+@forward "../css/vendors.css";
+@forward "../css/main.css";
+@forward "./custom.scss";
 
-// Import node_modules styles
-@import "~react-modal-video/scss/modal-video.scss";
+// Import node_modules styles using @use
+@use "react-modal-video/scss/modal-video.scss";

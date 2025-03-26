@@ -1,9 +1,8 @@
 import React from "react";
 import About from "@/components/about/About";
-import Brands from "@/components/common/Brands";
 import Instructors from "@/components/common/Instructors";
 import PageLinks from "@/components/common/PageLinks";
-import TestimonialsOne from "@/components/common/TestimonialsOne";
+import ClientComponentWrapper from "@/components/about/ClientComponentWrapper";
 import WhyCourse from "@/components/homes/WhyCourse";
 import FooterOne from "@/components/layout/footers/FooterOne";
 
@@ -20,9 +19,8 @@ export default function AboutPage() {
         <PageLinks dark={undefined} />
         <About />
         <WhyCourse />
-        <TestimonialsOne />
+        <ClientComponentWrapper />
         <Instructors backgroundColor={undefined} />
-        <Brands backgroundColorComponent={undefined} brandsTwo={undefined} />
         <FooterOne />
       </div>
     </div>

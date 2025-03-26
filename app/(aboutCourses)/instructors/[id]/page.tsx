@@ -31,7 +31,6 @@ export default async function Page({
       <Header /> */}
       <div className="content-wrapper js-content-wrapper overflow-hidden">
         <PageLinks dark={undefined} />
-        {/* @ts-expect-error Async Server Component */}
         <InstractorSingle id={id} />
         {/* <FooterOne /> */}
       </div>
