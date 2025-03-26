@@ -8,11 +8,12 @@ import { notifications } from "@/data/notifications";
 import Messages from "../component/Messages";
 import MyCourses from "../component/MyCourses";
 import Link from "next/link";
+import { SignOutButton } from "@clerk/nextjs";
 
 export default function HeaderDashboard() {
   const [messageOpen, setMessageOpen] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
 
@@ -31,17 +32,23 @@ export default function HeaderDashboard() {
   };
 
   useEffect(() => {
-    setDocumentElement(document.documentElement);
+    const htmlElement = document.documentElement as HTMLElement;
+    setDocumentElement(htmlElement as any);
   }, []);
+
   const openFullscreen = () => {
-    if (documentElement?.requestFullscreen) {
-      documentElement?.requestFullscreen();
-    } else if (documentElement?.webkitRequestFullscreen) {
+    if (!documentElement) return;
+
+    const element = documentElement as HTMLElement;
+
+    if ("requestFullscreen" in element) {
+      element.requestFullscreen();
+    } else if ("webkitRequestFullscreen" in element) {
       /* Safari */
-      documentElement?.webkitRequestFullscreen();
-    } else if (documentElement?.msRequestFullscreen) {
+      (element as any).webkitRequestFullscreen();
+    } else if ("msRequestFullscreen" in element) {
       /* IE11 */
-      documentElement?.msRequestFullscreen();
+      (element as any).msRequestFullscreen();
     }
   };
 
@@ -52,14 +59,14 @@ export default function HeaderDashboard() {
   };
 
   const closeFullscreen = () => {
-    if (document?.exitFullscreen) {
-      document?.exitFullscreen();
-    } else if (document?.webkitExitFullscreen) {
+    if (document && document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document && "webkitExitFullscreen" in document) {
       /* Safari */
-      document?.webkitExitFullscreen();
-    } else if (document?.msExitFullscreen) {
+      (document as any).webkitExitFullscreen();
+    } else if (document && "msExitFullscreen" in document) {
       /* IE11 */
-      document?.msExitFullscreen();
+      (document as any).msExitFullscreen();
     }
   };
   const handleResize = () => {};
@@ -313,13 +320,22 @@ export default function HeaderDashboard() {
                                 elm.id == 1 ? "-is-active -dark-bg-dark-2" : ""
                               }`}
                             >
-                              <a
-                                href={elm.href}
-                                className="d-flex items-center text-17 lh-1 fw-500 "
-                              >
-                                <i className={elm.iconClass}></i>
-                                {elm.text}
-                              </a>
+                              {elm.text === "Logout" ? (
+                                <SignOutButton>
+                                  <button className="d-flex items-center text-17 lh-1 fw-500 ">
+                                    <i className={elm.iconClass}></i>
+                                    {elm.text}
+                                  </button>
+                                </SignOutButton>
+                              ) : (
+                                <a
+                                  href={elm.href}
+                                  className="d-flex items-center text-17 lh-1 fw-500 "
+                                >
+                                  <i className={elm.iconClass}></i>
+                                  {elm.text}
+                                </a>
+                              )}
                             </div>
                           ))}
                         </div>

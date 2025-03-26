@@ -10,6 +10,7 @@ import { usePathname } from "next/navigation";
 import { menuItems } from "@/data/headermenu";
 import SearchToggle from "./SearchToggle";
 import CartToggle from "./CartToggle";
+import { useAuth } from "@clerk/nextjs";
 
 export default function MobileMenu() {
   const [showMenu, setShowMenu] = useState(false);
@@ -17,6 +18,8 @@ export default function MobileMenu() {
   const [menuItem, setMenuItem] = useState("");
   const [submenu, setSubmenu] = useState("");
   const [activeMobileMenu, setActiveMobileMenu] = useState(false);
+  const { isSignedIn, isLoaded } = useAuth();
+  // console.log("isSignedIn: ", isSignedIn);
 
   useEffect(() => {
     menuItems.forEach((elm) => {
@@ -242,15 +245,26 @@ export default function MobileMenu() {
           </div>
 
           <div className="header-right__buttons d-flex items-center ml-30 md:d-none">
-            <Link href="/login" className="button -underline text-white">
-              Log in
-            </Link>
-            <Link
-              href="/signup"
-              className="button -sm -white text-dark-1 ml-30"
-            >
-              Sign up
-            </Link>
+            {isLoaded && isSignedIn ? (
+              <Link
+                href="/dashboard"
+                className="button -sm -white text-dark-1 ml-30"
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link href="/login" className="button -underline text-white">
+                  Log in
+                </Link>
+                <Link
+                  href="/signup"
+                  className="button -sm -white text-dark-1 ml-30"
+                >
+                  Sign up
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

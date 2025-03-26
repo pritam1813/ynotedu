@@ -8,13 +8,19 @@ import AuthImageMove from "@/components/others/AuthImageMove";
 // import LoginForm from '@/components/others/LoginForm'
 import SignUpForm from "@/components/others/SignUpForm";
 // import Terms from '@/components/terms/Terms'
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 export const metadata = {
   title: "Sign up || ynotedu - Professional LMS Online Education ",
   description:
     "Elevate your e-learning content with ynotedu, the most impressive LMS template for online courses, education and LMS platforms.",
 };
-export default function SignUp() {
+export default async function SignUp() {
+  const { userId } = await auth();
+  if (userId) {
+    redirect("/dashboard");
+  }
   return (
     <div className="main-content  ">
       {/* <Preloader />
