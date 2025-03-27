@@ -7,7 +7,7 @@ import WhyCourse from "@/components/homes/WhyCourse";
 import FooterOne from "@/components/layout/footers/FooterOne";
 
 export const metadata = {
-  title: "About-1 || Ynotedu - Professional LMS Online Education ",
+  title: "About || Ynotedu - Professional LMS Online Education ",
   description:
     "Elevate your e-learning content with Ynotedu, the most impressive LMS template for online courses, education and LMS platforms.",
 };

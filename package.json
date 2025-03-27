@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && [ \"$SEED_ON_DEPLOY\" = \"true\" ] && pnpm seed || true",
+    "build": "node build.js",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
