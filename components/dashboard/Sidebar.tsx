@@ -1,29 +1,28 @@
-"use client";
-
-import { sidebarItems } from "@/data/dashBoardSidebar";
 import React from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { sidebarItems } from "@/data/dashboardSidebarMenu";
+import { checkRole } from "@/utils/roles";
+import { Roles } from "@/types/globals";
+import SidebarItem from "./SidebarItem";
 
-export default function Sidebar() {
-  const pathname = usePathname();
+export default async function Sidebar() {
+  // Check for user role directly (server-side)
+  let userRole: Roles = "student"; // Default to student
+
+  if (await checkRole("admin")) {
+    userRole = "admin";
+  } else if (await checkRole("instructor")) {
+    userRole = "instructor";
+  }
+
+  // Filter sidebar items based on user role
+  const filteredItems = sidebarItems.filter((item) =>
+    item.roles?.includes(userRole)
+  );
+
   return (
     <div className="sidebar -dashboard">
-      {sidebarItems.map((elm, i) => (
-        <div
-          key={i}
-          className={`sidebar__item ${
-            pathname === elm.href ? "-is-active" : ""
-          }`}
-        >
-          <Link
-            href={elm.href}
-            className="d-flex items-center text-17 lh-1 fw-500"
-          >
-            <i className={`${elm.iconClass} mr-15`}></i>
-            {elm.text}
-          </Link>
-        </div>
+      {filteredItems.map((elm, i) => (
+        <SidebarItem key={i} item={elm} />
       ))}
     </div>
   );
