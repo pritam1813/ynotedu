@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import InstructorTabsSwitching from "./InstructorTabsSwitching";
 import type { Instructor, SocialProfile } from "@prisma/client";
+import { getBaseUrl } from "@/utils/getBaseUrl";
 // import "@/public/assets/sass/tabswitching.scss";
 // import "@/public/assets/css/tabswitching.css";
 
@@ -11,7 +12,7 @@ interface InstructorWithSocialProfile extends Instructor {
 }
 
 export default async function InstractorSingle({ id }: { id: string }) {
-  const data = await fetch(`http://localhost:3000/api/instructors/${id}`);
+  const data = await fetch(`${getBaseUrl()}/api/instructors/${id}`);
   const instructor: InstructorWithSocialProfile = await data.json();
   // Check if instructor was not found
   if ("error" in instructor) {
