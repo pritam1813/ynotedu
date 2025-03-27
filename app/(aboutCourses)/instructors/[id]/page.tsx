@@ -6,7 +6,7 @@ import PageLinks from "@/components/common/PageLinks";
 // import Header from "@/components/layout/headers/Header";
 
 export const metadata = {
-  title: "Instractors || Ynotedu - Professional LMS Online Education ",
+  title: "Instructors || Ynotedu - Professional LMS Online Education ",
   description:
     "Elevate your e-learning content with Ynotedu, the most impressive LMS template for online courses, education and LMS platforms.",
 };

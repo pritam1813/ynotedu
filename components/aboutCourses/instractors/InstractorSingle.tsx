@@ -13,6 +13,8 @@ interface InstructorWithSocialProfile extends Instructor {
 
 export default async function InstractorSingle({ id }: { id: string }) {
   const data = await fetch(`${getBaseUrl()}/api/instructors/${id}`);
+  console.log("Url: ", getBaseUrl());
+
   const instructor: InstructorWithSocialProfile = await data.json();
   // Check if instructor was not found
   if ("error" in instructor) {
