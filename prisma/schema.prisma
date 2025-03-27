@@ -25,6 +25,7 @@ model Instructor {
   categories     CategoryInstructor[]
   socialProfile  SocialProfile[]
   coursesCreated Course[]             @relation("InstructorCourses")
+  meetings       Meeting[]            @relation("InstructorMeetings")
   createdAt      DateTime             @default(now())
   updatedAt      DateTime             @updatedAt
 }
@@ -72,6 +73,30 @@ model Course {
   isFeatured   Boolean    @default(false)
   lessons      Int
   students     Int
+  meetings     Meeting[]  @relation("CourseMeetings")
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
+}
+
+model Meeting {
+  id            Int           @id @default(autoincrement())
+  title         String
+  startTime     DateTime
+  duration      Int // Duration in minutes
+  description   String?
+  meetLink      String
+  status        MeetingStatus @default(SCHEDULED)
+  courseId      Int?
+  course        Course?       @relation("CourseMeetings", fields: [courseId], references: [id])
+  instructorId  Int
+  instructor    Instructor    @relation("InstructorMeetings", fields: [instructorId], references: [id])
+  googleEventId String? // Google Calendar event ID for syncing
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+enum MeetingStatus {
+  SCHEDULED
+  LIVE
+  CANCELLED
 }

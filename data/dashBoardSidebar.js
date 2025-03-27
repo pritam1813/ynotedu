@@ -19,6 +19,12 @@ export const sidebarItems = [
     text: "Bookmarks",
   },
   {
+    id: 19,
+    href: "/dshb-scheduleclass",
+    text: "Schedule Class",
+    iconClass: "text-20 icon-list",
+  },
+  {
     id: 4,
     href: "/dshb-messages",
     iconClass: "text-20 icon-message",

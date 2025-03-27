@@ -8,6 +8,7 @@ import Header from "@/components/Header";
 // import FooterOne from "@/components/layout/footers/FooterOne";
 import Footer from "@/components/Footer";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "react-hot-toast";
 // config.autoAddCss = false;
 
 export default function RootLayout({
@@ -22,6 +23,7 @@ export default function RootLayout({
           <Header />
           <main>{children}</main>
           <Footer />
+          <Toaster position="top-right" />
         </body>
       </html>
     </ClerkProvider>
