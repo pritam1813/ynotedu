@@ -36,11 +36,11 @@ export default function EventCart() {
     }
   };
 
-  const handleRemoveCart = (index) => {
-    const item = cartEvents[index];
-
-    setCartEvents((pre) => [...pre.filter((elm) => elm !== item)]);
+  const handleRemoveCart = (index: number) => {
+    const newCartEvents = cartEvents.filter((_, i) => i !== index);
+    setCartEvents(newCartEvents);
   };
+
   useEffect(() => {
     const sum = cartEvents.reduce((accumulator, currentValue) => {
       return accumulator + currentValue.price * currentValue.quantity;

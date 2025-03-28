@@ -36,11 +36,11 @@ export default function ShopCart() {
     }
   };
 
-  const handleRemoveCart = (index) => {
-    const item = cartProducts[index];
-
-    setCartProducts((pre) => [...pre.filter((elm) => elm !== item)]);
+  const handleRemoveCart = (index: number) => {
+    const newCartEvents = cartProducts.filter((_, i) => i !== index);
+    setCartProducts(newCartEvents);
   };
+
   useEffect(() => {
     const sum = cartProducts.reduce((accumulator, currentValue) => {
       return accumulator + currentValue.price * currentValue.quantity;
@@ -112,12 +112,9 @@ export default function ShopCart() {
                           ></div>
                         </div>
                         <div className="fw-500 text-dark-1 ml-30">
-                        <Link
-                          className="linkCustom"
-                          href={`/shop/${elm.id}`}
-                        >
-                          {elm.name}{" "}
-                        </Link>
+                          <Link className="linkCustom" href={`/shop/${elm.id}`}>
+                            {elm.name}{" "}
+                          </Link>
                         </div>
                       </div>
                     </div>
