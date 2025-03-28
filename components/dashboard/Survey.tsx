@@ -31,7 +31,7 @@ export default function Survey() {
                   Your views on this course
                 </h4>
                 <div className="mt-15">
-                  Mode: User's name will be logged and shown with answers
+                  Mode: User&apos;s name will be logged and shown with answers
                 </div>
 
                 <div className="mt-50">

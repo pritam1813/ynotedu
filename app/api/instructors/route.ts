@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     const sort = searchParams.get("sort"); // 'asc' or 'desc'
 
     // Build the query
-    let query: any = {
+    const query: any = {
       include: {
         socialProfile: true,
         categories: {

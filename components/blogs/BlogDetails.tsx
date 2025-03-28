@@ -186,7 +186,7 @@ export default function BlogDetails({ id }) {
                   <div className="col-auto">
                     <div className="row x-gap-10 y-gap-10">
                       {tags.slice(0, 4).map((elm, i) => (
-                        <div className="col-auto">
+                        <div key={i} className="col-auto">
                           <a
                             href={elm.href}
                             className="badge -sm -light-3 text-11 text-dark-1"
@@ -467,7 +467,7 @@ export default function BlogDetails({ id }) {
                         required
                         name="comment"
                         placeholder="Message"
-                        rows="8"
+                        rows={8}
                       ></textarea>
                     </div>
                     <div className="col-12">

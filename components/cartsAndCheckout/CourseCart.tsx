@@ -21,7 +21,7 @@ export default function CourseCart() {
 
     item.quantity += 1;
     const updated = [...cartCourses];
-    updated[index] == item;
+    updated[index] = item;
 
     setCartCourses(updated);
   };
@@ -31,7 +31,7 @@ export default function CourseCart() {
     if (item.quantity > 1) {
       item.quantity -= 1;
       const updated = [...cartCourses];
-      updated[index] == item;
+      updated[index] = item;
 
       setCartCourses(updated);
     }

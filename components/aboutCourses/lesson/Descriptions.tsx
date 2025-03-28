@@ -30,7 +30,7 @@ export default function Descriptions() {
       </button>
 
       <div className="mt-60">
-        <h4 className="text-20 mb-30">What you'll learn</h4>
+        <h4 className="text-20 mb-30">What you&apos;ll learn</h4>
         <div className="row x-gap-100 justfiy-between">
           <div className="col-md-6">
             <div className="y-gap-20">

@@ -37,8 +37,8 @@ export default function CourseCheckOut() {
 
                 <div>
                   <p className="page-header__text">
-                    We're on a mission to deliver engaging, curated courses at a
-                    reasonable price.
+                    We&apos;re on a mission to deliver engaging, curated courses
+                    at a reasonable price.
                   </p>
                 </div>
               </div>

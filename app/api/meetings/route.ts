@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get("status");
 
     // Build the query
-    let query: any = {};
+    const query: any = {};
 
     if (instructorId) {
       query.where = {

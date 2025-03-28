@@ -7,8 +7,8 @@ import { faMinus, faPlus, faX } from "@fortawesome/free-solid-svg-icons";
 import { useStore } from "@/store/useStore";
 import Link from "next/link";
 
-export default function ShopCart() {
-  const { cartProducts, setCartProducts } = useStore();
+export default function EventCart() {
+  const { cartEvents, setCartEvents } = useStore();
   const [totalPrice, setTotalPrice] = useState(0);
 
   const handleSubmit = (e) => {
@@ -16,37 +16,37 @@ export default function ShopCart() {
   };
 
   const handleIncrease = (index) => {
-    const item = cartProducts[index];
+    const item = cartEvents[index];
 
     item.quantity += 1;
-    const updated = [...cartProducts];
-    updated[index] == item;
+    const updated = [...cartEvents];
+    updated[index] = item;
 
-    setCartProducts(updated);
+    setCartEvents(updated);
   };
   const handleDecrease = (index) => {
-    const item = cartProducts[index];
+    const item = cartEvents[index];
 
     if (item.quantity > 1) {
       item.quantity -= 1;
-      const updated = [...cartProducts];
-      updated[index] == item;
+      const updated = [...cartEvents];
+      updated[index] = item;
 
-      setCartProducts(updated);
+      setCartEvents(updated);
     }
   };
 
   const handleRemoveCart = (index) => {
-    const item = cartProducts[index];
+    const item = cartEvents[index];
 
-    setCartProducts((pre) => [...pre.filter((elm) => elm !== item)]);
+    setCartEvents((pre) => [...pre.filter((elm) => elm !== item)]);
   };
   useEffect(() => {
-    const sum = cartProducts.reduce((accumulator, currentValue) => {
+    const sum = cartEvents.reduce((accumulator, currentValue) => {
       return accumulator + currentValue.price * currentValue.quantity;
     }, 0);
     setTotalPrice(sum);
-  }, [cartProducts]);
+  }, [cartEvents]);
 
   return (
     <>
@@ -56,7 +56,7 @@ export default function ShopCart() {
             <div className="row justify-center text-center">
               <div className="col-auto">
                 <div>
-                  <h1 className="page-header__title">Shop Cart</h1>
+                  <h1 className="page-header__title">Event Cart</h1>
                 </div>
 
                 <div>
@@ -98,7 +98,7 @@ export default function ShopCart() {
               </div>
 
               <div className="px-30 pr-60 md:px-0">
-                {cartProducts.map((elm, i) => (
+                {cartEvents.map((elm, i) => (
                   <div
                     key={i}
                     className="row y-gap-20 justify-between items-center pt-30 pb-30 border-bottom-light"
@@ -108,16 +108,16 @@ export default function ShopCart() {
                         <div className="">
                           <div
                             className="size-100 bg-image rounded-8 js-lazy"
-                            style={{ backgroundImage: `url(${elm.image})` }}
+                            style={{ backgroundImage: `url(${elm.imgSrc})` }}
                           ></div>
                         </div>
                         <div className="fw-500 text-dark-1 ml-30">
-                        <Link
-                          className="linkCustom"
-                          href={`/shop/${elm.id}`}
-                        >
-                          {elm.name}{" "}
-                        </Link>
+                          <Link
+                            className="linkCustom"
+                            href={`/events/${elm.id}`}
+                          >
+                            {elm.title}{" "}
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -188,7 +188,7 @@ export default function ShopCart() {
               </div>
 
               <div className="shopCart-footer px-16 mt-30">
-                {cartProducts.length > 0 ? (
+                {cartEvents.length > 0 ? (
                   <div className="row justify-between y-gap-30">
                     <div className="col-xl-5">
                       <form className="" onSubmit={handleSubmit}>
@@ -218,10 +218,10 @@ export default function ShopCart() {
                   <div className="row justify-center pt-60 lg:pt-40">
                     <div className="col-auto">
                       <Link
-                        href="/shop-list"
+                        href="/event-list-1"
                         className="button -md -outline-purple-1 text-purple-1"
                       >
-                        Buy Products
+                        Buy Events
                       </Link>
                     </div>
                   </div>
@@ -249,7 +249,7 @@ export default function ShopCart() {
               </div>
 
               <Link
-                href="/shop-checkout"
+                href="/event-checkout"
                 className="button -md -purple-1 text-white col-12 mt-30"
               >
                 Proceed to checkout

@@ -30,7 +30,7 @@ export default function LoginForm() {
         await setActive({ session: result.createdSessionId });
         router.push("/");
       } else {
-        /*Investigate why the sign-in hasn't completed */
+        /*Investigate why the sign-in hasn&apos;t completed */
         // console.log(result);
       }
     } catch (err) {
@@ -47,7 +47,7 @@ export default function LoginForm() {
             <div className="px-50 py-50 md:px-25 md:py-25 bg-white shadow-1 rounded-16">
               <h3 className="text-30 lh-13">Login</h3>
               <p className="mt-10">
-                Don't have an account yet?
+                Don&apos;t have an account yet?
                 <Link href="/signup" className="text-purple-1">
                   Sign up for free
                 </Link>

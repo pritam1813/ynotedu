@@ -11,7 +11,7 @@ export default function LandJob() {
             </h3>
             <p className="mt-25">
               From a certification in data science to personalized resume
-              reviews and interview prep—we've got you covered.
+              reviews and interview prep—we&apos;ve got you covered.
             </p>
             <div className="d-inline-block mt-30">
               <a

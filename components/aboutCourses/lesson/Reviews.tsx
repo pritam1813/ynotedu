@@ -15,7 +15,7 @@ export default function Reviews() {
 
           <ul className="comments__list mt-30">
             {reviews.slice(0, 2).map((elm, i) => (
-              <li className="comments__item">
+              <li key={i} className="comments__item">
                 <div className="comments__item-inner md:direction-column">
                   <div className="comments__img mr-20">
                     <div
@@ -93,7 +93,7 @@ export default function Reviews() {
             <label className="text-16 lh-1 fw-500 text-dark-1 mb-10">
               Review Content
             </label>
-            <textarea name="comment" placeholder="Message" rows="8"></textarea>
+            <textarea name="comment" placeholder="Message" rows={8}></textarea>
           </div>
           <div className="col-12">
             <button

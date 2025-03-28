@@ -1,13 +1,6 @@
 "use client";
 
-const {
-  Pie,
-  Tooltip,
-  Legend,
-  PieChart,
-  Cell,
-  ResponsiveContainer,
-} = require("recharts");
+import { Pie, Tooltip, Legend, PieChart, ResponsiveContainer } from "recharts";
 
 const data = [
   { name: "Direct", value: 400 },

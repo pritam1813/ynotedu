@@ -35,7 +35,7 @@ export default function Typography() {
       <div className="row pt-60 lg:pt-40">
         <div className="col-lg-9">
           <div className="text-18 lh-1 text-dark-1 fw-500 mb-30">
-            What you'll learn
+            What you&apos;ll learn
           </div>
           <div className="row x-gap-100 justfiy-between">
             <div className="col-md-6">

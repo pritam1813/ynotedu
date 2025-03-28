@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     const durationValue = duration ? parseInt(duration) : undefined;
 
     // Build the where clause conditionally based on available parameters
-    let whereClause: any = {};
+    const whereClause: any = {};
 
     if (category) {
       whereClause.category = {

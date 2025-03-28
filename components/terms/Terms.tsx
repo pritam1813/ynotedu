@@ -30,7 +30,7 @@ export default function Terms() {
               <h5>Using our services</h5>
               <p className="mt-30">
                 You must follow any policies made available to you within the
-                Services. Don't misuse our Services. For example, don't
+                Services. Don&apos;t misuse our Services. For example, don&apos;t
                 interfere with our Services or try to access them using a method
                 other than the interface and the instructions that we provide.
                 You may use our Services only as permitted by law, including
@@ -42,7 +42,7 @@ export default function Terms() {
                 the content you access. You may not use content from our
                 Services unless you obtain permission from its owner or are
                 otherwise permitted by law. These terms do not grant you the
-                right to use any branding or logos used in our Services. Don't
+                right to use any branding or logos used in our Services. Don&apos;t
                 remove, obscure, or alter any legal notices displayed in or
                 along with our Services.
               </p>

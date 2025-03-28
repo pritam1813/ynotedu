@@ -17,7 +17,7 @@ export default function Notifications({ activeTab }) {
               Notifications - Choose when and how to be notified
             </div>
             <p className="text-14 lh-13 mt-5">
-              Select push and email notifications you'd like to receive
+              Select push and email notifications you&apos;d like to receive
             </p>
           </div>
         </div>
@@ -36,7 +36,7 @@ export default function Notifications({ activeTab }) {
               <div className="col-auto">
                 <div className="text-16 fw-500 text-dark-1">Subscriptions</div>
                 <p className="text-14 lh-13 mt-5">
-                  Notify me about activity from the profiles I'm subscribed to
+                  Notify me about activity from the profiles I&apos;m subscribed to
                 </p>
               </div>
               <div className="col-auto">
@@ -57,7 +57,7 @@ export default function Notifications({ activeTab }) {
                   Recommended Courses
                 </div>
                 <p className="text-14 lh-13 mt-5">
-                  Notify me about activity from the profiles I'm subscribed to
+                  Notify me about activity from the profiles I&apos;m subscribed to
                 </p>
               </div>
               <div className="col-auto">
@@ -78,7 +78,7 @@ export default function Notifications({ activeTab }) {
                   Replies to my comments
                 </div>
                 <p className="text-14 lh-13 mt-5">
-                  Notify me about activity from the profiles I'm subscribed to
+                  Notify me about activity from the profiles I&apos;m subscribed to
                 </p>
               </div>
               <div className="col-auto">
@@ -99,7 +99,7 @@ export default function Notifications({ activeTab }) {
                   Activity on my comments
                 </div>
                 <p className="text-14 lh-13 mt-5">
-                  Notify me about activity from the profiles I'm subscribed to
+                  Notify me about activity from the profiles I&apos;m subscribed to
                 </p>
               </div>
               <div className="col-auto">
@@ -131,7 +131,7 @@ export default function Notifications({ activeTab }) {
                   requested
                 </div>
                 <p className="text-14 lh-13 mt-5">
-                  Notify me about activity from the profiles I'm subscribed to
+                  Notify me about activity from the profiles I&apos;m subscribed to
                 </p>
               </div>
               <div className="col-auto">
@@ -153,7 +153,7 @@ export default function Notifications({ activeTab }) {
                   Cursus.
                 </div>
                 <p className="text-14 lh-13 mt-5">
-                  Notify me about activity from the profiles I'm subscribed to
+                  Notify me about activity from the profiles I&apos;m subscribed to
                 </p>
               </div>
               <div className="col-auto">
@@ -175,7 +175,7 @@ export default function Notifications({ activeTab }) {
                   in.
                 </div>
                 <p className="text-14 lh-13 mt-5">
-                  Notify me about activity from the profiles I'm subscribed to
+                  Notify me about activity from the profiles I&apos;m subscribed to
                 </p>
               </div>
               <div className="col-auto">
