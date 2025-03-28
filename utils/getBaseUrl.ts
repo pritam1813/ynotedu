@@ -4,8 +4,8 @@ export function getBaseUrl() {
     return "http://localhost:3000";
   }
   // When deployed on Vercel, the environment variable VERCEL_URL is automatically provided.
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}`;
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
   }
   // Fallback in case no condition matches.
   return "";
