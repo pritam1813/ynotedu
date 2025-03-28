@@ -39,9 +39,9 @@ class ErrorBoundary extends Component<Props, State> {
             <div className="col-md-8 text-center">
               <h2 className="text-2xl font-bold mb-4">Something went wrong</h2>
               <p className="mb-4">
-                We're sorry, but there was an error rendering this component.
-                Please try refreshing the page or contact support if the issue
-                persists.
+                We&apos;re sorry, but there was an error rendering this
+                component. Please try refreshing the page or contact support if
+                the issue persists.
               </p>
               <div className="d-flex justify-content-center gap-3">
                 <button

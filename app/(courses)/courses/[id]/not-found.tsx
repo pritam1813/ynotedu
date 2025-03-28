@@ -30,7 +30,8 @@ export default function CourseNotFound() {
               </h1>
               <h2 className="text-35 lh-12 mt-5">Course Not Found</h2>
               <div className="mt-10">
-                The course you're looking for doesn't exist or has been removed.
+                The course you&apos;re looking for doesn&apos;t exist or has
+                been removed.
                 <br />
                 Try checking our course catalog for similar options.
               </div>
