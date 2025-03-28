@@ -2,7 +2,6 @@ import React from "react";
 import Brands from "@/components/common/Brands";
 import Categories from "@/components/homes/categories/Categories";
 import HomeHero from "@/components/homes/heros/HomeHero";
-import Courses from "@/components/homes/courses/Courses";
 import TestimonialsOne from "@/components/common/TestimonialsOne";
 import FeaturesOne from "@/components/homes/features/FeaturesOne";
 import WhyCourse from "@/components/homes/WhyCourse";
@@ -10,6 +9,7 @@ import Instructors from "@/components/common/Instructors";
 import GetApp from "@/components/homes/GetApp";
 import Blog from "@/components/homes/blogs/Blog";
 import Join from "@/components/homes/join/Join";
+import CustomCourseListHome from "@/components/CustomCourseList";
 
 export const metadata = {
   title: "Home || ynotedu - Professional LMS Online Education ",
@@ -23,7 +23,7 @@ export default function Home() {
       <HomeHero />
       <Brands backgroundColorComponent={null} brandsTwo={null} />
       <Categories />
-      <Courses />
+      <CustomCourseListHome />
       <TestimonialsOne />
       <FeaturesOne />
       <WhyCourse />

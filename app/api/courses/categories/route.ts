@@ -4,7 +4,18 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(request: NextRequest) {
   try {
     const categories = await prisma.category.findMany({
-      include: { courses: true },
+      include: {
+        courses: {
+          include: {
+            instructor: {
+              select: {
+                name: true,
+                image: true,
+              },
+            },
+          },
+        },
+      },
     });
     return NextResponse.json(categories);
   } catch (error) {

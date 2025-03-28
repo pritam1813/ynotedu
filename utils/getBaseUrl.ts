@@ -1,7 +1,7 @@
 export function getBaseUrl() {
   // When running locally in development, return localhost.
   if (process.env.NODE_ENV === "development") {
-    return "http://localhost:3000";
+    return process.env.BASE_URL || "http://localhost:3000";
   }
   // When deployed on Vercel, the environment variable VERCEL_URL is automatically provided.
   if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
