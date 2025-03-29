@@ -1,237 +1,266 @@
-"use client";
+import React from "react";
+import Image from "next/image";
+import type { Course } from "@prisma/client";
+import Star from "../common/Star";
+import Link from "next/link";
+import { getBaseUrl } from "@/utils/getBaseUrl";
 
-import React, { useEffect, useState } from "react";
-import CourseCard from "./CourseCard";
-import PaginationTwo from "../common/PaginationTwo";
-
-interface Course {
-  id: number;
-  imageSrc: string;
-  authorImageSrc: string;
-  title: string;
-  rating: number;
-  ratingCount: number;
-  lessonCount: number;
-  duration: number;
-  level: string;
-  originalPrice?: number;
-  discountedPrice?: number;
-  paid: boolean;
-  category?: string;
-  popular?: boolean;
-  authorName: string;
-  [key: string]: any; // Allow additional properties to accommodate different data structures
-}
-
-interface CourseListProps {
-  category: string;
-  level: string;
-  language: string;
-  price: string;
-  rating: string;
-  duration: string;
-  sort: string;
-  page: number;
-  onPageChange: (page: number) => void;
-}
-
-const CourseList: React.FC<CourseListProps> = ({
-  category,
-  level,
-  language,
-  price,
-  rating,
-  duration,
-  sort,
-  page,
-  onPageChange,
-}) => {
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [totalCourses, setTotalCourses] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const ITEMS_PER_PAGE = 12;
-
-  useEffect(() => {
-    const fetchCourses = async () => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        // Build query string with all filter parameters
-        const params = new URLSearchParams();
-        if (category) params.append("category", category);
-        if (level) params.append("level", level);
-        if (language) params.append("language", language);
-        if (price && price !== "All") params.append("price", price);
-        if (rating) params.append("rating", rating);
-        if (duration) params.append("duration", duration);
-        if (sort && sort !== "Default") params.append("sort", sort);
-        params.append("page", page.toString());
-        params.append("limit", ITEMS_PER_PAGE.toString());
-
-        // For testing - Remove this in production
-        // This is a temporary fallback to use static data from data/courses.js
-        // if the API isn't working yet
-        const useStaticData = true;
-
-        if (useStaticData) {
-          // Import coursesData dynamically to avoid circular dependencies
-          const coursesModule = await import("@/data/courses");
-          const staticCourses = coursesModule.coursesData as any[];
-
-          // Filter data based on the current filters
-          let filteredData = [...staticCourses];
-
-          if (category) {
-            filteredData = filteredData.filter(
-              (course) => course.category === category
-            );
-          }
-
-          if (level) {
-            filteredData = filteredData.filter(
-              (course) => course.level === level
-            );
-          }
-
-          if (language) {
-            filteredData = filteredData.filter(
-              (course) => course.languange === language
-            );
-          }
-
-          if (price === "Free") {
-            filteredData = filteredData.filter((course) => !course.paid);
-          } else if (price === "Paid") {
-            filteredData = filteredData.filter((course) => course.paid);
-          }
-
-          if (rating) {
-            const [min, max] = rating.split(",").map(Number);
-            filteredData = filteredData.filter(
-              (course) => course.rating >= min && course.rating <= max
-            );
-          }
-
-          if (duration) {
-            const [min, max] = duration.split(",").map(Number);
-            filteredData = filteredData.filter(
-              (course) => course.duration >= min && course.duration <= max
-            );
-          }
-
-          // Apply sorting
-          if (sort && sort !== "Default") {
-            filteredData = sortCourses(filteredData, sort);
-          }
-
-          // Apply pagination
-          const startIndex = (page - 1) * ITEMS_PER_PAGE;
-          const paginatedData = filteredData.slice(
-            startIndex,
-            startIndex + ITEMS_PER_PAGE
-          );
-
-          setCourses(paginatedData as Course[]);
-          setTotalCourses(filteredData.length);
-        } else {
-          // Real API call
-          const response = await fetch(`/api/courses?${params.toString()}`);
-
-          if (!response.ok) {
-            throw new Error("Failed to fetch courses");
-          }
-
-          // The API returns an array of courses, not an object with courses and total
-          const coursesData = await response.json();
-
-          // Check if the response is an array (expected from the API)
-          if (Array.isArray(coursesData)) {
-            setCourses(coursesData);
-            setTotalCourses(coursesData.length);
-          } else if (coursesData.courses) {
-            // Alternative format if the API changes to return {courses, total}
-            setCourses(coursesData.courses);
-            setTotalCourses(coursesData.total || coursesData.courses.length);
-          } else {
-            throw new Error("Unexpected API response format");
-          }
-        }
-      } catch (err) {
-        console.error("Error fetching courses:", err);
-        setError("Failed to load courses. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCourses();
-  }, [category, level, language, price, rating, duration, sort, page]);
-
-  // Helper function to sort courses based on the selected option
-  const sortCourses = (data: any[], sortOption: string) => {
-    const sortedData = [...data];
-
-    switch (sortOption) {
-      case "Rating (asc)":
-        return sortedData.sort((a, b) => a.rating - b.rating);
-      case "Rating (dsc)":
-        return sortedData.sort((a, b) => b.rating - a.rating);
-      case "Price (asc)":
-        return sortedData.sort(
-          (a, b) => (a.discountedPrice || 0) - (b.discountedPrice || 0)
-        );
-      case "Price (dsc)":
-        return sortedData.sort(
-          (a, b) => (b.discountedPrice || 0) - (a.discountedPrice || 0)
-        );
-      case "Duration (asc)":
-        return sortedData.sort((a, b) => a.duration - b.duration);
-      case "Duration (dsc)":
-        return sortedData.sort((a, b) => b.duration - a.duration);
-      default:
-        return sortedData;
-    }
-  };
-
-  if (loading) {
-    return <div className="text-center py-30">Loading courses...</div>;
-  }
-
-  if (error) {
-    return <div className="text-center py-30 text-red-1">{error}</div>;
-  }
-
+export default async function CourseList({ category }: { category: string }) {
+  const res = await fetch(`${getBaseUrl()}/api/courses?category=${category}`);
+  const coursesData: Course[] = await res.json();
   return (
-    <>
-      <div className="row y-gap-30 side-content__wrap">
-        {courses.length > 0 ? (
-          courses.map((course) => (
-            <CourseCard key={course.id} course={course} />
-          ))
-        ) : (
-          <div className="text-center py-30 col-12">
-            No courses found matching your criteria.
-          </div>
-        )}
-      </div>
+    <div className="row y-gap-30 side-content__wrap">
+      {coursesData.map((elm, i) => (
+        <div
+          key={i}
+          className="side-content col-xl-4 col-lg-6 col-md-4 col-sm-6"
+        >
+          <div className="coursesCard -type-1 ">
+            <div className="relative">
+              <div className="coursesCard__image overflow-hidden rounded-8">
+                <Image
+                  width={530}
+                  height={370}
+                  className="w-1/1"
+                  // src={elm.thumbnail}
+                  src="/assets/img/coursesCards/6.png"
+                  alt="image"
+                />
+                <div className="coursesCard__image_overlay rounded-8"></div>
+              </div>
+              <div className="d-flex justify-between py-10 px-10 absolute-full-center z-3">
+                {elm.isPopular && (
+                  <>
+                    <div>
+                      <div className="px-15 rounded-200 bg-purple-1">
+                        <span className="text-11 lh-1 uppercase fw-500 text-white">
+                          Popular
+                        </span>
+                      </div>
+                    </div>
 
-      {courses.length > 0 && (
-        <div className="row justify-center pt-90 lg:pt-50">
-          <div className="col-auto">
-            <PaginationTwo
-              pageNumber={page}
-              setPageNumber={onPageChange}
-              data={Array(totalCourses).fill(null)}
-              pageCapacity={ITEMS_PER_PAGE}
-            />
+                    <div>
+                      <div className="px-15 rounded-200 bg-green-1">
+                        <span className="text-11 lh-1 uppercase fw-500 text-dark-1">
+                          Best sellers
+                        </span>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+
+            <div className="h-100 pt-15">
+              <div className="d-flex items-center">
+                <div className="text-14 lh-1 text-yellow-1 mr-10">
+                  {elm.rating}
+                </div>
+                <div className="d-flex x-gap-5 items-center">
+                  <Star
+                    star={elm.rating}
+                    textSize={undefined}
+                    textColor={undefined}
+                  />
+                </div>
+                <div className="text-13 lh-1 ml-10">({elm.rating})</div>
+              </div>
+
+              <div className="text-17 lh-15 fw-500 text-dark-1 mt-10">
+                <Link className="linkCustom" href={`/courses/${elm.id}`}>
+                  {elm.title}
+                </Link>
+              </div>
+
+              <div className="d-flex x-gap-10 items-center pt-10">
+                <div className="d-flex items-center">
+                  <div className="mr-8">
+                    <Image
+                      width={16}
+                      height={17}
+                      src="/assets/img/coursesCards/icons/1.svg"
+                      alt="icon"
+                    />
+                  </div>
+                  <div className="text-14 lh-1">{elm.lessons} lesson</div>
+                </div>
+
+                <div className="d-flex items-center">
+                  <div className="mr-8">
+                    <Image
+                      width={16}
+                      height={17}
+                      src="/assets/img/coursesCards/icons/2.svg"
+                      alt="icon"
+                    />
+                  </div>
+                  <div className="text-14 lh-1">{`${Math.floor(
+                    elm.duration / 60
+                  )}h ${Math.floor(elm.duration % 60)}m`}</div>
+                </div>
+
+                <div className="d-flex items-center">
+                  <div className="mr-8">
+                    <Image
+                      width={16}
+                      height={17}
+                      src="/assets/img/coursesCards/icons/3.svg"
+                      alt="icon"
+                    />
+                  </div>
+                  <div className="text-14 lh-1">{elm.level}</div>
+                </div>
+              </div>
+
+              <div className="coursesCard-footer">
+                <div className="coursesCard-footer__author">
+                  <Image
+                    width={30}
+                    height={30}
+                    src="/assets/img/coursesCards/6.png"
+                    alt="image"
+                  />
+                  <div>{elm.instructorId}</div>
+                </div>
+
+                <div className="coursesCard-footer__price">
+                  {elm.price !== 0 ? (
+                    <>
+                      <div>${elm.price}</div>
+                      <div>${elm.price + 30}</div>
+                    </>
+                  ) : (
+                    <>
+                      <div></div>
+                      <div>Free</div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="side-content__item">
+            <div className="px-30 pt-20 pb-30 bg-white rounded-8 border-light shadow-2">
+              <div className="text-18 lh-16 text-dark-1">{elm.title}</div>
+
+              <div className="row x-gap-10 y-gap-10 items-center pt-15">
+                <div className="col-auto">
+                  <div className="d-flex items-center">
+                    <Image
+                      width={16}
+                      height={17}
+                      className="mr-8"
+                      src="/assets/img/coursesCards/icons/1.svg"
+                      alt="icon"
+                    />
+                    <div className="text-14 lh-1">{elm.lessons} lesson</div>
+                  </div>
+                </div>
+
+                <div className="col-auto">
+                  <div className="d-flex items-center">
+                    <Image
+                      width={16}
+                      height={17}
+                      className="mr-8"
+                      src="/assets/img/coursesCards/icons/2.svg"
+                      alt="icon"
+                    />
+                    <div className="text-14 lh-1">{`${Math.floor(
+                      elm.duration / 60
+                    )}h ${Math.floor(elm.duration % 60)}m`}</div>
+                  </div>
+                </div>
+
+                <div className="col-auto">
+                  <div className="d-flex items-center">
+                    <Image
+                      width={16}
+                      height={17}
+                      className="mr-8"
+                      src="/assets/img/coursesCards/icons/3.svg"
+                      alt="icon"
+                    />
+                    <div className="text-14 lh-1">{elm.level}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="d-inline-block px-15 py-5 bg-green-1 text-dark-1 rounded-200 text-11 fw-500 uppercase mt-20">
+                BEST SELLER
+              </div>
+
+              <p className="text-dark-1 mt-15">
+                Learn the #1 most important building block of all art, Drawing.
+                This course will teach you how to draw like a pro!
+              </p>
+
+              <div className="row y-gap-15 pt-15">
+                <div className="col-12">
+                  <div className="d-flex items-center">
+                    <div className="size-20 d-flex items-center justify-center rounded-full border-light">
+                      <div className="icon-check text-6"></div>
+                    </div>
+                    <div className="ml-10">Become a UX designer.</div>
+                  </div>
+                </div>
+
+                <div className="col-12">
+                  <div className="d-flex items-center">
+                    <div className="size-20 d-flex items-center justify-center rounded-full border-light">
+                      <div className="icon-check text-6"></div>
+                    </div>
+                    <div className="ml-10">
+                      You will be able to add UX designer.
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-12">
+                  <div className="d-flex items-center">
+                    <div className="size-20 d-flex items-center justify-center rounded-full border-light">
+                      <div className="icon-check text-6"></div>
+                    </div>
+                    <div className="ml-10">Become a UI designer.</div>
+                  </div>
+                </div>
+
+                <div className="col-12">
+                  <div className="d-flex items-center">
+                    <div className="size-20 d-flex items-center justify-center rounded-full border-light">
+                      <div className="icon-check text-6"></div>
+                    </div>
+                    <div className="ml-10">
+                      Build &amp; test a full website design.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="row x-gap-20 y-gap-15 items-center pt-30">
+                <div className="col">
+                  <button
+                    style={{ padding: "0px 54px" }}
+                    className="button -md h-60 -purple-1 text-white col-12 py-54"
+                    // onClick={() => addCourseToCart(elm.id)}
+                  >
+                    {/* {isAddedToCartCourses(elm.id)
+                                ? "Already Added"
+                                : "Add To Cart"} */}
+                    Add to Cart
+                  </button>
+                </div>
+                <div className="col-auto">
+                  <div className="d-flex items-center justify-center size-60 rounded-full border-light">
+                    <div className="icon-bookmark text-20 text-purple-1"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      )}
-    </>
+      ))}
+    </div>
   );
-};
-
-export default CourseList;
+}

@@ -32,13 +32,15 @@ export async function GET(request: NextRequest) {
     const priceValue = price ? parseFloat(price) : undefined;
     const ratingValue = rating ? parseFloat(rating) : undefined;
     const durationValue = duration ? parseInt(duration) : undefined;
+    const categoryId = category ? parseInt(category) : undefined;
 
     // Build the where clause conditionally based on available parameters
     const whereClause: any = {};
 
     if (category) {
       whereClause.category = {
-        label: category,
+        // label: category,
+        id: categoryId,
       };
     }
 
