@@ -1,12 +1,168 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Star from "@/components/common/Star";
 import { coursesData } from "@/data/courses";
+import { Meeting } from "@prisma/client";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendar, faClock } from "@fortawesome/free-solid-svg-icons";
 
-export default function InstructorTabsSwitching() {
+// Sample class schedule data
+const classScheduleData = [
+  {
+    id: 1,
+    title: "Chemistry",
+    date: new Date(Date.now() + 86400000 * 2), // 2 days from now
+    startTime: "10:00 AM",
+    endTime: "11:30 AM",
+    totalSlots: 10,
+    availableSlots: 2,
+  },
+  {
+    id: 2,
+    title: "Physics",
+    date: new Date(), // Today (in progress)
+    startTime:
+      (new Date().getHours() % 12 || 12) +
+      ":" +
+      (new Date().getMinutes() < 10
+        ? "0" + new Date().getMinutes()
+        : new Date().getMinutes()) +
+      (new Date().getHours() >= 12 ? " PM" : " AM"),
+    endTime:
+      ((new Date().getHours() + 3) % 12 || 12) +
+      ":" +
+      (new Date().getMinutes() < 10
+        ? "0" + new Date().getMinutes()
+        : new Date().getMinutes()) +
+      (new Date().getHours() + 3 >= 12 ? " PM" : " AM"),
+    totalSlots: 8,
+    availableSlots: 2,
+  },
+  {
+    id: 3,
+    title: "Maths",
+    date: new Date(Date.now() + 86400000 * 5), // 5 days from now
+    startTime: "02:00 PM",
+    endTime: "04:00 PM",
+    totalSlots: 12,
+    availableSlots: 0,
+  },
+  {
+    id: 4,
+    title: "Biology",
+    date: new Date(Date.now() + 86400000), // Tomorrow
+    startTime: "11:00 AM",
+    endTime: "01:00 PM",
+    totalSlots: 15,
+    availableSlots: 2,
+  },
+  {
+    id: 5,
+    title: "Maths",
+    date: new Date(Date.now() + 86400000 * 7), // 7 days from now
+    startTime: "10:00 AM",
+    endTime: "12:30 PM",
+    totalSlots: 10,
+    availableSlots: 10,
+  },
+];
+
+export default function InstructorTabsSwitching({
+  meetings,
+}: {
+  meetings: Meeting[];
+}) {
   const [activeTab, setActiveTab] = useState(1);
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  // Update current time every minute
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  // Function to check if a class is currently in progress
+  const isClassInProgress = (
+    classDate: Date,
+    startTime: string,
+    endTime: string
+  ) => {
+    const now = new Date(); // Use new Date() for real-time comparison
+
+    // Get date portions to compare
+    const todayDate = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    );
+    const itemDate = new Date(
+      classDate.getFullYear(),
+      classDate.getMonth(),
+      classDate.getDate()
+    );
+
+    // If not today, it can't be in progress
+    if (todayDate.getTime() !== itemDate.getTime()) {
+      return false;
+    }
+
+    // Parse times for today's date
+    const [startHours, startMinutes] = parseTimeString(startTime);
+    const [endHours, endMinutes] = parseTimeString(endTime);
+
+    // Create date objects for today with the specified times
+    const startDateTime = new Date();
+    startDateTime.setHours(startHours, startMinutes, 0, 0);
+
+    const endDateTime = new Date();
+    endDateTime.setHours(endHours, endMinutes, 0, 0);
+
+    // Check if current time is between start and end
+    const isInProgress = now >= startDateTime && now <= endDateTime;
+
+    // Debug log
+    if (todayDate.getTime() === itemDate.getTime()) {
+      console.log("Class check:", {
+        title: "Responsive Web Design Workshop",
+        now: now.toLocaleTimeString(),
+        start: startDateTime.toLocaleTimeString(),
+        end: endDateTime.toLocaleTimeString(),
+        isInProgress,
+      });
+    }
+
+    return isInProgress;
+  };
+
+  // Helper function to parse time strings like "10:30 AM" or "2:00 PM"
+  const parseTimeString = (timeString: string) => {
+    const [timePart, modifier] = timeString.split(" ");
+    let [hours, minutes] = timePart.split(":").map(Number);
+
+    if (modifier === "PM" && hours < 12) {
+      hours += 12;
+    } else if (modifier === "AM" && hours === 12) {
+      hours = 0;
+    }
+
+    return [hours, minutes];
+  };
+
+  // Function to format date
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
   return (
     <div className="layout-pt-md layout-pb-lg">
       <div className="container">
@@ -34,6 +190,16 @@ export default function InstructorTabsSwitching() {
                 >
                   Courses
                 </button>
+                <button
+                  onClick={() => setActiveTab(3)}
+                  className={`tabs__button js-tabs-button ml-30 ${
+                    activeTab == 3 ? "is-active" : ""
+                  } `}
+                  data-tab-target=".-tab-item-3"
+                  type="button"
+                >
+                  Class Schedule
+                </button>
               </div>
 
               <div className="tabs__content pt-60 lg:pt-40 js-tabs-content">
@@ -54,7 +220,7 @@ export default function InstructorTabsSwitching() {
                     <br />
                     <br />
                     This course is aimed at people interested in UI/UX Design.
-                    We’ll start from the very beginning and work all the way
+                    We'll start from the very beginning and work all the way
                     through, step by step. If you already have some UI/UX Design
                     experience but want to get up to speed using Adobe XD then
                     this course is perfect for you too!
@@ -205,6 +371,98 @@ export default function InstructorTabsSwitching() {
                                 )}
                               </div>
                             </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div
+                  className={`tabs__pane -tab-item-3 ${
+                    activeTab == 3 ? "is-active" : ""
+                  } `}
+                >
+                  <h4 className="text-20">Upcoming Classes</h4>
+
+                  <div className="mt-30">
+                    {classScheduleData.map((classItem, i) => (
+                      <div
+                        key={i}
+                        className="py-20 px-30 rounded-8 bg-white shadow-3 mb-10"
+                      >
+                        <div className="row y-gap-20 justify-between items-center">
+                          <div className="col-xl-5 col-lg-4">
+                            <h5 className="text-17 fw-500">
+                              {classItem.title}
+                            </h5>
+                            <div className="d-flex items-center mt-10">
+                              <div className="mr-8">
+                                <FontAwesomeIcon
+                                  icon={faCalendar}
+                                  width={16}
+                                  height={17}
+                                />
+                              </div>
+                              <div className="text-14 lh-1 text-light-1">
+                                {formatDate(classItem.date)}
+                              </div>
+                            </div>
+                            <div className="d-flex items-center mt-10">
+                              <div className="mr-8">
+                                <FontAwesomeIcon
+                                  icon={faClock}
+                                  width={16}
+                                  height={17}
+                                />
+                              </div>
+                              <div className="text-14 lh-1 text-light-1">
+                                {classItem.startTime} - {classItem.endTime}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="col-auto">
+                            {classItem.availableSlots !== 0 && (
+                              <div className="d-flex items-center">
+                                <div className="mr-10 text-14 lh-1 text-light-1">
+                                  {classItem.availableSlots}/
+                                  {classItem.totalSlots} slots available
+                                </div>
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="col-auto">
+                            {/* Class #2 is forced to always show the Attend Class button */}
+                            {(i === 1 ||
+                              isClassInProgress(
+                                classItem.date,
+                                classItem.startTime,
+                                classItem.endTime
+                              )) && (
+                              <Link
+                                href={`/classroom/${classItem.id}`}
+                                className="button -md -dark-1 text-white"
+                              >
+                                Attend Class
+                              </Link>
+                            )}
+                            {classItem.date > currentTime &&
+                              classItem.availableSlots > 0 &&
+                              i !== 1 && (
+                                /* Don't show Reserve button for class #2 */
+                                <button className="button -md -purple-1 text-white">
+                                  Reserve Slot
+                                </button>
+                              )}
+                            {classItem.availableSlots === 0 && (
+                              <div className="px-15 py-8 rounded-200 bg-error-1">
+                                <span className="text-14 lh-1 fw-500 text-white">
+                                  Slots Full
+                                </span>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>

@@ -27,6 +27,7 @@ export async function GET(
       where: { id },
       include: {
         socialProfile: true,
+        meetings: true,
       },
     });
 

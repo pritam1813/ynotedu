@@ -2,18 +2,18 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import InstructorTabsSwitching from "./InstructorTabsSwitching";
-import type { Instructor, SocialProfile } from "@prisma/client";
+import type { Instructor, Meeting, SocialProfile } from "@prisma/client";
 import { getBaseUrl } from "@/utils/getBaseUrl";
 // import "@/public/assets/sass/tabswitching.scss";
 // import "@/public/assets/css/tabswitching.css";
 
 interface InstructorWithSocialProfile extends Instructor {
   socialProfile: SocialProfile[];
+  meetings: Meeting[];
 }
 
 export default async function InstractorSingle({ id }: { id: string }) {
   const data = await fetch(`${getBaseUrl()}/api/instructors/${id}`);
-  console.log("Url: ", getBaseUrl());
 
   const instructor: InstructorWithSocialProfile = await data.json();
   // Check if instructor was not found
@@ -40,25 +40,18 @@ export default async function InstractorSingle({ id }: { id: string }) {
       </div>
     );
   }
+  // console.log(instructor);
 
-  const { name, role, image, reviews, students, courses, socialProfile } =
-    instructor;
-
-  // const [activeTab, setActiveTab] = useState(1);
-  // const [pageItem, setPageItem] = useState(teamMembers[0]);
-  // useEffect(() => {
-  //   const filtered = [
-  //     ...teamMembers,
-  //     ...teamMembersFull,
-  //     ...instractorsEight,
-  //     ...instractorsNine,
-  //     marketingCoordinator,
-  //   ].filter((elm) => elm.id == id)[0];
-
-  //   if (filtered) {
-  //     setPageItem(filtered);
-  //   }
-  // }, []);
+  const {
+    name,
+    role,
+    image,
+    reviews,
+    students,
+    courses,
+    socialProfile,
+    meetings,
+  } = instructor;
 
   return (
     <>
@@ -145,7 +138,7 @@ export default async function InstractorSingle({ id }: { id: string }) {
         </div>
       </section>
 
-      <InstructorTabsSwitching />
+      <InstructorTabsSwitching meetings={meetings} />
     </>
   );
 }

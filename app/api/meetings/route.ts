@@ -10,11 +10,13 @@ export async function GET(request: NextRequest) {
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    console.log("User Id: ", userId);
 
     const searchParams = request.nextUrl.searchParams;
     const instructorId = searchParams.get("instructorId");
     const courseId = searchParams.get("courseId");
     const status = searchParams.get("status");
+    console.log("Instructor Id: ", instructorId);
 
     // Build the query
     const query: any = {};
@@ -51,9 +53,9 @@ export async function GET(request: NextRequest) {
       startTime: "desc",
     };
 
-    const meetings = await prisma.meeting.findMany(query);
+    // const meetings = await prisma.meeting.findMany(query);
 
-    return NextResponse.json(meetings, { status: 200 });
+    return NextResponse.json({ meetings: "meeting" }, { status: 200 });
   } catch (error) {
     console.error("Error fetching meetings:", error);
     return NextResponse.json(
