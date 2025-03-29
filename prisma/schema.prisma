@@ -63,17 +63,18 @@ model Course {
   categoryId   Int
   category     Category   @relation("CategoryCourses", fields: [categoryId], references: [id])
   level        String
-  rating       Float
-  reviews      Int
+  rating       Float?     @default(0)
+  reviews      Int?       @default(0)
   language     String
   duration     Int // duration in minutes
   price        Float
   thumbnail    String
   isPopular    Boolean    @default(false)
   isFeatured   Boolean    @default(false)
-  lessons      Int
-  students     Int
+  lessons      Int        @default(0)
+  students     Int        @default(0)
   meetings     Meeting[]  @relation("CourseMeetings")
+  sections     Section[]
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 }
@@ -99,4 +100,101 @@ enum MeetingStatus {
   SCHEDULED
   LIVE
   CANCELLED
+}
+
+// New models for course content
+
+model Section {
+  id          Int           @id @default(autoincrement())
+  title       String
+  description String?
+  order       Int // For ordering sections within a course
+  courseId    Int
+  course      Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  contents    ContentItem[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model ContentItem {
+  id          Int          @id @default(autoincrement())
+  title       String
+  description String?
+  order       Int // For ordering content within a section
+  type        ContentType
+  sectionId   Int
+  section     Section      @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  video       Video?
+  pdf         PdfDocument?
+  quiz        Quiz?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+enum ContentType {
+  VIDEO
+  PDF
+  QUIZ
+}
+
+model Video {
+  id            Int         @id @default(autoincrement())
+  url           String // Video URL (YouTube, Vimeo, etc.)
+  duration      Int // Duration in seconds
+  thumbnail     String?
+  contentItemId Int         @unique
+  contentItem   ContentItem @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model PdfDocument {
+  id            Int         @id @default(autoincrement())
+  url           String // URL to the PDF file
+  pages         Int?
+  contentItemId Int         @unique
+  contentItem   ContentItem @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Quiz {
+  id            Int         @id @default(autoincrement())
+  timeLimit     Int? // Time limit in minutes, null means no limit
+  passingScore  Int // Minimum score to pass (percentage)
+  contentItemId Int         @unique
+  contentItem   ContentItem @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+  questions     Question[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Question {
+  id        Int              @id @default(autoincrement())
+  text      String
+  type      QuestionType
+  order     Int
+  points    Int              @default(1)
+  quizId    Int
+  quiz      Quiz             @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  options   QuestionOption[]
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  SINGLE_CHOICE
+  TRUE_FALSE
+  TEXT_ANSWER
+}
+
+model QuestionOption {
+  id         Int      @id @default(autoincrement())
+  text       String
+  isCorrect  Boolean
+  questionId Int
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
