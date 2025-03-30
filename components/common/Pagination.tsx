@@ -37,8 +37,8 @@ export default function Pagination({
     );
 
     // Calculate start and end of pagination range
-    let startPage = Math.max(2, currentPage - Math.floor(maxPagesToShow / 2));
-    let endPage = Math.min(pageCount - 1, startPage + maxPagesToShow - 3);
+    const startPage = Math.max(2, currentPage - Math.floor(maxPagesToShow / 2));
+    const endPage = Math.min(pageCount - 1, startPage + maxPagesToShow - 3);
 
     // Adjust if we're near the beginning
     if (startPage > 2) {

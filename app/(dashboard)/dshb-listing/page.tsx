@@ -1,8 +1,6 @@
 import Preloader from "@/components/common/Preloader";
 import AddCourse from "@/components/dashboard/AddCourse";
 
-import Listing from "@/components/dashboard/listing/Listing";
-
 import Sidebar from "@/components/dashboard/Sidebar";
 import HeaderDashboard from "@/components/layout/headers/HeaderDashboard";
 import React from "react";
@@ -27,7 +25,7 @@ export default function page() {
             <div className="dashboard__sidebar scroll-bar-1">
               <Sidebar />
             </div>
-            <AddCourse />
+            {/* <AddCourse /> */}
             {/* <Listing /> */}
           </div>
         </div>

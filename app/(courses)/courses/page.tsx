@@ -5,20 +5,16 @@ import { getBaseUrl } from "@/utils/getBaseUrl";
 
 import CoursePageHeader from "@/components/courseList/CoursePageHeader";
 import CoursesSideBar from "@/components/courseList/CoursesSideBar";
-
 import CourseList from "@/components/courseList/CourseList";
-import {
-  CourseWithCategory,
-  CourseWithInstructor,
-} from "@/components/CustomCourseList";
+import { CourseWithCategory } from "@/components/CustomCourseList";
 
 import CourseListSortDropDown from "@/components/courseList/CourseListSortDropDown";
-import CourseListPerPageDropDown from "@/components/courseList/CourseListPerPageDropDown";
 import CourseListPagination from "@/components/courseList/CourseListPagination";
-import CourseSidebarMobileWrapper from "@/components/courseList/CourseSidebarMobileWrapper";
+
+import type { Course } from "@prisma/client";
 
 interface CourseDataProps {
-  courses: CourseWithInstructor[];
+  coursesData: Course[];
   totalCount: number;
 }
 
@@ -37,7 +33,6 @@ export default async function Courses(props: {
     price?: number;
     sort?: string;
     page?: string;
-    limit?: string;
   }>;
 }) {
   const res = await fetch(`${getBaseUrl()}/api/courses/categories`);
@@ -52,24 +47,10 @@ export default async function Courses(props: {
   const level = searchParams?.level || "";
   const duration = searchParams?.duration || undefined;
   const price = searchParams?.price || undefined;
-
-  // Handle edge cases for page and limit
-  let page = searchParams?.page || "1";
-  // Ensure page is at least 1
-  if (parseInt(page) < 1 || isNaN(parseInt(page))) {
-    page = "1";
-  }
-
+  const page = searchParams?.page || "1";
   const sort = searchParams?.sort || "newest";
-
-  // Parse limit parameter or use default
-  let coursesPerPage = 9;
-  if (searchParams?.limit) {
-    const parsedLimit = parseInt(searchParams.limit);
-    if (!isNaN(parsedLimit) && parsedLimit > 0) {
-      coursesPerPage = parsedLimit;
-    }
-  }
+  const coursesPerPage = 9;
+  // console.log(searchParams);
 
   let queryString = `${getBaseUrl()}/api/courses?`;
 
@@ -84,20 +65,9 @@ export default async function Courses(props: {
   const neres = await fetch(queryString);
   const filteredCourses: CourseDataProps = await neres.json();
 
-  // Calculate items being shown (for the "Showing X of Y courses" text)
-  const startItem = (parseInt(page) - 1) * coursesPerPage + 1;
-  const endItem = Math.min(
-    startItem + coursesPerPage - 1,
-    filteredCourses.totalCount
-  );
-  const itemsShowing =
-    filteredCourses.totalCount > 0 ? endItem - startItem + 1 : 0;
-
-  const hasActiveFilters = category || rating || level || duration || price;
-
   return (
-    <div className="main-content">
-      <div className="content-wrapper js-content-wrapper overflow-hidden">
+    <div className="main-content  ">
+      <div className="content-wrapper  js-content-wrapper overflow-hidden">
         <PageLinks dark={undefined} />
 
         <CoursePageHeader coursecount={coursecount} />
@@ -114,35 +84,21 @@ export default async function Courses(props: {
               <div className="col-xl-9 col-lg-8">
                 <div className="row y-gap-20 justify-between items-center mb-30">
                   <div className="col-auto">
-                    <div className="text-14 lh-12">
+                    {/* <div className="text-14 lh-12">
                       Showing{" "}
                       <span className="text-dark-1 fw-500">
-                        {filteredCourses.totalCount === 0 ? 0 : startItem}
-                        {filteredCourses.totalCount > 0 && endItem > startItem
-                          ? ` - ${endItem}`
-                          : ""}
+                        {coursesPerPage}
                       </span>{" "}
                       of{" "}
                       <span className="text-dark-1 fw-500">
                         {filteredCourses.totalCount}{" "}
                       </span>
                       courses
-                      {hasActiveFilters && (
-                        <span className="ml-10 text-purple-1">(filtered)</span>
-                      )}
-                    </div>
+                    </div> */}
+                    <div className="text-14 lh-12">Available Courses</div>
                   </div>
 
-                  <div className="col-auto">
-                    <div className="d-flex items-center gap-20">
-                      <CourseListPerPageDropDown />
-                      <div className="me-2 d-block lg:d-none"></div>
-                      <CourseListSortDropDown />
-                      <div className="d-none lg:d-block ml-10">
-                        <CourseSidebarMobileWrapper categories={data} />
-                      </div>
-                    </div>
-                  </div>
+                  <CourseListSortDropDown />
                 </div>
                 <Suspense
                   key={
@@ -157,19 +113,26 @@ export default async function Courses(props: {
                   }
                   fallback={<div>Loading...</div>}
                 >
-                  <CourseList coursesData={filteredCourses.courses} />
+                  <CourseList
+                    category={category}
+                    rating={rating}
+                    level={level}
+                    duration={duration}
+                    price={price}
+                    page={page}
+                    sort={sort}
+                    limit={coursesPerPage}
+                  />
                 </Suspense>
 
-                {filteredCourses.totalCount > 0 && (
-                  <div className="row justify-center pt-90 lg:pt-50">
-                    <div className="col-auto">
-                      <CourseListPagination
-                        totalCount={filteredCourses.totalCount}
-                        coursesPerPage={coursesPerPage}
-                      />
-                    </div>
+                <div className="row justify-center pt-90 lg:pt-50">
+                  <div className="col-auto">
+                    <CourseListPagination
+                      totalCount={filteredCourses.totalCount}
+                      coursesPerPage={coursesPerPage}
+                    />
                   </div>
-                )}
+                </div>
               </div>
             </div>
           </div>

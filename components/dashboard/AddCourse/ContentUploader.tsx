@@ -61,7 +61,7 @@ export default function ContentUploader({
 
       if (data.success) {
         // Additional metadata based on content type
-        let contentMetadata = { ...metadata };
+        const contentMetadata = { ...metadata };
 
         if (type === "VIDEO") {
           contentMetadata.duration = metadata.duration || 0; // In seconds

@@ -142,8 +142,10 @@ export default function InstructorTabsSwitching({
   // Helper function to parse time strings like "10:30 AM" or "2:00 PM"
   const parseTimeString = (timeString: string) => {
     const [timePart, modifier] = timeString.split(" ");
-    let [hours, minutes] = timePart.split(":").map(Number);
-
+    // let [hours, minutes] = timePart.split(":").map(Number);
+    const timeParts = timePart.split(":").map(Number);
+    let hours = timeParts[0];
+    const minutes = timeParts[1];
     if (modifier === "PM" && hours < 12) {
       hours += 12;
     } else if (modifier === "AM" && hours === 12) {
@@ -220,10 +222,10 @@ export default function InstructorTabsSwitching({
                     <br />
                     <br />
                     This course is aimed at people interested in UI/UX Design.
-                    We'll start from the very beginning and work all the way
-                    through, step by step. If you already have some UI/UX Design
-                    experience but want to get up to speed using Adobe XD then
-                    this course is perfect for you too!
+                    We&apos;ll start from the very beginning and work all the
+                    way through, step by step. If you already have some UI/UX
+                    Design experience but want to get up to speed using Adobe XD
+                    then this course is perfect for you too!
                     <br />
                     <br />
                     First, we will go over the differences between UX and UI
