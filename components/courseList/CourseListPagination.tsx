@@ -1,112 +1,109 @@
 "use client";
-import Link from "next/link";
+
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useMemo } from "react";
 
 export default function CourseListPagination({
   totalCount,
   coursesPerPage,
 }: {
   totalCount: number;
-
   coursesPerPage: number;
 }) {
-  const [prevBtn, setPrevbtn] = useState<boolean>(false);
-  const [nextBtn, setNextbtn] = useState<boolean>(false);
-
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  const numberofpages = Math.ceil(totalCount / coursesPerPage);
-  let pageCapacity = 3;
+  const currentPage = Number(searchParams.get("page") || 1);
+  const totalPages = Math.ceil(totalCount / coursesPerPage);
 
-  function handlePreviousPageButton(page: string) {
-    const params = new URLSearchParams(searchParams.toString());
+  // Generate pagination array based on current page and total pages
+  const paginationRange = useMemo(() => {
+    const maxPagesToShow = 5;
 
-    const pageNum = parseInt(page);
-
-    if (!page) {
-      setPrevbtn(true);
-    } else if (pageNum > 1) {
-      setNextbtn(false);
-      params.set("page", (pageNum - 1).toString());
-    } else {
-      setPrevbtn(true);
+    // If total pages are less than max pages to show, display all pages
+    if (totalPages <= maxPagesToShow) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
 
-    replace(`${pathname}?${params.toString()}`);
-  }
-
-  function handleNextPageButton(page: string | null) {
-    const params = new URLSearchParams(searchParams.toString());
-
-    const pageNum = parseInt(page);
-    if (!page) {
-      setNextbtn(false);
-      params.set("page", "2");
-    } else if (pageNum < numberofpages) {
-      setPrevbtn(false);
-      params.set("page", (pageNum + 1).toString());
-    } else {
-      // params.set("page", "5");
-      setNextbtn(true);
+    // Handle case when we're at the beginning
+    if (currentPage <= 3) {
+      return [1, 2, 3, 4, "...", totalPages];
     }
 
-    replace(`${pathname}?${params.toString()}`);
-  }
-
-  function handlePageChange(page: string) {
-    const params = new URLSearchParams(searchParams.toString());
-
-    if (page) {
-      console.log("Page: ", page);
-
-      params.set("page", page);
+    // Handle case when we're at the end
+    if (currentPage >= totalPages - 2) {
+      return [
+        1,
+        "...",
+        totalPages - 3,
+        totalPages - 2,
+        totalPages - 1,
+        totalPages,
+      ];
     }
-    replace(`${pathname}?${params.toString()}`);
-  }
+
+    // Handle case when we're in the middle
+    return [
+      1,
+      "...",
+      currentPage - 1,
+      currentPage,
+      currentPage + 1,
+      "...",
+      totalPages,
+    ];
+  }, [currentPage, totalPages]);
+
+  // Create URL for a specific page
+  const createPageURL = (pageNumber: number | string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", pageNumber.toString());
+    return `${pathname}?${params.toString()}`;
+  };
+
+  // Navigate to a specific page
+  const handlePageChange = (pageNumber: number | string) => {
+    if (typeof pageNumber === "number") {
+      replace(createPageURL(pageNumber));
+    }
+  };
 
   return (
     <div className="pagination -buttons">
       <button
-        className="pagination__button -prev "
-        disabled={prevBtn}
-        onClick={() => {
-          handlePreviousPageButton(searchParams.get("page"));
-        }}
+        className="pagination__button -prev"
+        disabled={currentPage <= 1}
+        onClick={() => handlePageChange(currentPage - 1)}
+        aria-label="Previous page"
       >
         <i className="icon icon-chevron-left"></i>
       </button>
 
-      {Array.from({ length: pageCapacity }, (_, i) => (
-        <div key={i} className="pagination__count">
-          <button
-            className={
-              searchParams.get("page") === (i + 1).toString()
-                ? "-count-is-active"
-                : ""
-            }
-            onClick={() => {
-              handlePageChange((i + 1).toString());
-            }}
-          >
-            {i + 1}
-          </button>
-        </div>
-      ))}
-
-      {totalCount > pageCapacity * 4 && searchParams.get("page") !== "4" && (
-        <span>...</span>
+      {paginationRange.map((page, i) =>
+        page === "..." ? (
+          <span key={`ellipsis-${i}`} className="pagination__ellipsis">
+            ...
+          </span>
+        ) : (
+          <div key={`page-${page}`} className="pagination__count">
+            <button
+              className={currentPage === page ? "-count-is-active" : ""}
+              onClick={() => handlePageChange(page)}
+              aria-label={`Page ${page}`}
+              aria-current={currentPage === page ? "page" : undefined}
+            >
+              {page}
+            </button>
+          </div>
+        )
       )}
 
       <button
-        disabled={nextBtn}
-        onClick={() => {
-          handleNextPageButton(searchParams.get("page"));
-          // console.log("Next ", searchParams.get("page"));
-        }}
+        disabled={currentPage >= totalPages}
+        onClick={() => handlePageChange(currentPage + 1)}
         className="pagination__button -next"
+        aria-label="Next page"
       >
         <i className="icon icon-chevron-right"></i>
       </button>

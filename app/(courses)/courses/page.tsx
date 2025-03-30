@@ -11,7 +11,12 @@ import { CourseWithCategory } from "@/components/CustomCourseList";
 import CourseListSortDropDown from "@/components/courseList/CourseListSortDropDown";
 import CourseListPagination from "@/components/courseList/CourseListPagination";
 
-import { Course } from "@prisma/client";
+import type { Course } from "@prisma/client";
+
+interface CourseDataProps {
+  coursesData: Course[];
+  totalCount: number;
+}
 
 export const metadata = {
   title: "Courses || Ynotedu - Professional LMS Online Education ",
@@ -56,12 +61,9 @@ export default async function Courses(props: {
   if (duration) queryString += `duration=${duration}&`;
 
   queryString += `page=${page}&limit=${coursesPerPage}&sort=${sort}`;
-  // console.log("final Query string: ", queryString);
 
   const neres = await fetch(queryString);
-  const coursesData: Course[] = await neres.json();
-
-  // console.log(coursesData);
+  const filteredCourses: CourseDataProps = await neres.json();
 
   return (
     <div className="main-content  ">
@@ -80,17 +82,18 @@ export default async function Courses(props: {
               </div>
 
               <div className="col-xl-9 col-lg-8">
-                {/* <CourseListSortDropDown /> */}
                 <div className="row y-gap-20 justify-between items-center mb-30">
                   <div className="col-auto">
                     <div className="text-14 lh-12">
-                      {/* Showing */}
+                      Showing{" "}
                       <span className="text-dark-1 fw-500">
-                        {" "}
-                        Available Courses
+                        {coursesPerPage}
+                      </span>{" "}
+                      of{" "}
+                      <span className="text-dark-1 fw-500">
+                        {filteredCourses.totalCount}{" "}
                       </span>
-                      {/* total
-                      results */}
+                      courses
                     </div>
                   </div>
 
@@ -124,7 +127,7 @@ export default async function Courses(props: {
                 <div className="row justify-center pt-90 lg:pt-50">
                   <div className="col-auto">
                     <CourseListPagination
-                      totalCount={coursesData.totalCount}
+                      totalCount={filteredCourses.totalCount}
                       coursesPerPage={coursesPerPage}
                     />
                   </div>
