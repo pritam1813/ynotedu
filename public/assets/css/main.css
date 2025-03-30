@@ -6688,11 +6688,31 @@ h1, h2, h3, h4, h5, h6 {
   opacity: 0;
 }
 
+.pagination.-buttons .pagination__count button::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  width: 16px;
+  height: 2px;
+  transform: translateX(-50%);
+  background-color: var(--color-purple-1);
+  transition: all 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
+  opacity: 0;
+}
+
 .pagination.-buttons .pagination__count a.-count-is-active {
   color: var(--color-purple-1);
 }
 
+.pagination.-buttons .pagination__count button.-count-is-active {
+  color: var(--color-purple-1);
+}
+
 .pagination.-buttons .pagination__count a.-count-is-active::after {
+  opacity: 1;
+}
+.pagination.-buttons .pagination__count button.-count-is-active::after {
   opacity: 1;
 }
 

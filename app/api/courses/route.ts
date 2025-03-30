@@ -22,6 +22,8 @@ const courseSchema = zfd.formData({
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
+
+    // Extract filter parameters
     const category = searchParams.get("category");
     const level = searchParams.get("level");
     const language = searchParams.get("language");
@@ -29,18 +31,21 @@ export async function GET(request: NextRequest) {
     const rating = searchParams.get("rating");
     const duration = searchParams.get("duration");
 
-    const priceValue = price ? parseFloat(price) : undefined;
-    const ratingValue = rating ? parseFloat(rating) : undefined;
-    const durationValue = duration ? parseInt(duration) : undefined;
-    const categoryId = category ? parseInt(category) : undefined;
+    // Extract pagination parameters
+    const pageParam = searchParams.get("page");
+    const limitParam = searchParams.get("limit");
+    const sortOption = searchParams.get("sort") || "newest";
+
+    const page = pageParam ? parseInt(pageParam) : 1;
+    const limit = limitParam ? parseInt(limitParam) : 9;
+    const skip = (page - 1) * limit;
 
     // Build the where clause conditionally based on available parameters
     const whereClause: any = {};
 
     if (category) {
       whereClause.category = {
-        // label: category,
-        id: categoryId,
+        id: parseInt(category),
       };
     }
 
@@ -52,32 +57,86 @@ export async function GET(request: NextRequest) {
       whereClause.language = language;
     }
 
-    if (priceValue !== undefined) {
-      whereClause.price = {
-        lte: priceValue,
-      };
+    if (price !== null) {
+      const priceValue = price ? parseFloat(price) : undefined;
+      if (priceValue !== undefined) {
+        whereClause.price = {
+          lte: priceValue,
+        };
+      }
     }
 
-    if (ratingValue !== undefined) {
-      whereClause.rating = {
-        gte: ratingValue,
-      };
+    if (rating !== null) {
+      const ratingValue = rating ? parseFloat(rating) : undefined;
+      if (ratingValue !== undefined) {
+        whereClause.rating = {
+          gte: ratingValue,
+        };
+      }
     }
 
-    if (durationValue !== undefined) {
-      whereClause.duration = {
-        lte: durationValue,
-      };
+    if (duration !== null) {
+      const durationValue = duration ? parseInt(duration) : undefined;
+      if (durationValue !== undefined) {
+        whereClause.duration = {
+          lte: durationValue,
+        };
+      }
     }
 
+    // Build the orderBy clause based on sortOption
+    let orderBy: any = {};
+    switch (sortOption) {
+      case "newest":
+        orderBy = { createdAt: "desc" };
+        break;
+      case "oldest":
+        orderBy = { createdAt: "asc" };
+        break;
+      case "popular":
+        orderBy = { students: "desc" };
+        break;
+      case "price-low":
+        orderBy = { price: "asc" };
+        break;
+      case "price-high":
+        orderBy = { price: "desc" };
+        break;
+      case "rating":
+        orderBy = { rating: "desc" };
+        break;
+      default:
+        orderBy = { createdAt: "desc" };
+    }
+
+    // Get total count of filtered courses (for pagination)
+    const totalCount = await prisma.course.count({
+      where: whereClause,
+    });
+
+    // Get the courses with pagination
     const courses = await prisma.course.findMany({
       where: whereClause,
       include: {
-        instructor: true,
+        instructor: {
+          select: {
+            name: true,
+            image: true,
+          },
+        },
         category: true,
       },
+      orderBy,
+      skip,
+      take: limit,
     });
-    return NextResponse.json(courses);
+
+    return NextResponse.json({
+      courses,
+      totalCount,
+      currentPage: page,
+      totalPages: Math.ceil(totalCount / limit),
+    });
   } catch (error) {
     console.error("Error fetching Courses:", error);
     return NextResponse.json(
