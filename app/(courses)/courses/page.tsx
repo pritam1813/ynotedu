@@ -5,6 +5,7 @@ import { getBaseUrl } from "@/utils/getBaseUrl";
 
 import CoursePageHeader from "@/components/courseList/CoursePageHeader";
 import CoursesSideBar from "@/components/courseList/CoursesSideBar";
+
 import CourseList from "@/components/courseList/CourseList";
 import {
   CourseWithCategory,
@@ -14,6 +15,7 @@ import {
 import CourseListSortDropDown from "@/components/courseList/CourseListSortDropDown";
 import CourseListPerPageDropDown from "@/components/courseList/CourseListPerPageDropDown";
 import CourseListPagination from "@/components/courseList/CourseListPagination";
+import CourseSidebarMobileWrapper from "@/components/courseList/CourseSidebarMobileWrapper";
 
 interface CourseDataProps {
   courses: CourseWithInstructor[];
@@ -91,9 +93,11 @@ export default async function Courses(props: {
   const itemsShowing =
     filteredCourses.totalCount > 0 ? endItem - startItem + 1 : 0;
 
+  const hasActiveFilters = category || rating || level || duration || price;
+
   return (
-    <div className="main-content  ">
-      <div className="content-wrapper  js-content-wrapper overflow-hidden">
+    <div className="main-content">
+      <div className="content-wrapper js-content-wrapper overflow-hidden">
         <PageLinks dark={undefined} />
 
         <CoursePageHeader coursecount={coursecount} />
@@ -123,14 +127,20 @@ export default async function Courses(props: {
                         {filteredCourses.totalCount}{" "}
                       </span>
                       courses
+                      {hasActiveFilters && (
+                        <span className="ml-10 text-purple-1">(filtered)</span>
+                      )}
                     </div>
                   </div>
 
                   <div className="col-auto">
                     <div className="d-flex items-center gap-20">
                       <CourseListPerPageDropDown />
-                      <div className="me-2"></div>
+                      <div className="me-2 d-block lg:d-none"></div>
                       <CourseListSortDropDown />
+                      <div className="d-none lg:d-block ml-10">
+                        <CourseSidebarMobileWrapper categories={data} />
+                      </div>
                     </div>
                   </div>
                 </div>

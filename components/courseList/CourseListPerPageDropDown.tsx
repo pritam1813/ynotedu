@@ -37,7 +37,7 @@ export default function CourseListPerPageDropDown() {
   }
 
   return (
-    <div className="col-auto">
+    <div className="col-auto d-block lg:d-none">
       <div className="d-flex items-center">
         <div className="text-14 lh-12 fw-500 text-dark-1 mr-20">Show:</div>
 
