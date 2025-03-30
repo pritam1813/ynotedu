@@ -14,8 +14,11 @@ export default function CourseListPagination({
   const pathname = usePathname();
   const { replace } = useRouter();
 
+  // Get the current page from URL params, default to 1
   const currentPage = Number(searchParams.get("page") || 1);
-  const totalPages = Math.ceil(totalCount / coursesPerPage);
+
+  // Calculate total pages
+  const totalPages = Math.max(1, Math.ceil(totalCount / coursesPerPage));
 
   // Generate pagination array based on current page and total pages
   const paginationRange = useMemo(() => {
@@ -58,6 +61,13 @@ export default function CourseListPagination({
   // Create URL for a specific page
   const createPageURL = (pageNumber: number | string) => {
     const params = new URLSearchParams(searchParams.toString());
+
+    // Validate page number is valid before setting
+    if (typeof pageNumber === "number") {
+      if (pageNumber < 1) pageNumber = 1;
+      if (pageNumber > totalPages) pageNumber = totalPages;
+    }
+
     params.set("page", pageNumber.toString());
     return `${pathname}?${params.toString()}`;
   };
@@ -65,9 +75,14 @@ export default function CourseListPagination({
   // Navigate to a specific page
   const handlePageChange = (pageNumber: number | string) => {
     if (typeof pageNumber === "number") {
+      // Ensure page number is within valid range
+      if (pageNumber < 1 || pageNumber > totalPages) return;
       replace(createPageURL(pageNumber));
     }
   };
+
+  // Don't render pagination if there's only one page
+  if (totalPages <= 1) return null;
 
   return (
     <div className="pagination -buttons">
@@ -89,7 +104,7 @@ export default function CourseListPagination({
           <div key={`page-${page}`} className="pagination__count">
             <button
               className={currentPage === page ? "-count-is-active" : ""}
-              onClick={() => handlePageChange(page)}
+              onClick={() => handlePageChange(page as number)}
               aria-label={`Page ${page}`}
               aria-current={currentPage === page ? "page" : undefined}
             >

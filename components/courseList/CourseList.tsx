@@ -2,55 +2,18 @@ import React from "react";
 import Image from "next/image";
 import Star from "../common/Star";
 import Link from "next/link";
-import { getBaseUrl } from "@/utils/getBaseUrl";
 import { CourseWithInstructor } from "../CustomCourseList";
 
 interface CourseListProps {
-  category: string;
-  rating: number;
-  level: string;
-  duration: number;
-  price: number;
-  page: string;
-  sort: string;
-  limit: number;
+  coursesData: CourseWithInstructor[];
 }
 
-interface CourseDataProps {
-  courses: CourseWithInstructor[];
-}
-
-export default async function CourseList({
-  category,
-  rating,
-  level,
-  duration,
-  price,
-  page,
-  sort,
-  limit,
-}: CourseListProps) {
-  let queryString = `${getBaseUrl()}/api/courses?`;
-
-  if (category) queryString += `category=${category}&`;
-  if (level) queryString += `level=${level}&`;
-  if (rating) queryString += `rating=${rating}&`;
-  if (price) queryString += `price=${price}&`;
-  if (duration) queryString += `duration=${duration}&`;
-
-  queryString += `page=${page}&limit=${limit.toString()}&sort=${sort}`;
-  // console.log("final Query string: ", queryString);
-
-  const res = await fetch(queryString);
-  const coursesData: CourseDataProps = await res.json();
-
-  // console.log(coursesData);
-
+export default function CourseList({ coursesData }: CourseListProps) {
   return (
     <div className="row y-gap-30 side-content__wrap">
-      {coursesData.courses.length > 0 ? (
+      {coursesData.length > 0 ? (
         <>
-          {coursesData.courses.map((elm, i) => (
+          {coursesData.map((elm, i) => (
             <div
               key={i}
               className="side-content col-xl-4 col-lg-6 col-md-4 col-sm-6"
