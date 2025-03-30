@@ -69,7 +69,8 @@ export default function PinContent({
               width={368}
               height={238}
               className="w-1/1"
-              src={course?.thumbnail || "/assets/img/coursesCards/9.png"}
+              // src={course?.thumbnail || "/assets/img/coursesCards/9.png"}
+              src="/assets/img/coursesCards/9.png"
               alt={course?.title || "Course thumbnail"}
             />
             <div className="absolute-full-center d-flex justify-center items-center">

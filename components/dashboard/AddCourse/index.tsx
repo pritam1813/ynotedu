@@ -13,12 +13,14 @@ export default async function AddCourse() {
   // };
   const res = await fetch(`${getBaseUrl()}/api/courses/categories`);
   const categories: Category[] = await res.json();
-  const userRole = await checkRole("instructor");
-  let instructorId: null | string = null;
-  if (userRole) {
-    const user = await currentUser();
-    instructorId = user.id;
-  }
+
+  //WIll use later
+  // const userRole = await checkRole("instructor");
+  // let instructorId: null | string = null;
+  // if (userRole) {
+  //   const user = await currentUser();
+  //   instructorId = user.id;
+  // }
   return (
     <div className="dashboard__main">
       <div className="dashboard__content bg-light-4">
@@ -41,7 +43,7 @@ export default async function AddCourse() {
               <div className="py-30 px-30">
                 <CreateCourseForm
                   AvailableCategories={categories}
-                  Instructor={instructorId}
+                  Instructor="78"
                 />
 
                 <div className="row y-gap-20 justify-between pt-15">
