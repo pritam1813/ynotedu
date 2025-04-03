@@ -156,10 +156,10 @@ export default function Menu() {
             <li className="menu-item-has-children">
               <Link
                 data-barba
-                href="/blogs"
+                href="/instructors"
                 className={menuItem == "Blogs" ? "activeMenu" : ""}
               >
-                Blog
+                Instructors
                 {/* <i className="icon-chevron-right text-13 ml-10"></i> */}
               </Link>
             </li>
@@ -190,14 +190,14 @@ export default function Menu() {
                     {/* <div className="icon-chevron-right text-11"></div> */}
                   </Link>
 
-                  <ul className="subnav">
+                  {/* <ul className="subnav">
                     <li className="menu__backButton js-nav-list-back">
                       <Link href="/about">
                         <i className="icon-chevron-left text-13 mr-10"></i>
                         About Us
                       </Link>
                     </li>
-                  </ul>
+                  </ul> */}
                 </li>
 
                 <li className="menu-item-has-children">
@@ -208,6 +208,18 @@ export default function Menu() {
                     }
                   >
                     Contact
+                    {/* <div className="icon-chevron-right text-11"></div> */}
+                  </Link>
+                </li>
+
+                <li className="menu-item-has-children">
+                  <Link
+                    href="/blogs"
+                    className={
+                      submenu == "blogs" ? "activeMenu" : "inActiveMenu"
+                    }
+                  >
+                    Blogs
                     {/* <div className="icon-chevron-right text-11"></div> */}
                   </Link>
                 </li>
@@ -231,7 +243,7 @@ export default function Menu() {
               </ul>
             </li>
 
-            <li>
+            {/* <li>
               <Link
                 data-barba
                 href="/contact"
@@ -241,7 +253,7 @@ export default function Menu() {
               >
                 Contact
               </Link>
-            </li>
+            </li> */}
           </ul>
         </div>
 
