@@ -23,8 +23,7 @@ export default function CourseCard({ data }: { data: CourseWithInstructor }) {
                 height={500}
                 style={{ height: "100%", width: "100%" }}
                 className="w-1/1"
-                // src={data.thumbnail}
-                src="/assets/img/coursesCards/6.png"
+                src={data.thumbnail}
                 alt="image"
               />
               <div className="coursesCard__image_overlay rounded-8"></div>

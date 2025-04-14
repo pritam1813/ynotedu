@@ -62,8 +62,7 @@ export default async function CourseList({
                       width={530}
                       height={370}
                       className="w-1/1"
-                      // src={elm.thumbnail}
-                      src="/assets/img/coursesCards/6.png"
+                      src={elm.thumbnail}
                       alt="image"
                     />
                     <div className="coursesCard__image_overlay rounded-8"></div>
