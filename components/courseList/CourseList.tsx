@@ -1,9 +1,9 @@
 import React from "react";
 import Image from "next/image";
-import Star from "../common/Star";
 import Link from "next/link";
 import { getBaseUrl } from "@/utils/getBaseUrl";
 import { CourseWithInstructor } from "../CustomCourseList";
+import RatingStar from "../common/RatingStar";
 
 interface CourseListProps {
   category: string;
@@ -97,13 +97,9 @@ export default async function CourseList({
                       {elm.rating}
                     </div>
                     <div className="d-flex x-gap-5 items-center">
-                      <Star
-                        star={elm.rating}
-                        textSize={undefined}
-                        textColor={undefined}
-                      />
+                      <RatingStar rating={Math.floor(elm.rating)} />
                     </div>
-                    <div className="text-13 lh-1 ml-10">({elm.rating})</div>
+                    <div className="text-13 lh-1 ml-10">({elm.reviews})</div>
                   </div>
 
                   <div className="text-17 lh-15 fw-500 text-dark-1 mt-10">
