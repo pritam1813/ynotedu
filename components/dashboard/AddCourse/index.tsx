@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Curriculum from "./Curriculum";
 import FileUploader from "./FileUploader";
 import CreateCourseForm from "./CreateCourseForm";
@@ -6,13 +6,17 @@ import { getBaseUrl } from "@/utils/getBaseUrl";
 import type { Category } from "@prisma/client";
 import { checkRole } from "@/utils/roles";
 import { currentUser } from "@clerk/nextjs/server";
+import SampleForm from "./SampleForm";
+import CreateCourseFormWrapper from "./CreateCourseFormWrapper";
 
-export default async function AddCourse() {
+interface PageProps {
+  searchParams: { courseid?: string };
+}
+
+export default async function AddCourse({ courseId }: { courseId: string }) {
   // const handleSubmit = (e) => {
   //   e.preventDefault();
   // };
-  const res = await fetch(`${getBaseUrl()}/api/courses/categories`);
-  const categories: Category[] = await res.json();
 
   //WIll use later
   // const userRole = await checkRole("instructor");
@@ -41,12 +45,17 @@ export default async function AddCourse() {
               </div>
 
               <div className="py-30 px-30">
-                <CreateCourseForm
+                <Suspense key={courseId}>
+                  <CreateCourseFormWrapper courseId={courseId} />
+                </Suspense>
+                {/* <CreateCourseForm
                   AvailableCategories={categories}
                   Instructor="78"
-                />
+                  existingCourse={existingCourse}
+                  isEditing={!!courseId}
+                /> */}
 
-                <div className="row y-gap-20 justify-between pt-15">
+                {/* <div className="row y-gap-20 justify-between pt-15">
                   <div className="col-auto">
                     <button className="button -md -outline-purple-1 text-purple-1">
                       Prev
@@ -58,7 +67,7 @@ export default async function AddCourse() {
                       Next
                     </button>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

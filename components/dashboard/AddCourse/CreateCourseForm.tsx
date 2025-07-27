@@ -1,15 +1,68 @@
-import React from "react";
+"use client";
+import React, { useActionState, useEffect } from "react";
 import type { Category } from "@prisma/client";
+import { saveDraftCourse, updateCourse } from "@/app/actions/courseActions";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import toast, { Toaster } from "react-hot-toast";
+
+const initialState = {
+  errors: undefined,
+  success: false,
+  message: "",
+};
+
+interface ExistingCourse {
+  id: string;
+  title: string;
+  description: string;
+  level: string;
+  language: string;
+  categoryId: string;
+  // Add other fields as needed
+}
 
 export default function CreateCourseForm({
   AvailableCategories,
   Instructor,
+  existingCourse,
+  isEditing = false,
 }: {
   AvailableCategories: Category[];
   Instructor: string;
+  existingCourse?: ExistingCourse | null;
+  isEditing?: boolean;
 }) {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
+  const action = isEditing ? updateCourse : saveDraftCourse;
+  const [state, formAction] = useActionState(action, initialState);
+  const params = new URLSearchParams(searchParams);
+
+  useEffect(() => {
+    if (state.success) {
+      if (state.message != "") {
+        params.set("courseid", state.message.split("CourseId: ")[1]);
+      } else {
+        params.delete("courseid");
+      }
+      replace(`${pathname}?${params.toString()}`);
+    }
+
+    if (state?.message) {
+      state?.success
+        ? toast.success(state?.message.split(". CourseId:")[0])
+        : toast.error(state?.message);
+    }
+  }, [state]);
+
   return (
-    <form className="contact-form row y-gap-30" action="#">
+    <form className="contact-form row y-gap-30" action={formAction}>
+      <Toaster position="top-center" />
+      {isEditing && existingCourse && (
+        <input type="hidden" name="courseId" value={existingCourse.id} />
+      )}
+
       <div className="col-12">
         <label className="text-16 lh-1 fw-500 text-dark-1 mb-10">
           Course Title*
@@ -20,16 +73,9 @@ export default function CreateCourseForm({
           type="text"
           placeholder="Learn Figma - UI/UX Design Essential Training"
           name="title"
+          defaultValue={existingCourse?.title || ""}
         />
       </div>
-
-      {/* <div className="col-12">
-        <label className="text-16 lh-1 fw-500 text-dark-1 mb-10">
-          Short Description*
-        </label>
-
-        <textarea required placeholder="Description" rows={7}></textarea>
-      </div> */}
 
       <div className="col-12">
         <label className="text-16 lh-1 fw-500 text-dark-1 mb-10">
@@ -41,32 +87,20 @@ export default function CreateCourseForm({
           placeholder="Description"
           rows={7}
           name="description"
+          defaultValue={existingCourse?.description || ""}
         ></textarea>
       </div>
-
-      {/* <div className="col-md-6">
-        <label className="text-16 lh-1 fw-500 text-dark-1 mb-10">
-          What will students learn in your course?*
-        </label>
-
-        <textarea required placeholder="Description" rows={7}></textarea>
-      </div> */}
-
-      {/* <div className="col-md-6">
-        <label className="text-16 lh-1 fw-500 text-dark-1 mb-10">
-          Requirements*
-        </label>
-
-        <textarea required placeholder="Description" rows={7}></textarea>
-      </div> */}
 
       <div className="col-md-6">
         <label className="text-16 lh-1 fw-500 text-dark-1 mb-10">
           Course Level*
         </label>
 
-        {/* <input required type="text" placeholder="Select" /> */}
-        <select name="level" id="CourseLevel">
+        <select
+          name="level"
+          id="CourseLevel"
+          defaultValue={existingCourse?.level || "BEGINNER"}
+        >
           <option value="BEGINNER">Beginner</option>
           <option value="INTERMEDIATE">Intermediate</option>
           <option value="ADVANCED">Advanced</option>
@@ -78,35 +112,47 @@ export default function CreateCourseForm({
           Audio Language*
         </label>
 
-        {/* <input required type="text" placeholder="Select" /> */}
-        <select name="language" id="CourseLanguage">
+        <select
+          name="language"
+          id="CourseLanguage"
+          defaultValue={existingCourse?.language || "English"}
+        >
           <option value="English">English</option>
           <option value="Hindi">Hindi</option>
           <option value="Bengali">Bengali</option>
         </select>
       </div>
 
-      {/* <div className="col-md-6">
-        <label className="text-16 lh-1 fw-500 text-dark-1 mb-10">
-          Close Caption*
-        </label>
-
-        <input required type="text" placeholder="Select" />
-      </div> */}
-
       <div className="col-md-6">
         <label className="text-16 lh-1 fw-500 text-dark-1 mb-10">
           Course Category*
         </label>
 
-        {/* <input required type="text" placeholder="Select" /> */}
-        <select name="category" id="Category">
+        <select
+          name="categoryId"
+          id="Category"
+          defaultValue={existingCourse?.categoryId || ""}
+        >
           {AvailableCategories.map((category) => (
             <option key={category.id} value={category.id}>
               {category.label}
             </option>
           ))}
         </select>
+      </div>
+      <input type="hidden" name="instructorId" value={Instructor} />
+      <div className="row y-gap-20 justify-between pt-15">
+        <div className="col-auto">
+          <button className="button -md -outline-purple-1 text-purple-1">
+            Reset
+          </button>
+        </div>
+
+        <div className="col-auto">
+          <button className="button -md -purple-1 text-white" type="submit">
+            {isEditing ? "Update" : "Next"}
+          </button>
+        </div>
       </div>
     </form>
   );

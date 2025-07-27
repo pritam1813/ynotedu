@@ -20,6 +20,15 @@ const courseSchema = z.object({
   instructorId: z.number(),
 });
 
+const dratfCourseSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  level: z.string(),
+  language: z.string(),
+  categoryId: z.number(),
+  instructorId: z.number(),
+});
+
 export type CourseFormData = z.infer<typeof courseSchema>;
 
 export async function createCourse(data: CourseFormData) {
@@ -138,4 +147,113 @@ export async function addContentItem(
   } catch (error) {
     return { success: false, error: "Failed to add content item" };
   }
+}
+
+export type FormState = {
+  errors?: z.ZodIssue[];
+  success?: boolean;
+  message?: string;
+};
+
+export async function saveDraftCourse(
+  prevState: FormState,
+  formData: FormData
+): Promise<FormState> {
+  try {
+    const formValues = Object.fromEntries(formData);
+
+    const parsedValues = {
+      ...formValues,
+      categoryId: Number(formValues.categoryId),
+      instructorId: Number(formValues.instructorId),
+    };
+
+    const result = dratfCourseSchema.safeParse(parsedValues);
+
+    // const { categoryId, instructorId, title, description, level, language } =
+    //   result.data;
+    console.log(result);
+
+    // const course = await prisma.course.create({
+    //   data: {
+    //     title,
+    //     description,
+    //     level,
+    //     language,
+    //     thumbnail: "",
+    //     rating: 0,
+    //     reviews: 0,
+    //     duration: 0,
+    //     price: 0,
+    //     lessons: 0,
+    //     students: 0,
+    //     categoryId,
+    //     instructorId,
+    //   },
+    // });
+    // revalidatePath('/drafts');
+
+    return { success: true, message: `Course Saved to draft. CourseId: 10` };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      // Handle validation errors
+      console.error("Validation failed:");
+      for (const issue of error.errors) {
+        console.error(`- ${issue.path.join(".")}: ${issue.message}`);
+      }
+    } else {
+      // Handle other unexpected errors
+      console.error("Unexpected error:", error);
+    }
+    return { success: false };
+  }
+}
+
+export async function updateCourse(
+  prevState: FormState,
+  formData: FormData
+): Promise<FormState> {
+  const courseId = formData.get("courseId") as string;
+
+  try {
+    // Your update logic here
+    const updatedCourse = await prisma.course.update({
+      where: { id: Number(courseId) },
+      data: {
+        title: formData.get("title") as string,
+        description: formData.get("description") as string,
+        level: formData.get("level") as string,
+        language: formData.get("language") as string,
+        // categoryId: formData.get('categoryId') as string,
+      },
+    });
+
+    return {
+      success: true,
+      message: "Course updated successfully!",
+      errors: undefined,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Failed to update course",
+      // errors: { general: "Update failed" },
+    };
+  }
+}
+
+export async function submitSampleForm(prevState, formData) {
+  // Extract form data
+  const name = formData.get("name");
+  const description = formData.get("description");
+
+  // Save to database here
+  // await db.sampleFormData.create({ name, description });
+
+  // Return the form data to keep it in the form
+  return {
+    name,
+    description,
+    message: "Form submitted successfully!",
+  };
 }

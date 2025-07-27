@@ -11,7 +11,11 @@ export const metadata = {
     "Elevate your e-learning content with ynotedu, the most impressive LMS template for online courses, education and LMS platforms.",
 };
 
-export default function page() {
+export default async function page(props: {
+  searchParams?: Promise<{ courseid?: string }>;
+}) {
+  const searchParams = await props.searchParams;
+  const courseId = searchParams?.courseid || "";
   return (
     <div className="barba-container" data-barba="container">
       <main className="main-content">
@@ -25,7 +29,7 @@ export default function page() {
             <div className="dashboard__sidebar scroll-bar-1">
               <Sidebar />
             </div>
-            {/* <AddCourse /> */}
+            <AddCourse courseId={courseId} />
             {/* <Listing /> */}
           </div>
         </div>
