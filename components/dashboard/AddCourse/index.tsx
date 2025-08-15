@@ -6,8 +6,9 @@ import { getBaseUrl } from "@/utils/getBaseUrl";
 import type { Category } from "@prisma/client";
 import { checkRole } from "@/utils/roles";
 import { currentUser } from "@clerk/nextjs/server";
-import SampleForm from "./SampleForm";
 import CreateCourseFormWrapper from "./CreateCourseFormWrapper";
+import CourseSections from "./Curriculum";
+import CourseContentForm from "./Curriculum";
 
 interface PageProps {
   searchParams: { courseid?: string };
@@ -78,7 +79,9 @@ export default async function AddCourse({ courseId }: { courseId: string }) {
                 <h2 className="text-17 lh-1 fw-500">Curriculum</h2>
               </div>
 
-              <Curriculum />
+              {/* <Curriculum /> */}
+              {/* <CourseSections courseId={courseId} /> */}
+              <CourseContentForm courseId={courseId} />
             </div>
           </div>
           <FileUploader />

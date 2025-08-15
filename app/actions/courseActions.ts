@@ -170,30 +170,33 @@ export async function saveDraftCourse(
 
     const result = dratfCourseSchema.safeParse(parsedValues);
 
-    // const { categoryId, instructorId, title, description, level, language } =
-    //   result.data;
-    console.log(result);
+    const { categoryId, instructorId, title, description, level, language } =
+      result.data;
+    // console.log(result);
 
-    // const course = await prisma.course.create({
-    //   data: {
-    //     title,
-    //     description,
-    //     level,
-    //     language,
-    //     thumbnail: "",
-    //     rating: 0,
-    //     reviews: 0,
-    //     duration: 0,
-    //     price: 0,
-    //     lessons: 0,
-    //     students: 0,
-    //     categoryId,
-    //     instructorId,
-    //   },
-    // });
+    const course = await prisma.course.create({
+      data: {
+        title,
+        description,
+        level,
+        language,
+        thumbnail: "",
+        rating: 0,
+        reviews: 0,
+        duration: 0,
+        price: 0,
+        lessons: 0,
+        students: 0,
+        categoryId,
+        instructorId,
+      },
+    });
     // revalidatePath('/drafts');
 
-    return { success: true, message: `Course Saved to draft. CourseId: 10` };
+    return {
+      success: true,
+      message: `Course Saved to draft. CourseId: ${course.id}`,
+    };
   } catch (error) {
     if (error instanceof z.ZodError) {
       // Handle validation errors
@@ -215,25 +218,45 @@ export async function updateCourse(
 ): Promise<FormState> {
   const courseId = formData.get("courseId") as string;
 
+  const formValues = Object.fromEntries(formData);
+
+  const parsedValues = {
+    ...formValues,
+    categoryId: Number(formValues.categoryId),
+    instructorId: Number(formValues.instructorId),
+  };
+
+  const result = dratfCourseSchema.safeParse(parsedValues);
+
+  // const { categoryId, instructorId, title, description, level, language } =
+  //   result.data;
+
   try {
     // Your update logic here
     const updatedCourse = await prisma.course.update({
       where: { id: Number(courseId) },
       data: {
-        title: formData.get("title") as string,
-        description: formData.get("description") as string,
-        level: formData.get("level") as string,
-        language: formData.get("language") as string,
-        // categoryId: formData.get('categoryId') as string,
+        ...result.data,
       },
     });
 
     return {
       success: true,
-      message: "Course updated successfully!",
+      message: `Course updated successfully! CourseId: ${updatedCourse.id}`,
       errors: undefined,
     };
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      // Handle validation errors
+      console.error("Validation failed:");
+      for (const issue of error.errors) {
+        console.error(`- ${issue.path.join(".")}: ${issue.message}`);
+      }
+    } else {
+      // Handle other unexpected errors
+      console.error("Unexpected error:", error);
+    }
+
     return {
       success: false,
       message: "Failed to update course",
@@ -256,4 +279,50 @@ export async function submitSampleForm(prevState, formData) {
     description,
     message: "Form submitted successfully!",
   };
+}
+
+export async function submitCourseContent(formData: FormData) {
+  const courseId = formData.get("courseId");
+
+  // Parse the form data
+  const sections = [];
+  let sectionIndex = 0;
+
+  while (formData.get(`sections[${sectionIndex}][title]`)) {
+    const section = {
+      title: formData.get(`sections[${sectionIndex}][title]`),
+      description: formData.get(`sections[${sectionIndex}][description]`),
+      order: parseInt(
+        formData.get(`sections[${sectionIndex}][order]`) as string
+      ),
+      contents: [],
+    };
+
+    let contentIndex = 0;
+    while (
+      formData.get(`sections[${sectionIndex}][contents][${contentIndex}][type]`)
+    ) {
+      const content = {
+        title: formData.get(
+          `sections[${sectionIndex}][contents][${contentIndex}][title]`
+        ),
+        type: formData.get(
+          `sections[${sectionIndex}][contents][${contentIndex}][type]`
+        ),
+        // Add video, pdf, quiz data parsing here
+      };
+
+      section.contents.push(content);
+      contentIndex++;
+    }
+
+    sections.push(section);
+    sectionIndex++;
+  }
+
+  // Save to database using Prisma
+  console.log("Form data:", { courseId, sections });
+
+  // Return success/error
+  return { success: true };
 }

@@ -1,9 +1,9 @@
 "use client";
-import React, { useActionState, useEffect } from "react";
+import React, { useActionState, useEffect, useRef } from "react";
 import type { Category } from "@prisma/client";
 import { saveDraftCourse, updateCourse } from "@/app/actions/courseActions";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const initialState = {
   errors: undefined,
@@ -41,6 +41,7 @@ export default function CreateCourseForm({
 
   useEffect(() => {
     if (state.success) {
+      toast.success(state.message.split("CourseId: ")[0]);
       if (state.message != "") {
         params.set("courseid", state.message.split("CourseId: ")[1]);
       } else {
@@ -48,17 +49,11 @@ export default function CreateCourseForm({
       }
       replace(`${pathname}?${params.toString()}`);
     }
-
-    if (state?.message) {
-      state?.success
-        ? toast.success(state?.message.split(". CourseId:")[0])
-        : toast.error(state?.message);
-    }
   }, [state]);
 
   return (
     <form className="contact-form row y-gap-30" action={formAction}>
-      <Toaster position="top-center" />
+      {/* <Toaster position="top-center" /> */}
       {isEditing && existingCourse && (
         <input type="hidden" name="courseId" value={existingCourse.id} />
       )}
