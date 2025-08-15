@@ -1,13 +1,44 @@
-import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/client";
 import cloudinary from "@/lib/cloudinary";
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 
-export async function POST(request: NextRequest) {
+const courseIdSchema = z
+  .string()
+  .regex(/^\d+$/, "Course ID must be a valid number")
+  .transform(Number);
+
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const formData = await request.formData();
     const file = formData.get("file") as File;
 
     if (!file) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
+    }
+
+    const courseIdValidation = courseIdSchema.safeParse((await params).id);
+    if (!courseIdValidation.success) {
+      return NextResponse.json(
+        {
+          error: "Invalid course ID",
+          details: courseIdValidation.error.errors,
+        },
+        { status: 400 }
+      );
+    }
+    const courseId = courseIdValidation.data;
+
+    // Check if course exists
+    const course = await prisma.course.findUnique({
+      where: { id: courseId },
+    });
+
+    if (!course) {
+      return NextResponse.json({ error: "Course not found" }, { status: 404 });
     }
 
     // Convert file to buffer
@@ -36,16 +67,12 @@ export async function POST(request: NextRequest) {
 
     const uploadResult = result as any;
 
-    // console.log(uploadResult);
-
-    return NextResponse.json({
-      url: uploadResult.secure_url,
-      publicId: uploadResult.public_id,
-      width: uploadResult.width,
-      height: uploadResult.height,
-      format: uploadResult.format,
-      resourceType: uploadResult.resource_type,
+    const data = await prisma.course.update({
+      where: { id: courseId },
+      data: { thumbnail: uploadResult.url },
     });
+
+    return NextResponse.json({ status: 200 });
   } catch (error) {
     console.error("Upload error:", error);
     return NextResponse.json({ error: "Upload failed" }, { status: 500 });

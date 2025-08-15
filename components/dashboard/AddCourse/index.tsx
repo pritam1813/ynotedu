@@ -84,7 +84,7 @@ export default async function AddCourse({ courseId }: { courseId: string }) {
               <CourseContentForm courseId={courseId} />
             </div>
           </div>
-          <FileUploader />
+          <FileUploader courseId={courseId} />
           {/* <Media /> */}
         </div>
       </div>
