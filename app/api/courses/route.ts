@@ -30,6 +30,7 @@ export async function GET(request: NextRequest) {
     const price = searchParams.get("price");
     const rating = searchParams.get("rating");
     const duration = searchParams.get("duration");
+    const searchQuery = searchParams.get("search");
 
     // Extract pagination parameters
     const pageParam = searchParams.get("page");
@@ -55,6 +56,12 @@ export async function GET(request: NextRequest) {
 
     if (language) {
       whereClause.language = language;
+    }
+
+    if (searchQuery) {
+      whereClause.title = {
+        search: searchQuery,
+      };
     }
 
     if (price !== null) {

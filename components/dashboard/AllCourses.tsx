@@ -13,32 +13,32 @@ const ddItems = [
   { id: 5, label: "Business" },
 ];
 export default function MyCourses() {
-  const [currentCategory, setCurrentCategory] = useState("All Categories");
-  const [pageItems, setPageItems] = useState([]);
-  const [activeTab, setActiveTab] = useState(1);
-  const [pageData, setPageData] = useState(coursesData);
-  useEffect(() => {
-    if (activeTab == 1) {
-      setPageData(coursesData);
-    } else if (activeTab == 2) {
-      setPageData(coursesData.filter((elm) => elm.status == "Finished"));
-    } else if (activeTab == 3) {
-      setPageData(coursesData.filter((elm) => elm.status == "Not enrolled"));
-    }
-  }, [activeTab]);
+  // const [currentCategory, setCurrentCategory] = useState("All Categories");
+  // const [pageItems, setPageItems] = useState([]);
+  // const [activeTab, setActiveTab] = useState(1);
+  // const [pageData, setPageData] = useState(coursesData);
+  // useEffect(() => {
+  //   if (activeTab == 1) {
+  //     setPageData(coursesData);
+  //   } else if (activeTab == 2) {
+  //     setPageData(coursesData.filter((elm) => elm.status == "Finished"));
+  //   } else if (activeTab == 3) {
+  //     setPageData(coursesData.filter((elm) => elm.status == "Not enrolled"));
+  //   }
+  // }, [activeTab]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
-  useEffect(() => {
-    if (currentCategory == "All Categories") {
-      setPageItems(pageData);
-    } else {
-      setPageItems([
-        ...pageData.filter((elm) => elm.category == currentCategory),
-      ]);
-    }
-  }, [currentCategory, pageData]);
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  // };
+  // useEffect(() => {
+  //   if (currentCategory == "All Categories") {
+  //     setPageItems(pageData);
+  //   } else {
+  //     setPageItems([
+  //       ...pageData.filter((elm) => elm.category == currentCategory),
+  //     ]);
+  //   }
+  // }, [currentCategory, pageData]);
 
   return (
     <div className="dashboard__main">
@@ -46,9 +46,9 @@ export default function MyCourses() {
         <div className="row pb-50 mb-10">
           <div className="col-auto">
             <h1 className="text-30 lh-12 fw-700">All Courses</h1>
-            <div className="mt-10">
+            {/* <div className="mt-10">
               Lorem ipsum dolor sit amet, consectetur.
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -58,16 +58,17 @@ export default function MyCourses() {
               <div className="tabs -active-purple-2 js-tabs">
                 <div className="tabs__controls d-flex items-center pt-20 px-30 border-bottom-light js-tabs-controls">
                   <button
-                    className={`text-light-1 lh-12 tabs__button js-tabs-button ${
-                      activeTab == 1 ? "is-active" : ""
-                    } `}
+                    // className={`text-light-1 lh-12 tabs__button js-tabs-button ${
+                    //   activeTab == 1 ? "is-active" : ""
+                    // } `}
+                    className="text-light-1 lh-12 tabs__button js-tabs-button is-active"
                     data-tab-target=".-tab-item-1"
                     type="button"
-                    onClick={() => setActiveTab(1)}
+                    // onClick={() => setActiveTab(1)}
                   >
                     All Courses
                   </button>
-                  <button
+                  {/* <button
                     className={`text-light-1 lh-12 tabs__button js-tabs-button ml-30 ${
                       activeTab == 2 ? "is-active" : ""
                     } `}
@@ -86,7 +87,7 @@ export default function MyCourses() {
                     onClick={() => setActiveTab(3)}
                   >
                     Not enrolled
-                  </button>
+                  </button> */}
                 </div>
 
                 <div className="tabs__content py-30 px-30 js-tabs-content">
@@ -95,7 +96,7 @@ export default function MyCourses() {
                       <div className="col-auto">
                         <form
                           className="search-field border-light rounded-8 h-50"
-                          onSubmit={handleSubmit}
+                          // onSubmit={handleSubmit}
                         >
                           <input
                             required
@@ -129,11 +130,11 @@ export default function MyCourses() {
                                 data-el-toggle=".js-category-toggle"
                                 data-el-toggle-active=".js-category-active"
                               >
-                                <span className="js-dropdown-title">
+                                {/* <span className="js-dropdown-title">
                                   {currentCategory != "All Categories"
                                     ? currentCategory
                                     : "Categories"}
-                                </span>
+                                </span> */}
                                 <i className="icon text-9 ml-40 icon-chevron-down"></i>
                               </div>
 
@@ -142,7 +143,7 @@ export default function MyCourses() {
                                 className="toggle-element -dropdown -dark-bg-dark-2 -dark-border-white-10 js-click-dropdown js-category-toggle"
                               >
                                 <div className="text-14 y-gap-15 js-dropdown-list">
-                                  {ddItems.map((item, ind) => (
+                                  {/* {ddItems.map((item, ind) => (
                                     <div
                                       onClick={() =>
                                         setCurrentCategory(item.label)
@@ -161,7 +162,7 @@ export default function MyCourses() {
                                         {item.label}
                                       </span>
                                     </div>
-                                  ))}
+                                  ))} */}
                                 </div>
                               </div>
                             </div>
@@ -239,9 +240,9 @@ export default function MyCourses() {
                     </div>
 
                     <div className="row y-gap-30 pt-30">
-                      {pageItems.map((data, i) => (
+                      {/* {pageItems.map((data, i) => (
                         <CoursesCardDashboard data={data} key={i} />
-                      ))}
+                      ))} */}
                     </div>
 
                     <div className="row justify-center pt-30">
