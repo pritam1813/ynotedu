@@ -11,9 +11,13 @@ export interface CourseWithCategory extends Category {
   courses: CourseWithInstructor[];
 }
 
+export const revalidate = 3600;
+
 export default async function CustomCourseListHome() {
   const data = await fetch(`${getBaseUrl()}/api/courses/categories`);
   const categories: CourseWithCategory[] = await data.json();
+
+  // console.log(categories[0].courses);
 
   return (
     <section className="layout-pt-lg layout-pb-lg">
@@ -31,7 +35,13 @@ export default async function CustomCourseListHome() {
         </div>
       </div>
 
-      <CourseListCategoryWise categories={categories} />
+      {categories.length >= 0 && (
+        <CourseListCategoryWise
+          categories={categories.filter(
+            (catgory) => catgory.courses.length >= 7
+          )}
+        />
+      )}
     </section>
   );
 }
