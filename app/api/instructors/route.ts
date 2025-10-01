@@ -17,6 +17,15 @@ export async function GET(request: NextRequest) {
     const rating = searchParams.get("rating"); // Rating threshold (e.g., 4.0, 4.5)
     const sort = searchParams.get("sort"); // 'asc' or 'desc'
 
+    const pageParam = searchParams.get("page");
+    const limitParam = searchParams.get("limit");
+
+    const totalCount = await prisma.instructor.count();
+
+    const page = pageParam ? parseInt(pageParam) : 1;
+    const limit = limitParam ? parseInt(limitParam) : totalCount;
+    const skip = (page - 1) * limit;
+
     // Build the query
     const query: any = {
       include: {
@@ -69,9 +78,13 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch instructors from database
-    const instructors = await prisma.instructor.findMany(query);
+    const instructors = await prisma.instructor.findMany({
+      ...query,
+      skip,
+      take: limit,
+    });
 
-    return NextResponse.json(instructors, { status: 200 });
+    return NextResponse.json({ instructors, totalCount }, { status: 200 });
   } catch (error) {
     console.error("Error fetching instructors:", error);
     return NextResponse.json(

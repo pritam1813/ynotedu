@@ -24,6 +24,13 @@ export const sidebarItems: SidebarItem[] = [
     roles: ["admin", "instructor"],
   },
   {
+    id: 23,
+    href: "/dashboard/manageinstructor?page=1",
+    iconClass: "text-20 icon-play-button",
+    text: "Manage Instructor",
+    roles: ["admin"],
+  },
+  {
     id: 2,
     href: "/dshb-courses",
     iconClass: "text-20 icon-play-button",
