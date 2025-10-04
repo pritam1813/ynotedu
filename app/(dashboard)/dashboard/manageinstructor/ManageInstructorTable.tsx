@@ -13,7 +13,7 @@ export default async function ManageInstructorTable({
   const { instructors, totalCount } = data;
 
   const itemsPerPage = 5;
-  let currentPage = parseInt(page);
+  const currentPage = parseInt(page);
 
   const totalPages = Math.ceil(totalCount / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;

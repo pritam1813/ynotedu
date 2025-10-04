@@ -1,7 +1,7 @@
 import React from "react";
 import InstractorSingle from "@/components/aboutCourses/instractors/InstractorSingle";
 import PageLinks from "@/components/common/PageLinks";
-import { getBaseUrl } from "@/utils/getBaseUrl";
+import { prisma } from "@/lib/client";
 import type { Meeting, SocialProfile, Instructor } from "@prisma/client";
 
 export const metadata = {
@@ -16,14 +16,14 @@ export interface InstructorWithSocialProfile extends Instructor {
 }
 
 export const dynamicParams = true;
-export const revalidate = 60 * 60 * 24;
+export const revalidate = 3600;
 
 export async function generateStaticParams() {
-  const data = await fetch(`${getBaseUrl()}/api/instructors`).then((res) =>
-    res.json()
-  );
+  const instructors = await prisma.instructor.findMany({
+    select: { id: true },
+  });
 
-  return data.instructors.map((instructor: Instructor) => ({
+  return instructors.map((instructor) => ({
     id: instructor.id.toString(),
   }));
 }
@@ -35,9 +35,17 @@ export default async function Page({
 }) {
   const { id } = await params;
 
-  const data = await fetch(`${getBaseUrl()}/api/instructors/${id}`);
+  const instructor = await prisma.instructor.findUnique({
+    where: { id: parseInt(id) },
+    include: {
+      socialProfile: true,
+      meetings: true,
+    },
+  });
 
-  const instructor: InstructorWithSocialProfile = await data.json();
+  if (!instructor) {
+    throw new Error("Instructor not found");
+  }
 
   return (
     <div className="main-content">

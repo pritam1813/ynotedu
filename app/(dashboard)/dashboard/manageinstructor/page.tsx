@@ -9,7 +9,7 @@ export default async function ManageInstructor({
   searchParams: SearchParams;
 }) {
   const params = await searchParams;
-  let pageParam = params.page;
+  const pageParam = params.page;
 
   const page = Array.isArray(pageParam) ? pageParam[0] : pageParam ?? "1";
 
