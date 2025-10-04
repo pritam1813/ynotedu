@@ -15,7 +15,6 @@ export interface InstructorWithSocialProfile extends Instructor {
   meetings: Meeting[];
 }
 
-export const dynamicParams = true;
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
@@ -42,6 +41,8 @@ export default async function Page({
       meetings: true,
     },
   });
+
+  console.log("Ins: ", instructor);
 
   if (!instructor) {
     throw new Error("Instructor not found");
