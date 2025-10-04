@@ -9,63 +9,59 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendar, faClock } from "@fortawesome/free-solid-svg-icons";
 
 // Sample class schedule data
-const classScheduleData = [
+const dummyClassScheduleData = [
   {
     id: 1,
     title: "Chemistry",
-    date: new Date(Date.now() + 86400000 * 2), // 2 days from now
-    startTime: "10:00 AM",
-    endTime: "11:30 AM",
-    totalSlots: 10,
-    availableSlots: 2,
+    // date: new Date(Date.now() + 86400000 * 2), // 2 days from now
+    startTime: "2025-10-10T09:30:00.000Z",
+    duration: 120,
+    meetLink: "https://meet.google.com/12312",
+    status: "SCHEDULED",
+    // endTime: "11:30 AM",
+    // totalSlots: 10,
+    // availableSlots: 2,
   },
   {
     id: 2,
     title: "Physics",
-    date: new Date(), // Today (in progress)
-    startTime:
-      (new Date().getHours() % 12 || 12) +
-      ":" +
-      (new Date().getMinutes() < 10
-        ? "0" + new Date().getMinutes()
-        : new Date().getMinutes()) +
-      (new Date().getHours() >= 12 ? " PM" : " AM"),
-    endTime:
-      ((new Date().getHours() + 3) % 12 || 12) +
-      ":" +
-      (new Date().getMinutes() < 10
-        ? "0" + new Date().getMinutes()
-        : new Date().getMinutes()) +
-      (new Date().getHours() + 3 >= 12 ? " PM" : " AM"),
-    totalSlots: 8,
-    availableSlots: 2,
+    // date: new Date(), // Today (in progress)
+    startTime: "2025-10-12T09:30:00.000Z",
+    duration: 30,
+    meetLink: "https://meet.google.com/12312",
+    status: "SCHEDULED",
+    // totalSlots: 8,
+    // availableSlots: 2,
   },
   {
     id: 3,
     title: "Maths",
-    date: new Date(Date.now() + 86400000 * 5), // 5 days from now
-    startTime: "02:00 PM",
-    endTime: "04:00 PM",
-    totalSlots: 12,
-    availableSlots: 0,
+    startTime: "2025-10-13T09:30:00.000Z",
+    duration: 60,
+    meetLink: "https://meet.google.com/12312",
+    status: "CANCELLED",
+    // totalSlots: 12,
+    // availableSlots: 0,
   },
   {
     id: 4,
     title: "Biology",
-    date: new Date(Date.now() + 86400000), // Tomorrow
-    startTime: "11:00 AM",
-    endTime: "01:00 PM",
-    totalSlots: 15,
-    availableSlots: 2,
+    startTime: "2025-10-15T09:30:00.000Z",
+    duration: 90,
+    meetLink: "https://meet.google.com/12312",
+    status: "LIVE",
+    // totalSlots: 15,
+    // availableSlots: 2,
   },
   {
     id: 5,
     title: "Maths",
-    date: new Date(Date.now() + 86400000 * 7), // 7 days from now
-    startTime: "10:00 AM",
-    endTime: "12:30 PM",
-    totalSlots: 10,
-    availableSlots: 10,
+    startTime: "2025-10-15T09:30:00.000Z",
+    duration: 120,
+    meetLink: "https://meet.google.com/12312",
+    status: "SCHEDULED",
+    // totalSlots: 10,
+    // availableSlots: 10,
   },
 ];
 
@@ -76,6 +72,11 @@ export default function InstructorTabsSwitching({
 }) {
   const [activeTab, setActiveTab] = useState(1);
   const [currentTime, setCurrentTime] = useState(new Date());
+
+  let classScheduleData = [];
+
+  if (meetings.length > 0) classScheduleData = meetings;
+  else classScheduleData = dummyClassScheduleData;
 
   // Update current time every minute
   useEffect(() => {
@@ -164,6 +165,23 @@ export default function InstructorTabsSwitching({
       year: "numeric",
     });
   };
+
+  function getFormattedDate(isoDate: Date) {
+    return new Date(isoDate).toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  }
+
+  function getFormattedTime(isoDate: Date) {
+    return new Date(isoDate).toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  }
 
   return (
     <div className="layout-pt-md layout-pb-lg">
@@ -407,7 +425,7 @@ export default function InstructorTabsSwitching({
                                 />
                               </div>
                               <div className="text-14 lh-1 text-light-1">
-                                {formatDate(classItem.date)}
+                                {getFormattedDate(classItem.startTime)}
                               </div>
                             </div>
                             <div className="d-flex items-center mt-10">
@@ -419,12 +437,12 @@ export default function InstructorTabsSwitching({
                                 />
                               </div>
                               <div className="text-14 lh-1 text-light-1">
-                                {classItem.startTime} - {classItem.endTime}
+                                Starts: {getFormattedTime(classItem.startTime)}
                               </div>
                             </div>
                           </div>
 
-                          <div className="col-auto">
+                          {/* <div className="col-auto">
                             {classItem.availableSlots !== 0 && (
                               <div className="d-flex items-center">
                                 <div className="mr-10 text-14 lh-1 text-light-1">
@@ -433,11 +451,32 @@ export default function InstructorTabsSwitching({
                                 </div>
                               </div>
                             )}
-                          </div>
+                          </div> */}
 
                           <div className="col-auto">
+                            {classItem.status === "LIVE" ? (
+                              <Link
+                                href={`${classItem.meetLink}`}
+                                className="button -md -dark-1 text-white"
+                              >
+                                Attend Class
+                              </Link>
+                            ) : classItem.status === "SCHEDULED" ? (
+                              <Link href={`${classItem.meetLink}`}>
+                                <button className="button -md -purple-1 text-white">
+                                  Upcoming
+                                </button>
+                              </Link>
+                            ) : (
+                              <div className="px-15 py-8 rounded-200 bg-error-1">
+                                <span className="text-14 lh-1 fw-500 text-white">
+                                  Over
+                                </span>
+                              </div>
+                            )}
+
                             {/* Class #2 is forced to always show the Attend Class button */}
-                            {(i === 1 ||
+                            {/* {(i === 1 ||
                               isClassInProgress(
                                 classItem.date,
                                 classItem.startTime,
@@ -449,11 +488,11 @@ export default function InstructorTabsSwitching({
                               >
                                 Attend Class
                               </Link>
-                            )}
-                            {classItem.date > currentTime &&
+                            )} */}
+                            {/* {classItem.date > currentTime &&
                               classItem.availableSlots > 0 &&
                               i !== 1 && (
-                                /* Don't show Reserve button for class #2 */
+                                
                                 <button className="button -md -purple-1 text-white">
                                   Reserve Slot
                                 </button>
@@ -464,7 +503,7 @@ export default function InstructorTabsSwitching({
                                   Slots Full
                                 </span>
                               </div>
-                            )}
+                            )} */}
                           </div>
                         </div>
                       </div>

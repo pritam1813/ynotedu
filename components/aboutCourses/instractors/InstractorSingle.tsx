@@ -2,20 +2,13 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import InstructorTabsSwitching from "./InstructorTabsSwitching";
-import type { Instructor, Meeting, SocialProfile } from "@prisma/client";
-import { getBaseUrl } from "@/utils/getBaseUrl";
-// import "@/public/assets/sass/tabswitching.scss";
-// import "@/public/assets/css/tabswitching.css";
+import { InstructorWithSocialProfile } from "@/app/(aboutCourses)/instructors/[id]/page";
 
-interface InstructorWithSocialProfile extends Instructor {
-  socialProfile: SocialProfile[];
-  meetings: Meeting[];
-}
-
-export default async function InstractorSingle({ id }: { id: string }) {
-  const data = await fetch(`${getBaseUrl()}/api/instructors/${id}`);
-
-  const instructor: InstructorWithSocialProfile = await data.json();
+export default async function InstractorSingle({
+  instructor,
+}: {
+  instructor: InstructorWithSocialProfile;
+}) {
   // Check if instructor was not found
   if ("error" in instructor) {
     return (
