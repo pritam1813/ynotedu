@@ -42,12 +42,6 @@ export default async function Page({
     },
   });
 
-  console.log("Ins: ", instructor);
-
-  if (!instructor) {
-    throw new Error("Instructor not found");
-  }
-
   return (
     <div className="main-content">
       <div className="content-wrapper js-content-wrapper overflow-hidden">
