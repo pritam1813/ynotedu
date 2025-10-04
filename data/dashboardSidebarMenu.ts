@@ -47,7 +47,7 @@ export const sidebarItems: SidebarItem[] = [
   },
   {
     id: 19,
-    href: "/dshb-scheduleclass",
+    href: "/dashboard/scheduleclass",
     text: "Schedule Class",
     iconClass: "text-20 icon-list",
     roles: ["admin", "instructor"],

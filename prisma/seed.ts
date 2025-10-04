@@ -4,15 +4,43 @@ import { courseDummyData } from "../data/courseDummyData";
 
 const prisma = new PrismaClient();
 
+// Generate dummy users with Clerk-style IDs
+function generateDummyUsers(count: number) {
+  const dummyUsers = [];
+
+  for (let i = 0; i < count; i++) {
+    // Clerk user IDs typically look like: user_2xxxxxxxxxxxxxxxxxxxxx
+    const clerkStyleId = `user_seed_${Math.random()
+      .toString(36)
+      .substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`;
+
+    dummyUsers.push({
+      id: clerkStyleId,
+      firstName: `User${i + 1}`,
+      lastName: `Instructor${i + 1}`,
+      username: `instructor${i + 1}`,
+      bio: `Passionate educator with years of experience in teaching and mentoring students.`,
+      avatarUrl: `/assets/img/team/${(i % 8) + 1}.png`,
+    });
+  }
+
+  return dummyUsers;
+}
+
 async function main() {
   console.log("Starting seeding...");
 
-  // Delete existing data
+  // Delete existing data in correct order (respecting foreign key constraints)
   await prisma.course.deleteMany();
+  await prisma.meeting.deleteMany();
   await prisma.socialProfile.deleteMany();
   await prisma.categoryInstructor.deleteMany();
-  await prisma.category.deleteMany();
   await prisma.instructor.deleteMany();
+  await prisma.userProfile.deleteMany();
+  await prisma.user.deleteMany();
+  await prisma.category.deleteMany();
+
+  console.log("Cleared existing data");
 
   // Create categories
   const categories = [
@@ -50,12 +78,39 @@ async function main() {
     {}
   );
 
-  // Seed instructors
+  // Generate dummy users (one for each instructor)
+  const dummyUsers = generateDummyUsers(instructors.length);
+  console.log(`Generated ${dummyUsers.length} dummy users`);
+
+  // Seed instructors with dummy users
   const createdInstructors: Record<number, number> = {};
 
-  for (const instructor of instructors) {
+  for (let i = 0; i < instructors.length; i++) {
+    const instructor = instructors[i];
+    const dummyUser = dummyUsers[i];
+
+    // Create User with profile
+    const user = await prisma.user.create({
+      data: {
+        id: dummyUser.id,
+        profile: {
+          create: {
+            firstName: dummyUser.firstName,
+            lastName: dummyUser.lastName,
+            username: dummyUser.username,
+            bio: dummyUser.bio,
+            avatarUrl: dummyUser.avatarUrl,
+          },
+        },
+      },
+    });
+
+    console.log(`Created user: ${user.id} (${dummyUser.username})`);
+
+    // Create the Instructor linked to the user
     const createdInstructor = await prisma.instructor.create({
       data: {
+        userId: user.id,
         name: instructor.name,
         role: instructor.role,
         image: instructor.image,
@@ -87,7 +142,7 @@ async function main() {
     createdInstructors[instructor.id] = createdInstructor.id;
 
     console.log(
-      `Created instructor: ${createdInstructor.name} (ID: ${createdInstructor.id})`
+      `Created instructor: ${createdInstructor.name} (ID: ${createdInstructor.id}, UserID: ${user.id})`
     );
   }
 
@@ -172,6 +227,13 @@ async function main() {
 
   console.log(`Created ${courseCount} courses successfully!`);
   console.log("Seeding completed successfully!");
+  console.log("\nSummary:");
+  console.log(`- ${dummyUsers.length} users created`);
+  console.log(
+    `- ${Object.keys(createdInstructors).length} instructors created`
+  );
+  console.log(`- ${courseCount} courses created`);
+  console.log(`- ${createdCategories.length} categories created`);
 }
 
 main()

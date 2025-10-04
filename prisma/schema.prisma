@@ -15,20 +15,48 @@ datasource db {
 }
 
 model Instructor {
-  id             Int                  @id @default(autoincrement())
-  name           String
-  image          String
-  role           String
-  rating         Float
-  reviews        Int
-  students       Int
-  courses        Int
+  id     Int    @id @default(autoincrement())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+
+  name     String
+  image    String
+  role     String
+  rating   Float
+  reviews  Int
+  students Int
+  courses  Int
+
   categories     CategoryInstructor[]
   socialProfile  SocialProfile[]
   coursesCreated Course[]             @relation("InstructorCourses")
   meetings       Meeting[]            @relation("InstructorMeetings")
-  createdAt      DateTime             @default(now())
-  updatedAt      DateTime             @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id         String       @id
+  profile    UserProfile?
+  instructor Instructor?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+}
+
+model UserProfile {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+
+  firstName String?
+  lastName  String?
+  username  String? @unique
+  bio       String?
+  avatarUrl String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model SocialProfile {
@@ -81,20 +109,22 @@ model Course {
 }
 
 model Meeting {
-  id            Int           @id @default(autoincrement())
-  title         String
-  startTime     DateTime
-  duration      Int // Duration in minutes
-  description   String?
-  meetLink      String
+  id          Int      @id @default(autoincrement())
+  title       String
+  startTime   DateTime
+  duration    Int
+  description String?
+  meetLink    String
+
   status        MeetingStatus @default(SCHEDULED)
   courseId      Int?
   course        Course?       @relation("CourseMeetings", fields: [courseId], references: [id])
   instructorId  Int
   instructor    Instructor    @relation("InstructorMeetings", fields: [instructorId], references: [id])
-  googleEventId String? // Google Calendar event ID for syncing
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  googleEventId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum MeetingStatus {
