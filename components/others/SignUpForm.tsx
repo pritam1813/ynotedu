@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useSignUp } from "@clerk/nextjs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { OAuthStrategy } from "@clerk/types";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function SignUpForm() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -35,6 +35,7 @@ export default function SignUpForm() {
       // change the UI to our pending section.
       setPendingVerification(true);
     } catch (err) {
+      toast.error(err.errors[0].message);
       setPasswordError(err.errors[0].message);
       console.error(JSON.stringify(err, null, 2));
     }
@@ -61,11 +62,13 @@ export default function SignUpForm() {
         router.push("/");
       }
     } catch (err) {
+      toast.error(err.message);
       console.error(JSON.stringify(err, null, 2));
     }
   };
   return (
     <div className="form-page__content lg:py-50">
+      <Toaster position="top-right" />
       <div className="container">
         <div className="row justify-center items-center">
           <div className="col-xl-8 col-lg-9">

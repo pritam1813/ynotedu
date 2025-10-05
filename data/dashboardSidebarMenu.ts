@@ -75,10 +75,10 @@ export const sidebarItems: SidebarItem[] = [
   },
   {
     id: 7,
-    href: "/dshb-settings",
+    href: "/dashboard/settings",
     iconClass: "text-20 icon-setting",
     text: "Settings",
-    roles: ["admin"],
+    roles: ["admin", "student", "instructor"],
   },
 
   {
