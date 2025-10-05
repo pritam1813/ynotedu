@@ -11,7 +11,8 @@
     "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.12.9",
+    "@clerk/nextjs": "^6.33.2",
+    "@clerk/types": "^4.91.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",

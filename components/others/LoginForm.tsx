@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useSignIn } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { OAuthStrategy } from "@clerk/types";
 
 export default function LoginForm() {
   const { isLoaded, signIn, setActive } = useSignIn();
@@ -37,6 +38,24 @@ export default function LoginForm() {
       setErrorMessage(err.errors[0].message);
       console.error("error", err.errors[0].longMessage);
     }
+  };
+
+  const signInWith = (strategy: OAuthStrategy) => {
+    return signIn
+      .authenticateWithRedirect({
+        strategy,
+        redirectUrl: "/login/sso-callback",
+        redirectUrlComplete: "/login/tasks", // Learn more about session tasks at https://clerk.com/docs/guides/development/custom-flows/overview#session-tasks
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err: any) => {
+        // See https://clerk.com/docs/guides/development/custom-flows/error-handling
+        // for more info on error handling
+        console.log(err.errors);
+        console.error(err, null, 2);
+      });
   };
 
   return (
@@ -102,12 +121,18 @@ export default function LoginForm() {
 
               <div className="d-flex x-gap-20 items-center justify-between pt-20">
                 <div>
-                  <button className="button -sm px-24 py-20 -outline-blue-3 text-blue-3 text-14">
+                  <button
+                    onClick={() => signInWith("oauth_facebook")}
+                    className="button -sm px-24 py-20 -outline-blue-3 text-blue-3 text-14"
+                  >
                     Log In via Facebook
                   </button>
                 </div>
                 <div>
-                  <button className="button -sm px-24 py-20 -outline-red-3 text-red-3 text-14">
+                  <button
+                    onClick={() => signInWith("oauth_google")}
+                    className="button -sm px-24 py-20 -outline-red-3 text-red-3 text-14"
+                  >
                     Log In via Google
                   </button>
                 </div>

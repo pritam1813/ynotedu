@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useSignUp } from "@clerk/nextjs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { OAuthStrategy } from "@clerk/types";
 
 export default function SignUpForm() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -177,7 +178,7 @@ export default function SignUpForm() {
                   </div>
                 </form>
 
-                <div className="lh-12 text-dark-1 fw-500 text-center mt-20">
+                {/* <div className="lh-12 text-dark-1 fw-500 text-center mt-20">
                   Or sign in using
                 </div>
 
@@ -192,7 +193,7 @@ export default function SignUpForm() {
                       Log In via Google
                     </button>
                   </div>
-                </div>
+                </div> */}
               </div>
             )}
           </div>
