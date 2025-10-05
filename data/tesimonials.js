@@ -1,7 +1,7 @@
 export const testimonials = [
   {
     id: 0,
-    imageSrc: "/assets/img/testimonials/1.png",
+    imageSrc: "/assets/img/testimonials/1.jpg",
     name: "Courtney Henry",
     position: "Web Designer",
     comment: "Great Work",
@@ -23,7 +23,7 @@ export const testimonials = [
   },
   {
     id: 2,
-    imageSrc: "/assets/img/testimonials/3.png",
+    imageSrc: "/assets/img/testimonials/3.jpg",
     name: "Annette Black",
     position: "Nursing Assistant",
     comment: "Great Work",
@@ -34,7 +34,7 @@ export const testimonials = [
   },
   {
     id: 3,
-    imageSrc: "/assets/img/testimonials/4.png",
+    imageSrc: "/assets/img/testimonials/4.jpg",
     name: "Courtney Henry",
     position: "Web Designer",
     comment: "Great Work",

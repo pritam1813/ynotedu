@@ -1,7 +1,7 @@
 export const events = [
   {
     id: 1,
-    imgSrc: "/assets/img/courses-list/1.png",
+    imgSrc: "/assets/img/courses-list/1.jpg",
     title: "Summer School 2022",
     date: "6 April, 2022",
     location: "London, UK",
@@ -12,7 +12,7 @@ export const events = [
   },
   {
     id: 2,
-    imgSrc: "/assets/img/courses-list/2.png",
+    imgSrc: "/assets/img/courses-list/2.jpg",
     title: "Summer School 2022",
     date: "6 April, 2022",
     location: "London, UK",
@@ -23,7 +23,7 @@ export const events = [
   },
   {
     id: 3,
-    imgSrc: "/assets/img/courses-list/3.png",
+    imgSrc: "/assets/img/courses-list/3.jpg",
     title: "Summer School 2022",
     date: "6 April, 2022",
     location: "London, UK",
