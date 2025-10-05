@@ -47,6 +47,7 @@ export default function ImageLightBox({
                 objectFit: "contain",
                 margin: "auto auto",
               }}
+              alt="Image"
             />
           </div>
         ))}
@@ -55,7 +56,7 @@ export default function ImageLightBox({
           className="prev"
           onClick={() =>
             setCurrentSlideIndex((pre) =>
-              pre == 0 ? images.length - 1 : pre - 1,
+              pre == 0 ? images.length - 1 : pre - 1
             )
           }
         >
@@ -65,7 +66,7 @@ export default function ImageLightBox({
           className="next"
           onClick={() =>
             setCurrentSlideIndex((pre) =>
-              pre == images.length - 1 ? 0 : pre + 1,
+              pre == images.length - 1 ? 0 : pre + 1
             )
           }
         >
