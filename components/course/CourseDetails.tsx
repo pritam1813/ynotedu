@@ -117,7 +117,7 @@ export default function CourseDetailsOne({
         </div>
       </section>
       <PinContent course={course} />
-      <CourseDetailsTab />
+      <CourseDetailsTab course={course} />
     </div>
   );
 }
