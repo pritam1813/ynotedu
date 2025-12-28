@@ -12,7 +12,7 @@ export default function GetApp() {
                 width={700}
                 height={500}
                 style={{ height: "100%", width: "100%" }}
-                src="/assets/img/app/1.png"
+                src="/assets/img/app/1.jpg"
                 alt="image"
               />
             </div>
