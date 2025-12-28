@@ -1,9 +1,8 @@
-import React from "react";
-
 import Star from "../common/Star";
 import { CourseWithInstructor } from "../CustomCourseList";
 import PinContent from "./PinContent";
 import CourseDetailsTab from "./CourseDetailsTab";
+import Link from "next/link";
 
 export default function CourseDetailsOne({
   course,
@@ -12,6 +11,7 @@ export default function CourseDetailsOne({
 }) {
   // Ensure we have instructor data
   const instructorName = course?.instructor?.name || "Unknown Instructor";
+  const instructorId = course?.instructor?.id || "Unknown Instructor";
   const instructorImage =
     course?.instructor?.image || "/assets/img/instructors/default.png";
   const rating = course?.rating || 0;
@@ -93,8 +93,8 @@ export default function CourseDetailsOne({
                     <div className="text-14 ml-8">
                       {course?.updatedAt
                         ? `Last updated ${new Date(
-                            course.updatedAt
-                          ).toLocaleDateString()}`
+                          course.updatedAt
+                        ).toLocaleDateString()}`
                         : "Last updated recently"}
                     </div>
                   </div>
@@ -107,7 +107,9 @@ export default function CourseDetailsOne({
                       backgroundImage: `url(${instructorImage})`,
                     }}
                   ></div>
-                  <div className="text-14 lh-1 ml-10">{instructorName}</div>
+                  <div className="text-14 lh-1 ml-10">
+                    <Link href={`/instructors/${instructorId}`}>{instructorName}</Link>
+                  </div>
                 </div>
               </div>
             </div>

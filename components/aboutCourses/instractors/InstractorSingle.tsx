@@ -10,7 +10,7 @@ export default async function InstractorSingle({
   instructor: InstructorWithSocialProfile;
 }) {
   // Check if instructor was not found
-  if ("error" in instructor || instructor == null) {
+  if (instructor == null) {
     return (
       <div className="container py-20">
         <div className="row justify-center">
