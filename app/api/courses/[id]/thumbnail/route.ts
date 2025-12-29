@@ -67,9 +67,12 @@ export async function POST(
 
     const uploadResult = result as any;
 
+    // Use secure_url to ensure HTTPS protocol
+    const thumbnailUrl = uploadResult.secure_url || uploadResult.url.replace('http://', 'https://');
+
     const data = await prisma.course.update({
       where: { id: courseId },
-      data: { thumbnail: uploadResult.url },
+      data: { thumbnail: thumbnailUrl },
     });
 
     return NextResponse.json({ status: 200 });

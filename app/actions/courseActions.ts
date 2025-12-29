@@ -168,7 +168,32 @@ export async function saveDraftCourse(
       instructorId: Number(formValues.instructorId),
     };
 
+    // Validate instructorId and categoryId are valid numbers
+    if (isNaN(parsedValues.instructorId) || parsedValues.instructorId <= 0) {
+      console.error("Invalid instructor ID:", formValues.instructorId);
+      return {
+        success: false,
+        message: "Invalid instructor ID. Please try again or contact support.",
+      };
+    }
+
+    if (isNaN(parsedValues.categoryId) || parsedValues.categoryId <= 0) {
+      console.error("Invalid category ID:", formValues.categoryId);
+      return {
+        success: false,
+        message: "Invalid category selected. Please select a valid category.",
+      };
+    }
+
     const result = dratfCourseSchema.safeParse(parsedValues);
+
+    if (!result.success) {
+      console.error("Validation failed:", result.error.errors);
+      return {
+        success: false,
+        message: "Validation failed. Please check all required fields.",
+      };
+    }
 
     const { categoryId, instructorId, title, description, level, language } =
       result.data;
@@ -202,13 +227,20 @@ export async function saveDraftCourse(
       // Handle validation errors
       console.error("Validation failed:");
       for (const issue of error.errors) {
-        console.error(`- ${issue.path.join(".")}: ${issue.message}`);
+        console.error(`- ${issue.path.join(".")}:  ${issue.message}`);
       }
+      return {
+        success: false,
+        message: "Validation failed. Please check all required fields.",
+      };
     } else {
       // Handle other unexpected errors
       console.error("Unexpected error:", error);
+      return {
+        success: false,
+        message: "Failed to create course. Please try again.",
+      };
     }
-    return { success: false };
   }
 }
 
@@ -226,7 +258,32 @@ export async function updateCourse(
     instructorId: Number(formValues.instructorId),
   };
 
+  // Validate instructorId and categoryId are valid numbers
+  if (isNaN(parsedValues.instructorId) || parsedValues.instructorId <= 0) {
+    console.error("Invalid instructor ID:", formValues.instructorId);
+    return {
+      success: false,
+      message: "Invalid instructor ID. Please try again or contact support.",
+    };
+  }
+
+  if (isNaN(parsedValues.categoryId) || parsedValues.categoryId <= 0) {
+    console.error("Invalid category ID:", formValues.categoryId);
+    return {
+      success: false,
+      message: "Invalid category selected. Please select a valid category.",
+    };
+  }
+
   const result = dratfCourseSchema.safeParse(parsedValues);
+
+  if (!result.success) {
+    console.error("Validation failed:", result.error.errors);
+    return {
+      success: false,
+      message: "Validation failed. Please check all required fields.",
+    };
+  }
 
   // const { categoryId, instructorId, title, description, level, language } =
   //   result.data;
@@ -250,18 +307,20 @@ export async function updateCourse(
       // Handle validation errors
       console.error("Validation failed:");
       for (const issue of error.errors) {
-        console.error(`- ${issue.path.join(".")}: ${issue.message}`);
+        console.error(`- ${issue.path.join(".")}:  ${issue.message}`);
       }
+      return {
+        success: false,
+        message: "Validation failed. Please check all required fields.",
+      };
     } else {
       // Handle other unexpected errors
       console.error("Unexpected error:", error);
+      return {
+        success: false,
+        message: "Failed to update course. Please try again.",
+      };
     }
-
-    return {
-      success: false,
-      message: "Failed to update course",
-      // errors: { general: "Update failed" },
-    };
   }
 }
 
