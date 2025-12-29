@@ -1,5 +1,5 @@
 "use client";
-import React, { useActionState, useEffect, useRef } from "react";
+import { useActionState, useEffect, useRef, useCallback } from "react";
 import type { Category } from "@prisma/client";
 import { saveDraftCourse, updateCourse } from "@/app/actions/courseActions";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -38,6 +38,13 @@ export default function CreateCourseForm({
   const action = isEditing ? updateCourse : saveDraftCourse;
   const [state, formAction] = useActionState(action, initialState);
   const params = new URLSearchParams(searchParams);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const handleReset = useCallback(() => {
+    if (formRef.current) {
+      formRef.current.reset();
+    }
+  }, []);
 
   useEffect(() => {
     if (state.success) {
@@ -52,7 +59,7 @@ export default function CreateCourseForm({
   }, [state]);
 
   return (
-    <form className="contact-form row y-gap-30" action={formAction}>
+    <form ref={formRef} className="contact-form row y-gap-30" action={formAction}>
       {/* <Toaster position="top-center" /> */}
       {isEditing && existingCourse && (
         <input type="hidden" name="courseId" value={existingCourse.id} />
@@ -126,8 +133,12 @@ export default function CreateCourseForm({
         <select
           name="categoryId"
           id="Category"
+          required
           defaultValue={existingCourse?.categoryId || ""}
         >
+          <option value="" disabled>
+            Select a category
+          </option>
           {AvailableCategories.map((category) => (
             <option key={category.id} value={category.id}>
               {category.label}
@@ -138,7 +149,11 @@ export default function CreateCourseForm({
       <input type="hidden" name="instructorId" value={Instructor} />
       <div className="row y-gap-20 justify-between pt-15">
         <div className="col-auto">
-          <button className="button -md -outline-purple-1 text-purple-1">
+          <button
+            type="button"
+            onClick={handleReset}
+            className="button -md -outline-purple-1 text-purple-1"
+          >
             Reset
           </button>
         </div>
