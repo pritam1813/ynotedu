@@ -42,7 +42,10 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit;
 
     // Build the where clause conditionally based on available parameters
-    const whereClause: any = {};
+    // Only show published courses on public route
+    const whereClause: any = {
+      isPublished: true,
+    };
 
     if (category) {
       whereClause.category = {

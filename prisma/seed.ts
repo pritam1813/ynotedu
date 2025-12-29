@@ -127,12 +127,12 @@ async function main() {
         categories: {
           create: instructor.category
             ? [
-                {
-                  category: {
-                    connect: { id: categoryMap[instructor.category] },
-                  },
+              {
+                category: {
+                  connect: { id: categoryMap[instructor.category] },
                 },
-              ]
+              },
+            ]
             : [],
         },
       },
@@ -215,6 +215,7 @@ async function main() {
         thumbnail: course.thumbnail,
         isPopular: course.isPopular,
         isFeatured: course.isFeatured,
+        isPublished: true, // All dummy courses are published
         lessons: course.lessons,
         students: course.students,
         instructorId,
