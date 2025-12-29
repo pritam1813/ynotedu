@@ -1,12 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    images:{
-        remotePatterns:[
+    images: {
+        remotePatterns: [
             {
                 protocol: 'https',
                 hostname: 'res.cloudinary.com',
                 port: '',
                 pathname: '/dilccvk58/**'
+            },
+            {
+                protocol: 'https',
+                hostname: 'img.clerk.com',
+                port: '',
+                pathname: '/**'
             }
         ]
     }
