@@ -1,12 +1,9 @@
-// app/settings/page.tsx (Server Component)
-import React from "react";
-import EditProfile from "./EditProfile";
+"use client";
+import React, { useState } from "react";
 import Password from "./Password";
 import SocialProfiles from "./SocialProfiles";
 import CloseAccount from "./CloseAccount";
-
 import Notification from "./Notifications";
-import TabButton from "./TabButton";
 import type { UserProfile } from "@prisma/client";
 import EditProfileForm from "./EditProfileForm";
 
@@ -18,18 +15,17 @@ const tabs = [
   { id: "close-account", label: "Close Account", index: 5 },
 ];
 
-export default async function Settings({
-  currentTab,
+export default function Settings({
+  initialTab,
   profile,
 }: {
-  currentTab: string;
+  initialTab: string;
   profile: UserProfile;
 }) {
-  // Default to first tab if no tab specified
-
-  const activeTabIndex = tabs.find((t) => t.id === currentTab)?.index || 1;
-
-  // console.log(profile);
+  // Client-side tab state - no server calls on tab switch
+  const [activeTab, setActiveTab] = useState(
+    tabs.find((t) => t.id === initialTab)?.index || 1
+  );
 
   return (
     <div className="dashboard__main">
@@ -49,25 +45,24 @@ export default async function Settings({
               <div className="tabs -active-purple-2 js-tabs pt-0">
                 <div className="tabs__controls d-flex x-gap-30 y-gap-20 flex-wrap items-center pt-20 px-30 border-bottom-light js-tabs-controls">
                   {tabs.map((tab) => (
-                    <TabButton
+                    <button
                       key={tab.id}
-                      tabId={tab.id}
-                      label={tab.label}
-                      isActive={currentTab === tab.id}
-                    />
+                      onClick={() => setActiveTab(tab.index)}
+                      className={`tabs__button text-light-1 js-tabs-button ${activeTab === tab.index ? "is-active" : ""
+                        }`}
+                      type="button"
+                    >
+                      {tab.label}
+                    </button>
                   ))}
                 </div>
 
                 <div className="tabs__content py-30 px-30 js-tabs-content">
-                  {/* <EditProfile activeTab={activeTabIndex} /> */}
-                  <EditProfileForm
-                    activeTab={activeTabIndex}
-                    profile={profile}
-                  />
-                  <Password activeTab={activeTabIndex} />
-                  <SocialProfiles activeTab={activeTabIndex} />
-                  <Notification activeTab={activeTabIndex} />
-                  <CloseAccount activeTab={activeTabIndex} />
+                  <EditProfileForm activeTab={activeTab} profile={profile} />
+                  <Password activeTab={activeTab} />
+                  <SocialProfiles activeTab={activeTab} />
+                  <Notification activeTab={activeTab} />
+                  <CloseAccount activeTab={activeTab} />
                 </div>
               </div>
             </div>

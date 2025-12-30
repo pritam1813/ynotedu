@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/client";
-import { type UserProfile } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
@@ -11,13 +10,15 @@ export async function GET(
     const id = res.id;
 
     let user = await prisma.user.findUnique({ where: { id } });
-    let profile: UserProfile;
 
     if (!user) {
       user = await prisma.user.create({ data: { id } });
+    }
+
+    // Get or create profile
+    let profile = await prisma.userProfile.findUnique({ where: { userId: id } });
+    if (!profile) {
       profile = await prisma.userProfile.create({ data: { userId: id } });
-    } else {
-      profile = await prisma.userProfile.findUnique({ where: { userId: id } });
     }
     // console.log("USER BCKEND: ", user);
 

@@ -109,9 +109,8 @@ export default function EditProfileForm({
 
   return (
     <div
-      className={`tabs__pane -tab-item-1 is-active ${
-        activeTab == 1 ? "is-active" : ""
-      } `}
+      className={`tabs__pane -tab-item-1 ${activeTab == 1 ? "is-active" : ""
+        } `}
     >
       <form action={handleSubmit} className="contact-form row y-gap-30">
         <Toaster position="top-right" />

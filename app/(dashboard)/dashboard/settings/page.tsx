@@ -31,5 +31,5 @@ export default async function SettingsPage({
     ? tabParam[0]
     : tabParam ?? "edit-profile";
 
-  return <Settings currentTab={tab} profile={fromdb.profile} />;
+  return <Settings initialTab={tab} profile={fromdb.profile} />;
 }
