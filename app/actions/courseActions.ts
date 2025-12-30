@@ -27,6 +27,8 @@ const dratfCourseSchema = z.object({
   language: z.string(),
   categoryId: z.number(),
   instructorId: z.number(),
+  price: z.number().min(0).optional(),
+  duration: z.number().min(1).optional(),
 });
 
 export type CourseFormData = z.infer<typeof courseSchema>;
@@ -166,6 +168,8 @@ export async function saveDraftCourse(
       ...formValues,
       categoryId: Number(formValues.categoryId),
       instructorId: Number(formValues.instructorId),
+      price: formValues.price ? Number(formValues.price) : undefined,
+      duration: formValues.duration ? Number(formValues.duration) : undefined,
     };
 
     // Validate instructorId and categoryId are valid numbers
@@ -195,9 +199,8 @@ export async function saveDraftCourse(
       };
     }
 
-    const { categoryId, instructorId, title, description, level, language } =
+    const { categoryId, instructorId, title, description, level, language, price, duration } =
       result.data;
-    // console.log(result);
 
     const course = await prisma.course.create({
       data: {
@@ -208,8 +211,8 @@ export async function saveDraftCourse(
         thumbnail: "",
         rating: 0,
         reviews: 0,
-        duration: 0,
-        price: 0,
+        duration: duration || 0,
+        price: price || 0,
         lessons: 0,
         students: 0,
         categoryId,
@@ -256,6 +259,8 @@ export async function updateCourse(
     ...formValues,
     categoryId: Number(formValues.categoryId),
     instructorId: Number(formValues.instructorId),
+    price: formValues.price ? Number(formValues.price) : undefined,
+    duration: formValues.duration ? Number(formValues.duration) : undefined,
   };
 
   // Validate instructorId and categoryId are valid numbers

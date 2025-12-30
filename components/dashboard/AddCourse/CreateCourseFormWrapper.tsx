@@ -5,6 +5,31 @@ import type { Category } from "@prisma/client";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/client";
 
+// Error display component with consistent styling
+function ErrorDisplay({ title, message }: { title: string; message: string }) {
+  return (
+    <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-center">
+      <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+        <svg
+          className="h-6 w-6 text-red-600"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth="1.5"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+          />
+        </svg>
+      </div>
+      <h3 className="mb-2 text-lg font-semibold text-red-800">{title}</h3>
+      <p className="text-red-600">{message}</p>
+    </div>
+  );
+}
+
 export default async function CreateCourseFormWrapper({
   courseId,
 }: {
@@ -15,15 +40,23 @@ export default async function CreateCourseFormWrapper({
   const user = await currentUser();
 
   if (!userId || !user) {
-    throw new Error("Unauthorized: Please sign in to create a course.");
+    return (
+      <ErrorDisplay
+        title="Authentication Required"
+        message="Please sign in to create a course."
+      />
+    );
   }
 
   // Check if user has instructor role in Clerk
   const userRole = user.publicMetadata?.role as string | undefined;
 
-  if (userRole !== "instructor") {
-    throw new Error(
-      "Access denied: Only users with instructor role can create courses. Please contact support to become an instructor."
+  if (userRole !== "instructor" && userRole !== "admin") {
+    return (
+      <ErrorDisplay
+        title="Access Denied"
+        message="Only users with instructor role can create courses. Please contact support to become an instructor."
+      />
     );
   }
 

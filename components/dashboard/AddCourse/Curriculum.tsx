@@ -266,6 +266,34 @@ export default function CourseContentForm({ courseId, existingSections = [] }: C
     }
   };
 
+  const deleteQuestion = (
+    sectionIndex: number,
+    contentIndex: number,
+    questionIndex: number
+  ) => {
+    const content = formData.sections[sectionIndex].contents[contentIndex];
+    if (content.quiz) {
+      const question = content.quiz.questions[questionIndex];
+      const confirmDelete = window.confirm(
+        `Are you sure you want to delete this question?`
+      );
+
+      if (confirmDelete) {
+        const updatedQuestions = content.quiz.questions
+          .filter((_, i) => i !== questionIndex)
+          .map((q, i) => ({ ...q, order: i + 1 }));
+
+        const updatedQuiz = {
+          ...content.quiz,
+          questions: updatedQuestions,
+        };
+
+        updateContentItem(sectionIndex, contentIndex, "quiz", updatedQuiz);
+        toast.success("Question deleted");
+      }
+    }
+  };
+
   const updateQuestion = (
     sectionIndex: number,
     contentIndex: number,
@@ -334,6 +362,35 @@ export default function CourseContentForm({ courseId, existingSections = [] }: C
         "options",
         updatedOptions
       );
+    }
+  };
+
+  const deleteOption = (
+    sectionIndex: number,
+    contentIndex: number,
+    questionIndex: number,
+    optionIndex: number
+  ) => {
+    const content = formData.sections[sectionIndex].contents[contentIndex];
+    if (content.quiz) {
+      const question = content.quiz.questions[questionIndex];
+
+      // Don't allow deleting if only 2 options remain
+      if (question.options.length <= 2) {
+        toast.error("A question must have at least 2 options");
+        return;
+      }
+
+      const updatedOptions = question.options.filter((_, i) => i !== optionIndex);
+
+      updateQuestion(
+        sectionIndex,
+        contentIndex,
+        questionIndex,
+        "options",
+        updatedOptions
+      );
+      toast.success("Option deleted");
     }
   };
 
@@ -857,6 +914,24 @@ export default function CourseContentForm({ courseId, existingSections = [] }: C
                                                     key={questionIndex}
                                                     className="border-light p-15 mb-15 bg-white"
                                                   >
+                                                    <div className="d-flex items-center justify-between mb-10">
+                                                      <span className="text-14 fw-500 text-dark-1">
+                                                        Question {questionIndex + 1}
+                                                      </span>
+                                                      <button
+                                                        type="button"
+                                                        onClick={() =>
+                                                          deleteQuestion(
+                                                            sectionIndex,
+                                                            contentIndex,
+                                                            questionIndex
+                                                          )
+                                                        }
+                                                        className="button -xs py-5 px-10 -outline-red-1 text-red-1 fw-500"
+                                                      >
+                                                        Delete Question
+                                                      </button>
+                                                    </div>
                                                     <div className="row y-gap-15 p-10">
                                                       <div className="col-md-8">
                                                         <label className="text-12 lh-1 fw-500 text-dark-1 mb-5">
@@ -1039,6 +1114,19 @@ export default function CourseContentForm({ courseId, existingSections = [] }: C
                                                                     placeholder={`Option ${optionIndex +
                                                                       1
                                                                       }`}
+                                                                  />
+                                                                  <button
+                                                                    type="button"
+                                                                    onClick={() =>
+                                                                      deleteOption(
+                                                                        sectionIndex,
+                                                                        contentIndex,
+                                                                        questionIndex,
+                                                                        optionIndex
+                                                                      )
+                                                                    }
+                                                                    className="icon icon-bin text-red-1"
+                                                                    style={{ cursor: "pointer", border: "none", background: "none" }}
                                                                   />
                                                                 </div>
                                                               )

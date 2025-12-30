@@ -18,7 +18,8 @@ interface ExistingCourse {
   level: string;
   language: string;
   categoryId: string;
-  // Add other fields as needed
+  price?: number;
+  duration?: number;
 }
 
 export default function CreateCourseForm({
@@ -146,6 +147,39 @@ export default function CreateCourseForm({
           ))}
         </select>
       </div>
+
+      <div className="col-md-6">
+        <label className="text-16 lh-1 fw-500 text-dark-1 mb-10">
+          Price (₹)*
+        </label>
+
+        <input
+          required
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          placeholder="999"
+          name="price"
+          defaultValue={existingCourse?.price || ""}
+        />
+      </div>
+
+      <div className="col-md-6">
+        <label className="text-16 lh-1 fw-500 text-dark-1 mb-10">
+          Duration (minutes)*
+        </label>
+
+        <input
+          required
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          placeholder="60"
+          name="duration"
+          defaultValue={existingCourse?.duration || ""}
+        />
+      </div>
+
       <input type="hidden" name="instructorId" value={Instructor} />
       <div className="row y-gap-20 justify-between pt-15">
         <div className="col-auto">
