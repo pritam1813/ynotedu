@@ -13,12 +13,13 @@ export async function GET(
       return NextResponse.json({ error: "Invalid Course ID" }, { status: 400 });
     }
 
-    // Find the course by ID with instructor, meetings, and sections
+    // Find the course by ID with instructor, meetings, demoLink, and sections
     const course = await prisma.course.findUnique({
       where: { id },
       include: {
         instructor: true,
         meetings: true,
+        demoLink: true,
         sections: {
           include: {
             contents: {

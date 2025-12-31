@@ -53,6 +53,13 @@ export const sidebarItems: SidebarItem[] = [
     roles: ["admin", "instructor"],
   },
   {
+    id: 24,
+    href: "/dashboard/demolinks",
+    iconClass: "text-20 icon-video-file",
+    text: "Demo Links",
+    roles: ["admin", "instructor"],
+  },
+  {
     id: 4,
     href: "/dshb-messages",
     iconClass: "text-20 icon-message",

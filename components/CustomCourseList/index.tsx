@@ -1,11 +1,12 @@
 import React from "react";
 import { getBaseUrl } from "@/utils/getBaseUrl";
-import type { Category, Course, Instructor, Meeting } from "@prisma/client";
+import type { Category, Course, Instructor, Meeting, DemoLink } from "@prisma/client";
 import CourseListCategoryWise from "./CourseListCategoryWise";
 
 export interface CourseWithInstructor extends Course {
   instructor: Instructor;
   meetings?: Meeting[];
+  demoLink?: DemoLink | null;
 }
 
 export interface CourseWithCategory extends Category {

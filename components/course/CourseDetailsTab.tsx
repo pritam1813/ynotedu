@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { Meeting } from "@prisma/client";
+import type { Meeting, DemoLink } from "@prisma/client";
 import Overview from "../courseSingle/Overview";
 import CourseContent from "../courseSingle/CourseContent";
 import Instractor from "../courseSingle/Instractor";
@@ -21,12 +21,14 @@ const menuItems: { id: TabId; text: string }[] = [
 
 interface CourseDetailsTabProps {
   course: CourseWithInstructor;
+  isOwner?: boolean;
 }
 
-export default function CourseDetailsTab({ course }: CourseDetailsTabProps) {
+export default function CourseDetailsTab({ course, isOwner = false }: CourseDetailsTabProps) {
   const [activeTab, setActiveTab] = useState<TabId>("overview");
 
   const meetings: Meeting[] = course.meetings || [];
+  const demoLink: DemoLink | null | undefined = course.demoLink;
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -37,7 +39,7 @@ export default function CourseDetailsTab({ course }: CourseDetailsTabProps) {
       case "instructors":
         return <Instractor />;
       case "classes":
-        return <Classes meetings={meetings} />;
+        return <Classes meetings={meetings} demoLink={demoLink} isOwner={isOwner} />;
       case "reviews":
         return <Reviews />;
       default:
@@ -80,4 +82,3 @@ export default function CourseDetailsTab({ course }: CourseDetailsTabProps) {
     </section>
   );
 }
-

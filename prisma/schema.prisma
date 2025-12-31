@@ -105,8 +105,20 @@ model Course {
   students     Int        @default(0)
   meetings     Meeting[]  @relation("CourseMeetings")
   sections     Section[]
+  demoLink     DemoLink?
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
+}
+
+model DemoLink {
+  id          Int      @id @default(autoincrement())
+  title       String
+  url         String   // URL to the demo video (YouTube, Vimeo, etc.)
+  description String?
+  courseId    Int      @unique
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Meeting {

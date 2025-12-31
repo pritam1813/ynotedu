@@ -4,11 +4,15 @@ import PinContent from "./PinContent";
 import CourseDetailsTab from "./CourseDetailsTab";
 import Link from "next/link";
 
+interface CourseDetailsProps {
+  course: CourseWithInstructor;
+  isOwner?: boolean;
+}
+
 export default function CourseDetailsOne({
   course,
-}: {
-  course: CourseWithInstructor;
-}) {
+  isOwner = false,
+}: CourseDetailsProps) {
   // Ensure we have instructor data
   const instructorName = course?.instructor?.name || "Unknown Instructor";
   const instructorId = course?.instructor?.id || "Unknown Instructor";
@@ -117,7 +121,8 @@ export default function CourseDetailsOne({
         </div>
       </section>
       <PinContent course={course} />
-      <CourseDetailsTab course={course} />
+      <CourseDetailsTab course={course} isOwner={isOwner} />
     </div>
   );
 }
+

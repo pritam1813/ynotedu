@@ -2,8 +2,21 @@
 
 import type { Meeting } from "@prisma/client";
 
+// Define DemoLink interface locally to avoid Prisma import issues during type resolution
+interface DemoLinkData {
+    id: number;
+    title: string;
+    url: string;
+    description: string | null;
+    courseId: number;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
 interface ClassesProps {
     meetings: Meeting[];
+    demoLink?: DemoLinkData | null;
+    isOwner?: boolean;
 }
 
 // Dummy data for preview - remove this when real data is available
@@ -140,7 +153,7 @@ function formatDuration(minutes: number): string {
     return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
 }
 
-export default function Classes({ meetings }: ClassesProps) {
+export default function Classes({ meetings, demoLink, isOwner = false }: ClassesProps) {
     // Use dummy data if no real meetings exist
     const displayMeetings = meetings.length > 0 ? meetings : getDummyMeetings();
 
@@ -169,6 +182,10 @@ export default function Classes({ meetings }: ClassesProps) {
             upcoming: "bg-blue-1 text-white",
             ended: "bg-light-4 text-dark-1",
         };
+
+        // Determine if join button should be disabled
+        const canJoin = isOwner && showJoinButton;
+        const showDisabledButton = !isOwner && showJoinButton;
 
         return (
             <div
@@ -209,7 +226,7 @@ export default function Classes({ meetings }: ClassesProps) {
                         </div>
                     </div>
 
-                    {showJoinButton && meeting.meetLink && (
+                    {canJoin && meeting.meetLink && (
                         <a
                             href={meeting.meetLink}
                             target="_blank"
@@ -218,6 +235,17 @@ export default function Classes({ meetings }: ClassesProps) {
                         >
                             Join Class
                         </a>
+                    )}
+
+                    {showDisabledButton && (
+                        <button
+                            disabled
+                            className="button -sm -light-4 text-light-1 ml-20"
+                            style={{ cursor: "not-allowed", opacity: 0.6 }}
+                            title="Purchase this course to join live classes"
+                        >
+                            Join Class
+                        </button>
                     )}
                 </div>
             </div>
@@ -240,9 +268,79 @@ export default function Classes({ meetings }: ClassesProps) {
         </div>
     );
 
+    // Render Demo Link Section
+    const renderDemoSection = () => {
+        if (!demoLink) return null;
+
+        return (
+            <div className="mb-30">
+                <h3 className="text-18 fw-500 text-dark-1 mb-15">🎬 Demo Class</h3>
+                <div
+                    className="py-20 px-25 border-light rounded-8"
+                    style={{ backgroundColor: "#f0f7ff" }}
+                >
+                    <div className="d-flex justify-between items-start">
+                        <div className="flex-grow-1">
+                            <div className="d-flex items-center gap-10 mb-10">
+                                <h4 className="text-17 fw-500 text-dark-1">{demoLink.title}</h4>
+                                <span className="badge px-10 py-4 text-11 rounded-4 bg-purple-1 text-white">
+                                    Free Preview
+                                </span>
+                            </div>
+
+                            {demoLink.description && (
+                                <p className="text-14 text-light-1 mb-10">{demoLink.description}</p>
+                            )}
+
+                            <p className="text-13 text-purple-1">
+                                <i className="icon-play text-13 mr-5"></i>
+                                Watch this free demo to get a preview of what you&apos;ll learn
+                            </p>
+                        </div>
+
+                        <a
+                            href={demoLink.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="button -sm -purple-1 text-white ml-20"
+                        >
+                            <i className="icon-play text-13 mr-8"></i>
+                            Watch Demo
+                        </a>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    // Non-owner purchase message
+    const renderPurchaseMessage = () => {
+        if (isOwner) return null;
+
+        return (
+            <div
+                className="mb-30 py-15 px-20 rounded-8"
+                style={{ backgroundColor: "#fff3cd", border: "1px solid #ffc107" }}
+            >
+                <div className="d-flex items-center">
+                    <i className="icon-info text-18 mr-10" style={{ color: "#856404" }}></i>
+                    <p className="text-14" style={{ color: "#856404" }}>
+                        <strong>Purchase this course</strong> to join live classes and access all content.
+                    </p>
+                </div>
+            </div>
+        );
+    };
+
     return (
         <div id="classes" className="pt-30">
             <h2 className="text-20 fw-500 mb-20">Live Classes</h2>
+
+            {/* Demo Section - shown for everyone if demo link exists */}
+            {renderDemoSection()}
+
+            {/* Purchase message for non-owners */}
+            {renderPurchaseMessage()}
 
             {displayMeetings.length === 0 ? (
                 <div className="py-30 text-center">
@@ -276,3 +374,4 @@ export default function Classes({ meetings }: ClassesProps) {
         </div>
     );
 }
+

@@ -1,6 +1,7 @@
 import React from "react";
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
 
 import { getBaseUrl } from "@/utils/getBaseUrl";
 import type { Course } from "@prisma/client";
@@ -52,6 +53,7 @@ export default async function CoursePage({
 }) {
   //   <Preloader/>
   const { id } = await params;
+  const { userId } = await auth();
 
   try {
     const response = await fetch(`${getBaseUrl()}/api/courses/${id}`);
@@ -67,11 +69,14 @@ export default async function CoursePage({
 
     const course: CourseWithInstructor = await response.json();
 
+    // Check if current user is the owner (instructor) of this course
+    const isOwner = userId ? course.instructor?.userId === userId : false;
+
     return (
       <div className="main-content">
         <div className="content-wrapper js-content-wrapper">
           <PageLinks dark={undefined} />
-          <CourseDetails course={course} />
+          <CourseDetails course={course} isOwner={isOwner} />
           <CourseSlider />
         </div>
       </div>
