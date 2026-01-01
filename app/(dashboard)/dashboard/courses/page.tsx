@@ -3,6 +3,8 @@ import { getInstructorCourses } from "@/app/actions/instructorCourseActions";
 import InstructorCourseCard from "@/components/dashboard/InstructorCourseCard";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "My Courses || ynotedu - Professional LMS Online Education",
   description: "Manage your courses - create, edit, publish and delete courses.",

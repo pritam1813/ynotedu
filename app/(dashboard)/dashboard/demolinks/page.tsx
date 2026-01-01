@@ -2,6 +2,8 @@ import React from "react";
 import { getInstructorCoursesWithDemoLinks } from "@/app/actions/demoLinkActions";
 import DemoLinkManager from "@/components/dashboard/DemoLinkManager";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
     title: "Demo Links || ynotedu - Professional LMS Online Education",
     description: "Manage demo links for your courses.",

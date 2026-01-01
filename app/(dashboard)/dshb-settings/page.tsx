@@ -22,7 +22,7 @@ export default function page() {
             <div className="dashboard__sidebar scroll-bar-1">
               <Sidebar />
             </div>
-            <Settings currentTab={""} profile={undefined} />
+            {/* <Settings currentTab={""} profile={undefined} /> */}
           </div>
         </div>
       </main>

@@ -2,12 +2,20 @@
 
 import React, { useState, useEffect } from "react";
 import { useStore } from "@/store/useStore";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import ModalVideoComponent from "../common/ModalVideo";
 import Image from "next/image";
 import { CourseWithInstructor } from "../CustomCourseList";
 import { socialMediaLinks } from "@/data/socials";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import toast from "react-hot-toast";
+
+interface EnrollmentStatus {
+  enrolled: boolean;
+  status?: string;
+}
 
 export default function PinContent({
   course,
@@ -15,9 +23,15 @@ export default function PinContent({
   course: CourseWithInstructor;
 }) {
   const { isAddedToCartCourses, addCourseToCart } = useStore();
+  const { isSignedIn, isLoaded } = useUser();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-
   const [screenWidth, setScreenWidth] = useState(0);
+  const [enrollmentStatus, setEnrollmentStatus] = useState<EnrollmentStatus>({
+    enrolled: false,
+  });
+  const [isEnrolling, setIsEnrolling] = useState(false);
+  const [isCheckingEnrollment, setIsCheckingEnrollment] = useState(true);
 
   // Default values for possible undefined properties
   const coursePrice = course?.price ?? 0;
@@ -27,14 +41,45 @@ export default function PinContent({
   const courseId = course?.id ?? 0;
 
   // Default values for course information
-  const lessonsCount = 20; // Static values for now, would be better coming from API
+  const lessonsCount = 20; // Static values for now
   const quizzesCount = 3;
   const hasCertificate = true;
   const hasLifetimeAccess = true;
   const videoId = "LlCwHnp3kL4";
 
+  const isFree = coursePrice === 0;
+
+  // Check enrollment status on mount
   useEffect(() => {
-    // Set initial width
+    const checkEnrollment = async () => {
+      if (!courseId) {
+        setIsCheckingEnrollment(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/enrollments/${courseId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setEnrollmentStatus({
+            enrolled: data.enrolled,
+            status: data.status,
+          });
+        }
+      } catch (error) {
+        console.error("Error checking enrollment:", error);
+      } finally {
+        setIsCheckingEnrollment(false);
+      }
+    };
+
+    if (isLoaded) {
+      checkEnrollment();
+    }
+  }, [courseId, isLoaded]);
+
+  // Handle screen resize
+  useEffect(() => {
     setScreenWidth(window.innerWidth);
 
     const handleResize = () => {
@@ -43,11 +88,148 @@ export default function PinContent({
 
     window.addEventListener("resize", handleResize);
 
-    // Cleanup the event listener when the component is unmounted
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  // Handle free course enrollment
+  const handleEnroll = async () => {
+    if (!isSignedIn) {
+      toast.error("Please sign in to enroll in this course");
+      router.push("/sign-in");
+      return;
+    }
+
+    setIsEnrolling(true);
+    try {
+      const response = await fetch("/api/enrollments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ courseId }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setEnrollmentStatus({ enrolled: true, status: "ACTIVE" });
+        toast.success("Successfully enrolled in this course!");
+        router.push(`/courses/${courseId}/purchase/success`);
+      } else if (response.status === 409) {
+        setEnrollmentStatus({ enrolled: true, status: "ACTIVE" });
+        toast.success("You are already enrolled in this course!");
+      } else {
+        toast.error(data.error || "Failed to enroll in course");
+      }
+    } catch (error) {
+      console.error("Error enrolling:", error);
+      toast.error("An error occurred. Please try again.");
+    } finally {
+      setIsEnrolling(false);
+    }
+  };
+
+  // Handle paid course purchase with PhonePe
+  const handlePurchase = async () => {
+    if (!isSignedIn) {
+      toast.error("Please sign in to purchase this course");
+      router.push("/sign-in");
+      return;
+    }
+
+    setIsEnrolling(true);
+    try {
+      const response = await fetch("/api/payments/phonepe/initiate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ courseId }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.redirectUrl) {
+        toast.success("Redirecting to payment...");
+        // Redirect to PhonePe payment page
+        window.location.href = data.redirectUrl;
+      } else if (response.status === 409) {
+        setEnrollmentStatus({ enrolled: true, status: "ACTIVE" });
+        toast.success("You are already enrolled in this course!");
+      } else {
+        toast.error(data.error || "Failed to initiate payment");
+      }
+    } catch (error) {
+      console.error("Error initiating payment:", error);
+      toast.error("An error occurred. Please try again.");
+    } finally {
+      setIsEnrolling(false);
+    }
+  };
+
+  // Render enrollment button based on state
+  const renderActionButtons = () => {
+    if (isCheckingEnrollment) {
+      return (
+        <button
+          className="button -md -purple-1 text-white w-1/1"
+          disabled
+        >
+          Loading...
+        </button>
+      );
+    }
+
+    if (enrollmentStatus.enrolled) {
+      return (
+        <>
+          <Link href={`/courses/${courseId}`}>
+            <button className="button -md -green-1 text-white w-1/1">
+              Continue Learning
+            </button>
+          </Link>
+          <div className="text-14 lh-1 text-center text-green-1 mt-15">
+            ✓ You are enrolled in this course
+          </div>
+        </>
+      );
+    }
+
+    // Not enrolled - show purchase buttons
+    return (
+      <>
+        {isFree ? (
+          // Free course - single enroll button
+          <button
+            className="button -md -purple-1 text-white w-1/1"
+            onClick={handleEnroll}
+            disabled={isEnrolling}
+          >
+            {isEnrolling ? "Enrolling..." : "Enroll Now (Free)"}
+          </button>
+        ) : (
+          // Paid course - Add to cart and Buy Now buttons
+          <>
+            <button
+              className="button -md -purple-1 text-white w-1/1"
+              onClick={() => addCourseToCart(courseId)}
+            >
+              {isAddedToCartCourses(courseId) ? "Already Added" : "Add To Cart"}
+            </button>
+            <button
+              className="button -md -outline-dark-1 text-dark-1 w-1/1 mt-10"
+              onClick={handlePurchase}
+              disabled={isEnrolling}
+            >
+              {isEnrolling ? "Processing..." : "Buy Now"}
+            </button>
+          </>
+        )}
+      </>
+    );
+  };
 
   return (
     <>
@@ -69,7 +251,6 @@ export default function PinContent({
               width={368}
               height={238}
               className="w-1/1"
-              // src={course?.thumbnail || "/assets/img/coursesCards/9.png"}
               src="/assets/img/coursesCards/9.png"
               alt={course?.title || "Course thumbnail"}
             />
@@ -103,17 +284,9 @@ export default function PinContent({
               )}
             </div>
 
-            <button
-              className="button -md -purple-1 text-white w-1/1"
-              onClick={() => addCourseToCart(courseId)}
-            >
-              {isAddedToCartCourses(courseId) ? "Already Added" : "Add To Cart"}
-            </button>
-            <button className="button -md -outline-dark-1 text-dark-1 w-1/1 mt-10">
-              Buy Now
-            </button>
+            {renderActionButtons()}
 
-            {coursePrice !== 0 && (
+            {coursePrice !== 0 && !enrollmentStatus.enrolled && (
               <div className="text-14 lh-1 text-center mt-30">
                 30-Day Money-Back Guarantee
               </div>

@@ -2,43 +2,67 @@
 
 import React, { useEffect, useState } from "react";
 import FooterNine from "../layout/footers/FooterNine";
-import { coursesData } from "@/data/dashboard";
 import Pagination from "../common/Pagination";
 import CoursesCardDashboard from "./DashBoardCards/CoursesCardDashboard";
-const ddItems = [
-  { id: 1, label: "All Categories" },
-  { id: 2, label: "Animation" },
-  { id: 3, label: "Design" },
-  { id: 4, label: "Illustration" },
-  { id: 5, label: "Business" },
-];
+import Link from "next/link";
+
 export default function MyCourses() {
-  const [currentCategory, setCurrentCategory] = useState("All Categories");
   const [pageItems, setPageItems] = useState([]);
   const [activeTab, setActiveTab] = useState(1);
-  const [pageData, setPageData] = useState(coursesData);
+  const [isLoading, setIsLoading] = useState(true);
+  const [allEnrollments, setAllEnrollments] = useState([]);
+
+  // Fetch enrolled courses from API
   useEffect(() => {
-    if (activeTab == 1) {
-      setPageData(coursesData);
-    } else if (activeTab == 2) {
-      setPageData(coursesData.filter((elm) => elm.status == "Finished"));
-    } else if (activeTab == 3) {
-      setPageData(coursesData.filter((elm) => elm.status == "Not enrolled"));
+    const fetchEnrollments = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch("/api/enrollments");
+        if (response.ok) {
+          const data = await response.json();
+          // Transform enrollment data to match expected format
+          const transformedData = data.map((enrollment) => ({
+            id: enrollment.course.id,
+            imageSrc: enrollment.course.thumbnail || "/assets/img/coursesCards/9.png",
+            authorName: enrollment.course.instructor?.name || "Unknown",
+            title: enrollment.course.title,
+            rating: enrollment.course.rating || 0,
+            completed: 0, // TODO: Implement progress tracking
+            category: enrollment.course.category?.label || "General",
+            status: "Enrolled", // All fetched are enrolled
+            enrolledAt: enrollment.enrolledAt,
+            courseId: enrollment.courseId,
+          }));
+          setAllEnrollments(transformedData);
+          setPageItems(transformedData);
+        }
+      } catch (error) {
+        console.error("Error fetching enrollments:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchEnrollments();
+  }, []);
+
+  // Filter based on active tab (for future progress tracking)
+  useEffect(() => {
+    if (activeTab === 1) {
+      // All enrolled courses
+      setPageItems(allEnrollments);
+    } else if (activeTab === 2) {
+      // Completed courses (for now, none)
+      setPageItems(allEnrollments.filter((elm) => elm.completed >= 100));
+    } else if (activeTab === 3) {
+      // In progress (for now, all enrolled)
+      setPageItems(allEnrollments.filter((elm) => elm.completed < 100));
     }
-  }, [activeTab]);
+  }, [activeTab, allEnrollments]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
   };
-  useEffect(() => {
-    if (currentCategory == "All Categories") {
-      setPageItems(pageData);
-    } else {
-      setPageItems([
-        ...pageData.filter((elm) => elm.category == currentCategory),
-      ]);
-    }
-  }, [currentCategory, pageData]);
 
   return (
     <div className="dashboard__main">
@@ -47,7 +71,9 @@ export default function MyCourses() {
           <div className="col-auto">
             <h1 className="text-30 lh-12 fw-700">My Courses</h1>
             <div className="mt-10">
-              Lorem ipsum dolor sit amet, consectetur.
+              {isLoading
+                ? "Loading your courses..."
+                : `You have enrolled in ${allEnrollments.length} course${allEnrollments.length !== 1 ? "s" : ""}`}
             </div>
           </div>
         </div>
@@ -58,34 +84,31 @@ export default function MyCourses() {
               <div className="tabs -active-purple-2 js-tabs">
                 <div className="tabs__controls d-flex items-center pt-20 px-30 border-bottom-light js-tabs-controls">
                   <button
-                    className={`text-light-1 lh-12 tabs__button js-tabs-button ${
-                      activeTab == 1 ? "is-active" : ""
-                    } `}
+                    className={`text-light-1 lh-12 tabs__button js-tabs-button ${activeTab === 1 ? "is-active" : ""
+                      } `}
                     data-tab-target=".-tab-item-1"
                     type="button"
                     onClick={() => setActiveTab(1)}
                   >
-                    All Courses
+                    All Enrolled
                   </button>
                   <button
-                    className={`text-light-1 lh-12 tabs__button js-tabs-button ml-30 ${
-                      activeTab == 2 ? "is-active" : ""
-                    } `}
+                    className={`text-light-1 lh-12 tabs__button js-tabs-button ml-30 ${activeTab === 2 ? "is-active" : ""
+                      } `}
                     data-tab-target=".-tab-item-2"
                     type="button"
                     onClick={() => setActiveTab(2)}
                   >
-                    Finished
+                    Completed
                   </button>
                   <button
-                    className={`text-light-1 lh-12 tabs__button js-tabs-button ml-30 ${
-                      activeTab == 3 ? "is-active" : ""
-                    } `}
+                    className={`text-light-1 lh-12 tabs__button js-tabs-button ml-30 ${activeTab === 3 ? "is-active" : ""
+                      } `}
                     data-tab-target=".-tab-item-3"
                     type="button"
                     onClick={() => setActiveTab(3)}
                   >
-                    Not enrolled
+                    In Progress
                   </button>
                 </div>
 
@@ -108,151 +131,47 @@ export default function MyCourses() {
                           </button>
                         </form>
                       </div>
-
-                      <div className="col-auto">
-                        <div className="d-flex flex-wrap y-gap-10 x-gap-20">
-                          <div>
-                            <div
-                              id="dd14button"
-                              onClick={() => {
-                                document
-                                  .getElementById("dd14button")
-                                  .classList.toggle("-is-dd-active");
-                                document
-                                  .getElementById("dd14content")
-                                  .classList.toggle("-is-el-visible");
-                              }}
-                              className="dropdown js-dropdown js-category-active"
-                            >
-                              <div
-                                className="dropdown__button d-flex items-center text-14 bg-white -dark-bg-dark-2 border-light rounded-8 px-20 py-10 text-14 lh-12"
-                                data-el-toggle=".js-category-toggle"
-                                data-el-toggle-active=".js-category-active"
-                              >
-                                <span className="js-dropdown-title">
-                                  {currentCategory != 'All Categories' ? currentCategory :'Categories' }
-                                  
-                                </span>
-                                <i className="icon text-9 ml-40 icon-chevron-down"></i>
-                              </div>
-
-                              <div
-                                id="dd14content"
-                                className="toggle-element -dropdown -dark-bg-dark-2 -dark-border-white-10 js-click-dropdown js-category-toggle"
-                              >
-                                <div className="text-14 y-gap-15 js-dropdown-list">
-                                  {ddItems.map((item, ind) => (
-                                    <div
-                                      onClick={() =>
-                                        setCurrentCategory(item.label)
-                                        
-                                      }
-                                      key={ind}
-                                      className={`d-block js-dropdown-link cursor ${
-                                        currentCategory == item.label
-                                          ? "activeMenu"
-                                          : ""
-                                      } `}
-                                    >
-                                      <span
-                                        style={{ cursor: "pointer" }}
-                                        className="d-block js-dropdown-link"
-                                      >
-                                        {item.label}
-                                      </span>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div>
-                            <div
-                              id="dd15button"
-                              onClick={() => {
-                                document
-                                  .getElementById("dd15button")
-                                  .classList.toggle("-is-dd-active");
-                                document
-                                  .getElementById("dd15content")
-                                  .classList.toggle("-is-el-visible");
-                              }}
-                              className="dropdown js-dropdown js-review-active"
-                            >
-                              <div
-                                className="dropdown__button d-flex items-center text-14 bg-white -dark-bg-dark-2 border-light rounded-8 px-20 py-10 text-14 lh-12"
-                                data-el-toggle=".js-review-toggle"
-                                data-el-toggle-active=".js-review-active"
-                              >
-                                <span className="js-dropdown-title">
-                                  Old Review
-                                </span>
-                                <i className="icon text-9 ml-40 icon-chevron-down"></i>
-                              </div>
-
-                              <div
-                                id="dd15content"
-                                className="toggle-element -dropdown -dark-bg-dark-2 -dark-border-white-10 js-click-dropdown js-review-toggle"
-                              >
-                                <div className="text-14 y-gap-15 js-dropdown-list">
-                                  <div>
-                                    <a
-                                      href="#"
-                                      className="d-block js-dropdown-link"
-                                    >
-                                      Animation
-                                    </a>
-                                  </div>
-
-                                  <div>
-                                    <a
-                                      href="#"
-                                      className="d-block js-dropdown-link"
-                                    >
-                                      Design
-                                    </a>
-                                  </div>
-
-                                  <div>
-                                    <a
-                                      href="#"
-                                      className="d-block js-dropdown-link"
-                                    >
-                                      Illustration
-                                    </a>
-                                  </div>
-
-                                  <div>
-                                    <a
-                                      href="#"
-                                      className="d-block js-dropdown-link"
-                                    >
-                                      Business
-                                    </a>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
                     </div>
 
                     <div className="row y-gap-30 pt-30">
-                      {pageItems.map((data, i) => (
-                        <CoursesCardDashboard data={data} key={i} />
-                      ))}
+                      {isLoading ? (
+                        <div className="col-12 text-center py-30">
+                          <div className="text-18 text-light-1">
+                            Loading your courses...
+                          </div>
+                        </div>
+                      ) : pageItems.length === 0 ? (
+                        <div className="col-12 text-center py-30">
+                          <div className="text-18 text-dark-1 mb-20">
+                            {activeTab === 1
+                              ? "You haven't enrolled in any courses yet."
+                              : activeTab === 2
+                                ? "No completed courses yet."
+                                : "No courses in progress."}
+                          </div>
+                          {activeTab === 1 && (
+                            <Link href="/courses">
+                              <button className="button -md -purple-1 text-white">
+                                Browse Courses
+                              </button>
+                            </Link>
+                          )}
+                        </div>
+                      ) : (
+                        pageItems.map((data, i) => (
+                          <CoursesCardDashboard data={data} key={i} />
+                        ))
+                      )}
                     </div>
 
-                    <div className="row justify-center pt-30">
-                      <div className="col-auto">
-                        <Pagination />
+                    {pageItems.length > 0 && (
+                      <div className="row justify-center pt-30">
+                        <div className="col-auto">
+                          <Pagination />
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
-
-                  {/* <div className="tabs__pane -tab-item-2"></div>
-                  <div className="tabs__pane -tab-item-3"></div> */}
                 </div>
               </div>
             </div>

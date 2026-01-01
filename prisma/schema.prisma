@@ -37,11 +37,12 @@ model Instructor {
 }
 
 model User {
-  id         String       @id
-  profile    UserProfile?
-  instructor Instructor?
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
+  id          String       @id
+  profile     UserProfile?
+  instructor  Instructor?
+  enrollments Enrollment[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
 
 model UserProfile {
@@ -103,11 +104,12 @@ model Course {
   isPublished  Boolean    @default(false)
   lessons      Int        @default(0)
   students     Int        @default(0)
-  meetings     Meeting[]  @relation("CourseMeetings")
+  meetings     Meeting[]    @relation("CourseMeetings")
   sections     Section[]
   demoLink     DemoLink?
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  enrollments  Enrollment[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 }
 
 model DemoLink {
@@ -241,4 +243,27 @@ model QuestionOption {
   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+// Course Enrollment/Purchase Model
+model Enrollment {
+  id            Int              @id @default(autoincrement())
+  userId        String
+  user          User             @relation(fields: [userId], references: [id])
+  courseId      Int
+  course        Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  status        EnrollmentStatus @default(PENDING)
+  paymentAmount Float            @default(0)
+  paymentId     String?          // External payment reference (for future integration)
+  enrolledAt    DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@unique([userId, courseId])
+}
+
+enum EnrollmentStatus {
+  PENDING   // Payment initiated but not confirmed
+  ACTIVE    // Successfully enrolled/paid
+  CANCELLED // Enrollment cancelled
+  REFUNDED  // Payment refunded
 }
