@@ -165,11 +165,6 @@ export default function PinContent({
                     </div>
                 </div>
             </div>
-            {/* <ModalVideoComponent
-        videoId={videoId}
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-      /> */}
         </>
     );
 }
