@@ -17,6 +17,7 @@ interface ClassesProps {
     meetings: Meeting[];
     demoLink?: DemoLinkData | null;
     isOwner?: boolean;
+    isCheckingAccess?: boolean;
 }
 
 // Dummy data for preview - remove this when real data is available
@@ -153,7 +154,7 @@ function formatDuration(minutes: number): string {
     return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
 }
 
-export default function Classes({ meetings, demoLink, isOwner = false }: ClassesProps) {
+export default function Classes({ meetings, demoLink, isOwner = false, isCheckingAccess = false }: ClassesProps) {
     // Use dummy data if no real meetings exist
     const displayMeetings = meetings.length > 0 ? meetings : getDummyMeetings();
 
@@ -184,8 +185,10 @@ export default function Classes({ meetings, demoLink, isOwner = false }: Classes
         };
 
         // Determine if join button should be disabled
+        // While checking access, show loading state instead of disabled button
         const canJoin = isOwner && showJoinButton;
-        const showDisabledButton = !isOwner && showJoinButton;
+        const showDisabledButton = !isOwner && !isCheckingAccess && showJoinButton;
+        const showLoadingButton = isCheckingAccess && showJoinButton;
 
         return (
             <div
@@ -235,6 +238,16 @@ export default function Classes({ meetings, demoLink, isOwner = false }: Classes
                         >
                             Join Class
                         </a>
+                    )}
+
+                    {showLoadingButton && (
+                        <button
+                            disabled
+                            className="button -sm -light-4 text-light-1 ml-20"
+                            style={{ cursor: "not-allowed", opacity: 0.6 }}
+                        >
+                            Loading...
+                        </button>
                     )}
 
                     {showDisabledButton && (
@@ -315,7 +328,8 @@ export default function Classes({ meetings, demoLink, isOwner = false }: Classes
 
     // Non-owner purchase message
     const renderPurchaseMessage = () => {
-        if (isOwner) return null;
+        // Don't show purchase message while checking access or if user has access
+        if (isOwner || isCheckingAccess) return null;
 
         return (
             <div

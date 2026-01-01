@@ -17,7 +17,7 @@ interface EnrollmentStatus {
   status?: string;
 }
 
-export default function PinContent({
+export default function PinContentOld({
   course,
 }: {
   course: CourseWithInstructor;
@@ -49,7 +49,7 @@ export default function PinContent({
 
   const isFree = coursePrice === 0;
 
-  // Check enrollment status on mount
+  // Check enrollment status on mount and when auth state changes
   useEffect(() => {
     const checkEnrollment = async () => {
       if (!courseId) {
@@ -57,8 +57,17 @@ export default function PinContent({
         return;
       }
 
+      // Reset checking state when starting a new check
+      setIsCheckingEnrollment(true);
+
       try {
-        const response = await fetch(`/api/enrollments/${courseId}`);
+        const response = await fetch(`/api/enrollments/${courseId}`, {
+          credentials: 'include',
+          // Disable cache to ensure fresh data on reload
+          headers: {
+            'Cache-Control': 'no-cache',
+          },
+        });
         if (response.ok) {
           const data = await response.json();
           setEnrollmentStatus({
@@ -73,10 +82,11 @@ export default function PinContent({
       }
     };
 
+    // Only check enrollment when authentication is loaded
     if (isLoaded) {
       checkEnrollment();
     }
-  }, [courseId, isLoaded]);
+  }, [courseId, isLoaded, isSignedIn]);
 
   // Handle screen resize
   useEffect(() => {
@@ -97,7 +107,7 @@ export default function PinContent({
   const handleEnroll = async () => {
     if (!isSignedIn) {
       toast.error("Please sign in to enroll in this course");
-      router.push("/sign-in");
+      router.push("/login");
       return;
     }
 
@@ -135,7 +145,9 @@ export default function PinContent({
   const handlePurchase = async () => {
     if (!isSignedIn) {
       toast.error("Please sign in to purchase this course");
-      router.push("/sign-in");
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000);
       return;
     }
 

@@ -12,6 +12,9 @@ export async function GET(
         const { courseId } = await params;
         const courseIdInt = parseInt(courseId);
 
+        console.log("User Id in Backend: ", userId);
+
+
         if (isNaN(courseIdInt)) {
             return NextResponse.json(
                 { error: "Invalid course ID" },
@@ -45,7 +48,15 @@ export async function GET(
             },
         });
 
+        // Check if enrollment exists first
         if (!enrollment) {
+            return NextResponse.json({
+                enrolled: false,
+                enrollment: null,
+            });
+        }
+
+        if (enrollment.status !== "ACTIVE") {
             return NextResponse.json({
                 enrolled: false,
                 enrollment: null,

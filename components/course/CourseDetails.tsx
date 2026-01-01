@@ -1,17 +1,20 @@
 import Star from "../common/Star";
 import { CourseWithInstructor } from "../CustomCourseList";
-import PinContent from "./PinContent";
 import CourseDetailsTab from "./CourseDetailsTab";
 import Link from "next/link";
+import PinContent from "./PinContent";
+
 
 interface CourseDetailsProps {
   course: CourseWithInstructor;
   isOwner?: boolean;
+  isEnrolled?: boolean;
 }
 
 export default function CourseDetailsOne({
   course,
   isOwner = false,
+  isEnrolled = false,
 }: CourseDetailsProps) {
   // Ensure we have instructor data
   const instructorName = course?.instructor?.name || "Unknown Instructor";
@@ -120,7 +123,7 @@ export default function CourseDetailsOne({
           </div>
         </div>
       </section>
-      <PinContent course={course} />
+      <PinContent course={course} isEnrolled={isEnrolled} />
       <CourseDetailsTab course={course} isOwner={isOwner} />
     </div>
   );

@@ -148,6 +148,9 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        // Note: Enrollment stays PENDING until callback/success page confirms payment
+        // The callback endpoint or success page will update to ACTIVE after verifying with PhonePe
+
         return NextResponse.json({
             success: true,
             redirectUrl,

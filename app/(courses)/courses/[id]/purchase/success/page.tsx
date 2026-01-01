@@ -50,7 +50,7 @@ async function checkPhonePeStatus(orderId: string) {
         });
 
         const statusData = await response.json();
-        console.log("PhonePe Status Response:", statusData);
+        // console.log("PhonePe Status Response:", statusData);
         return statusData;
     } catch (error) {
         console.error("Error checking PhonePe status:", error);
@@ -72,7 +72,7 @@ export default async function PurchaseSuccessPage({
     const transactionId = resolvedSearchParams.txnId as string | undefined;
 
     if (!userId) {
-        redirect("/sign-in");
+        redirect("/login");
     }
 
     // Get the enrollment for this course

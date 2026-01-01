@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Meeting, DemoLink } from "@prisma/client";
+import { useUser } from "@clerk/nextjs";
 import Overview from "../courseSingle/Overview";
 import CourseContent from "../courseSingle/CourseContent";
 import Instractor from "../courseSingle/Instractor";
@@ -26,9 +27,44 @@ interface CourseDetailsTabProps {
 
 export default function CourseDetailsTab({ course, isOwner = false }: CourseDetailsTabProps) {
   const [activeTab, setActiveTab] = useState<TabId>("overview");
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  const [isCheckingEnrollment, setIsCheckingEnrollment] = useState(true);
+  const { isLoaded } = useUser();
 
   const meetings: Meeting[] = course.meetings || [];
   const demoLink: DemoLink | null | undefined = course.demoLink;
+  const courseId = course?.id;
+
+  // Check enrollment status on mount
+  useEffect(() => {
+    const checkEnrollment = async () => {
+      if (!courseId) {
+        setIsCheckingEnrollment(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/enrollments/${courseId}`, {
+          credentials: 'include',
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setIsEnrolled(data.enrolled);
+        }
+      } catch (error) {
+        console.error("Error checking enrollment:", error);
+      } finally {
+        setIsCheckingEnrollment(false);
+      }
+    };
+
+    if (isLoaded) {
+      checkEnrollment();
+    }
+  }, [courseId, isLoaded]);
+
+  // User has access if they are the instructor OR enrolled
+  const hasAccess = isOwner || isEnrolled;
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -39,7 +75,7 @@ export default function CourseDetailsTab({ course, isOwner = false }: CourseDeta
       case "instructors":
         return <Instractor />;
       case "classes":
-        return <Classes meetings={meetings} demoLink={demoLink} isOwner={isOwner} />;
+        return <Classes meetings={meetings} demoLink={demoLink} isOwner={hasAccess} isCheckingAccess={isCheckingEnrollment} />;
       case "reviews":
         return <Reviews />;
       default:

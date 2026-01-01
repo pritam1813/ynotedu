@@ -1,0 +1,15 @@
+.pinContent {
+    /* Default styles for screens < 991px */
+    height: fit-content;
+    right: 0%;
+}
+
+@media (min-width: 991px) {
+
+    /* Styles for screens >= 991px */
+    .pinContent {
+        height: 100%;
+        right: 7%;
+        padding-top: 80px;
+    }
+}
