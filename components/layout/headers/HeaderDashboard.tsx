@@ -69,7 +69,7 @@ export default function HeaderDashboard() {
       (document as any).msExitFullscreen();
     }
   };
-  const handleResize = () => {};
+  const handleResize = () => { };
   useEffect(() => {
     if (window.innerWidth < 990) {
       document
@@ -199,14 +199,14 @@ export default function HeaderDashboard() {
                 </div>
 
                 <div className="d-flex items-center sm:d-none">
-                  <div className="relative">
+                  {/* <div className="relative">
                     <button
                       onClick={handleDarkmode}
                       className="js-darkmode-toggle text-light-1 d-flex items-center justify-center size-50 rounded-16 -hover-dshb-header-light"
                     >
                       <i className="text-24 icon icon-night"></i>
                     </button>
-                  </div>
+                  </div> */}
 
                   <div className="relative">
                     <button
@@ -217,12 +217,12 @@ export default function HeaderDashboard() {
                     </button>
                   </div>
 
-                  <CartToggle
+                  {/* <CartToggle
                     parentClassess={"relative"}
                     allClasses={
                       "d-flex items-center text-light-1 d-flex items-center justify-center size-50 rounded-16 -hover-dshb-header-light"
                     }
-                  />
+                  /> */}
 
                   <div
                     className="relative"
@@ -250,9 +250,8 @@ export default function HeaderDashboard() {
                     </a>
 
                     <div
-                      className={`toggle-element js-notif-toggle  ${
-                        isOnNotification ? "-is-el-visible" : ""
-                      } -`}
+                      className={`toggle-element js-notif-toggle  ${isOnNotification ? "-is-el-visible" : ""
+                        } -`}
                     >
                       <div className="toggle-bottom -notifications bg-white shadow-4 border-light rounded-8 mt-10">
                         <div className="py-30 px-30">
@@ -260,11 +259,10 @@ export default function HeaderDashboard() {
                             {notifications.map((elm, i) => (
                               <div
                                 key={i}
-                                className={`d-flex items-center  ${
-                                  i !== 0
-                                    ? "border-top-light -dark-border-top-light-5"
-                                    : ""
-                                } `}
+                                className={`d-flex items-center  ${i !== 0
+                                  ? "border-top-light -dark-border-top-light-5"
+                                  : ""
+                                  } `}
                               >
                                 <div className="shrink-0">
                                   <Image
@@ -306,9 +304,8 @@ export default function HeaderDashboard() {
                   </a>
 
                   <div
-                    className={`toggle-element js-profile-toggle ${
-                      isOnProfile ? "-is-el-visible" : ""
-                    } -`}
+                    className={`toggle-element js-profile-toggle ${isOnProfile ? "-is-el-visible" : ""
+                      } -`}
                   >
                     <div className="toggle-bottom -profile bg-white shadow-4 border-light rounded-8 mt-10">
                       <div className="px-30 py-30">
@@ -316,9 +313,8 @@ export default function HeaderDashboard() {
                           {sidebarItems.map((elm, i) => (
                             <div
                               key={i}
-                              className={`sidebar__item ${
-                                elm.id == 1 ? "-is-active -dark-bg-dark-2" : ""
-                              }`}
+                              className={`sidebar__item ${elm.id == 1 ? "-is-active -dark-bg-dark-2" : ""
+                                }`}
                             >
                               {elm.text === "Logout" ? (
                                 <SignOutButton>

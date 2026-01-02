@@ -1,53 +1,59 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinus, faPlus, faX } from "@fortawesome/free-solid-svg-icons";
-
-import { useStore } from "@/store/useStore";
+import { faX } from "@fortawesome/free-solid-svg-icons";
+import { useCartStore } from "@/store/cartStore";
 import Link from "next/link";
+import Image from "next/image";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function CourseCart() {
-  const { cartCourses, setCartCourses } = useStore();
-  const [totalPrice, setTotalPrice] = useState(0);
+  const { cartCourses, removeCourseFromCart, isLoading, getTotalPrice, clearCart } = useCartStore();
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const router = useRouter();
+  const totalPrice = getTotalPrice();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleRemoveCart = async (courseId: number) => {
+    await removeCourseFromCart(courseId);
+    toast.success("Removed from cart");
   };
 
-  const handleIncrease = (index: number) => {
-    const item = cartCourses[index];
+  const handleCheckout = async () => {
+    if (cartCourses.length === 0) {
+      toast.error("Your cart is empty");
+      return;
+    }
 
-    item.quantity += 1;
-    const updated = [...cartCourses];
-    updated[index] = item;
+    setIsCheckingOut(true);
+    try {
+      const response = await fetch("/api/cart/checkout", {
+        method: "POST",
+      });
 
-    setCartCourses(updated);
-  };
-  const handleDecrease = (index: number) => {
-    const item = cartCourses[index];
+      const data = await response.json();
 
-    if (item.quantity > 1) {
-      item.quantity -= 1;
-      const updated = [...cartCourses];
-      updated[index] = item;
+      if (!response.ok) {
+        throw new Error(data.error || "Checkout failed");
+      }
 
-      setCartCourses(updated);
+      // If there's a redirect URL (paid courses), redirect to PhonePe
+      if (data.redirectUrl) {
+        window.location.href = data.redirectUrl;
+      } else {
+        // Only free courses - direct enrollment success
+        clearCart();
+        toast.success("Successfully enrolled in free courses!");
+        router.push("/dshb-courses");
+      }
+    } catch (error) {
+      console.error("Checkout error:", error);
+      toast.error(error instanceof Error ? error.message : "Checkout failed");
+    } finally {
+      setIsCheckingOut(false);
     }
   };
-
-  const handleRemoveCart = (index: number) => {
-    const item = cartCourses[index];
-
-    setCartCourses(cartCourses.filter((elm) => elm !== item));
-  };
-  useEffect(() => {
-    const sum = cartCourses.reduce((accumulator, currentValue) => {
-      return accumulator + currentValue.discountedPrice * currentValue.quantity;
-    }, 0);
-    setTotalPrice(sum);
-  }, [cartCourses]);
 
   return (
     <>
@@ -62,7 +68,7 @@ export default function CourseCart() {
 
                 <div>
                   <p className="page-header__text">
-                    We’re on a mission to deliver engaging, curated courses at a
+                    We're on a mission to deliver engaging, curated courses at a
                     reasonable price.
                   </p>
                 </div>
@@ -78,17 +84,14 @@ export default function CourseCart() {
             <div className="col-12">
               <div className="px-30 pr-60 py-25 rounded-8 bg-light-6 md:d-none">
                 <div className="row justify-between">
-                  <div className="col-md-4">
-                    <div className="fw-500 text-purple-1">Product</div>
+                  <div className="col-md-5">
+                    <div className="fw-500 text-purple-1">Course</div>
+                  </div>
+                  <div className="col-md-3">
+                    <div className="fw-500 text-purple-1">Instructor</div>
                   </div>
                   <div className="col-md-2">
                     <div className="fw-500 text-purple-1">Price</div>
-                  </div>
-                  <div className="col-md-2">
-                    <div className="fw-500 text-purple-1">Quantity</div>
-                  </div>
-                  <div className="col-md-2">
-                    <div className="fw-500 text-purple-1">Subtotal</div>
                   </div>
                   <div className="col-md-1">
                     <div className="d-flex justify-end">
@@ -99,165 +102,134 @@ export default function CourseCart() {
               </div>
 
               <div className="px-30 pr-60 md:px-0">
-                {cartCourses.map((elm, i) => (
-                  <div
-                    key={i}
-                    className="row y-gap-20 justify-between items-center pt-30 pb-30 border-bottom-light"
-                  >
-                    <div className="col-md-4">
-                      <div className="d-flex items-center">
-                        <div className="">
-                          <div
-                            className="size-100 bg-image rounded-8 js-lazy"
-                            style={{ backgroundImage: `url(${elm.imageSrc})` }}
-                          ></div>
-                        </div>
-                        <div className="fw-500 text-dark-1 ml-30">
-                          <Link
-                            className="linkCustom"
-                            href={`/courses/${elm.id}`}
-                          >
-                            {elm.title}{" "}
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="col-md-2 md:mt-15">
-                      <div className="">
-                        <div className="shopCart-products__title d-none md:d-block mb-10">
-                          Price
-                        </div>
-                        <p>{elm.paid ? `$${elm.discountedPrice}` : "Free"}</p>
-                      </div>
-                    </div>
-
-                    <div className="col-md-2">
-                      <div className="">
-                        <div className="shopCart-products__title d-none md:d-block mb-10">
-                          Quantity
-                        </div>
-
-                        <div className="input-counter md:mt-20 js-input-counter">
-                          <input
-                            required
-                            className="input-counter__counter"
-                            type="number"
-                            placeholder="value..."
-                            value={elm.quantity}
-                          />
-
-                          <div className="input-counter__controls">
-                            <button
-                              className="input-counter__up js-down"
-                              onClick={() => handleDecrease(i)}
+                {isLoading ? (
+                  <div className="py-60 text-center">
+                    <p className="text-18 text-dark-1">Loading cart...</p>
+                  </div>
+                ) : cartCourses.length === 0 ? (
+                  <div className="py-60 text-center">
+                    <p className="text-18 text-dark-1 mb-20">Your cart is empty</p>
+                    <Link
+                      href="/courses-list-1"
+                      className="button -md -purple-1 text-white"
+                    >
+                      Browse Courses
+                    </Link>
+                  </div>
+                ) : (
+                  cartCourses.map((course) => (
+                    <div
+                      key={course.id}
+                      className="row y-gap-20 justify-between items-center pt-30 pb-30 border-bottom-light"
+                    >
+                      <div className="col-md-5">
+                        <div className="d-flex items-center">
+                          <div className="">
+                            <div
+                              className="size-100 bg-image rounded-8"
+                              style={{ backgroundImage: `url(${course.thumbnail})` }}
+                            ></div>
+                          </div>
+                          <div className="fw-500 text-dark-1 ml-30">
+                            <Link
+                              className="linkCustom"
+                              href={`/courses/${course.id}`}
                             >
-                              <FontAwesomeIcon icon={faMinus} />
-                            </button>
-
-                            <button
-                              className="input-counter__down js-up"
-                              onClick={() => handleIncrease(i)}
-                            >
-                              <FontAwesomeIcon icon={faPlus} />
-                            </button>
+                              {course.title}
+                            </Link>
                           </div>
                         </div>
                       </div>
-                    </div>
 
-                    <div className="col-md-1">
-                      <div className="">
-                        <div className="shopCart-products__title d-none md:d-block mb-10">
-                          Subtotal
+                      <div className="col-md-3 md:mt-15">
+                        <div className="">
+                          <div className="shopCart-products__title d-none md:d-block mb-10">
+                            Instructor
+                          </div>
+                          <p>{course.instructorName || "Instructor"}</p>
                         </div>
-
-                        <p>
-                          ${(elm.quantity * elm.discountedPrice).toFixed(2)}
-                        </p>
                       </div>
-                    </div>
 
-                    <div className="col-md-1">
-                      <div
-                        className="md:d-none d-flex justify-end"
-                        onClick={() => handleRemoveCart(i)}
-                      >
-                        <FontAwesomeIcon icon={faX} />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="shopCart-footer px-16 mt-30">
-                {cartCourses.length > 0 ? (
-                  <div className="row justify-between y-gap-30">
-                    <div className="col-xl-5">
-                      <form className="" onSubmit={handleSubmit}>
-                        <div className="d-flex justify-between border-dark">
-                          <input
-                            required
-                            className="rounded-8 px-25 py-20"
-                            type="text"
-                            placeholder="Coupon Code"
-                          />
-                          <button className="text-black fw-500" type="submit">
-                            Apply coupon
-                          </button>
+                      <div className="col-md-2 md:mt-15">
+                        <div className="">
+                          <div className="shopCart-products__title d-none md:d-block mb-10">
+                            Price
+                          </div>
+                          <p className="text-18 fw-500">
+                            {course.price > 0 ? `₹${course.price}` : "Free"}
+                          </p>
                         </div>
-                      </form>
-                    </div>
+                      </div>
 
-                    <div className="col-auto">
-                      <div className="shopCart-footer__item">
-                        <button className="button -md -purple-3 text-purple-1">
-                          Update cart
+                      <div className="col-md-1">
+                        <button
+                          className="md:d-none d-flex justify-end text-light-1 hover:text-red-1"
+                          onClick={() => handleRemoveCart(course.id)}
+                          disabled={isLoading}
+                          aria-label="Remove from cart"
+                        >
+                          <FontAwesomeIcon icon={faX} />
                         </button>
                       </div>
                     </div>
-                  </div>
-                ) : (
-                  <div className="row justify-center pt-60 lg:pt-40">
+                  ))
+                )}
+              </div>
+
+              {cartCourses.length > 0 && (
+                <div className="shopCart-footer px-16 mt-30">
+                  <div className="row justify-end">
                     <div className="col-auto">
                       <Link
                         href="/courses-list-1"
                         className="button -md -outline-purple-1 text-purple-1"
                       >
-                        Buy Course
+                        Continue Shopping
                       </Link>
                     </div>
                   </div>
+                </div>
+              )}
+            </div>
+
+            {cartCourses.length > 0 && (
+              <div className="col-xl-4 col-lg-5 layout-pt-lg">
+                <div className="py-30 bg-light-4 rounded-8 border-light">
+                  <h5 className="px-30 text-20 fw-500">Cart Totals</h5>
+
+                  <div className="d-flex justify-between px-30 item mt-25">
+                    <div className="py-15 fw-500 text-dark-1">
+                      Items ({cartCourses.length})
+                    </div>
+                    <div className="py-15 fw-500 text-dark-1">
+                      ₹{totalPrice.toFixed(2)}
+                    </div>
+                  </div>
+
+                  <div className="d-flex justify-between px-30 item border-top-dark">
+                    <div className="pt-15 fw-500 text-dark-1">Total</div>
+                    <div className="pt-15 fw-500 text-dark-1 text-20">
+                      ₹{totalPrice.toFixed(2)}
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleCheckout}
+                  disabled={isCheckingOut || isLoading}
+                  className={`button -md -purple-1 text-white col-12 mt-30 ${isCheckingOut ? "opacity-70" : ""
+                    }`}
+                >
+                  {isCheckingOut ? "Processing..." : "Proceed to Checkout"}
+                </button>
+
+                {totalPrice === 0 && (
+                  <p className="text-center text-14 text-light-1 mt-15">
+                    All courses are free! Click checkout to enroll.
+                  </p>
                 )}
               </div>
-            </div>
-
-            <div className="col-xl-4 col-lg-5 layout-pt-lg">
-              <div className="py-30 bg-light-4 rounded-8 border-light">
-                <h5 className="px-30 text-20 fw-500">Cart Totals</h5>
-
-                <div className="d-flex justify-between px-30 item mt-25">
-                  <div className="py-15 fw-500 text-dark-1">Subtotal</div>
-                  <div className="py-15 fw-500 text-dark-1">
-                    ${totalPrice.toFixed(2)}
-                  </div>
-                </div>
-
-                <div className="d-flex justify-between px-30 item border-top-dark">
-                  <div className="pt-15 fw-500 text-dark-1">Total</div>
-                  <div className="pt-15 fw-500 text-dark-1">
-                    ${totalPrice.toFixed(2)}
-                  </div>
-                </div>
-              </div>
-
-              <Link
-                href="/course-checkout"
-                className="button -md -purple-1 text-white col-12 mt-30"
-              >
-                Proceed to checkout
-              </Link>
-            </div>
+            )}
           </div>
         </div>
       </section>

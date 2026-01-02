@@ -9,6 +9,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "react-hot-toast";
+import { CartSyncProvider } from "@/components/providers/CartSyncProvider";
 // config.autoAddCss = false;
 
 export default function RootLayout({
@@ -20,12 +21,15 @@ export default function RootLayout({
     <ClerkProvider dynamic={true}>
       <html lang="en">
         <body>
-          <Header />
-          <main>{children}</main>
-          <Footer />
+          <CartSyncProvider>
+            <Header />
+            <main>{children}</main>
+            <Footer />
+          </CartSyncProvider>
           <Toaster position="top-right" />
         </body>
       </html>
     </ClerkProvider>
   );
 }
+

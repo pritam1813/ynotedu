@@ -41,6 +41,7 @@ model User {
   profile     UserProfile?
   instructor  Instructor?
   enrollments Enrollment[]
+  cart        Cart?
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 }
@@ -104,12 +105,13 @@ model Course {
   isPublished  Boolean    @default(false)
   lessons      Int        @default(0)
   students     Int        @default(0)
-  meetings     Meeting[]    @relation("CourseMeetings")
+  meetings     Meeting[]      @relation("CourseMeetings")
   sections     Section[]
   demoLink     DemoLink?
   enrollments  Enrollment[]
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  carts        CourseOnCart[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
 }
 
 model DemoLink {
@@ -266,4 +268,21 @@ enum EnrollmentStatus {
   ACTIVE    // Successfully enrolled/paid
   CANCELLED // Enrollment cancelled
   REFUNDED  // Payment refunded
+}
+
+model Cart {
+  id      String         @id @default(cuid())
+  userId  String         @unique
+  user    User           @relation(fields: [userId], references: [id])
+  courses CourseOnCart[]
+}
+
+model CourseOnCart {
+  cart     Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  cartId   String
+  course   Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId Int
+  addedAt  DateTime @default(now())
+
+  @@id([cartId, courseId])
 }

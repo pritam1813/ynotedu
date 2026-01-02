@@ -1,11 +1,11 @@
-"use client";
+// "use client";
 
 import React, { useState, useEffect } from "react";
-import { useStore } from "@/store/useStore";
+// import { useStore } from "@/store/useStore";
 import Link from "next/link";
 export default function EventCheckOut() {
-  
-  const { cartEvents } = useStore();
+
+  // const { cartEvents } = useStore();
   const [totalPrice, setTotalPrice] = useState(0);
   const [shiping, setShiping] = useState(0);
   useEffect(() => {
@@ -220,12 +220,11 @@ export default function EventCheckOut() {
                   {cartEvents.map((elm, i) => (
                     <div
                       key={i}
-                      className={`d-flex justify-between ${
-                        i == 0 ? "border-top-dark" : ""
-                      }  px-30`}
+                      className={`d-flex justify-between ${i == 0 ? "border-top-dark" : ""
+                        }  px-30`}
                     >
                       <div className="py-15 text-grey">
-                      <Link
+                        <Link
                           className="linkCustom"
                           href={`/events/${elm.id}`}
                         >

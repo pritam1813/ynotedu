@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useStore } from "@/store/useStore";
+// import { useStore } from "@/store/useStore";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import ModalVideoComponent from "../common/ModalVideo";
@@ -22,7 +22,7 @@ export default function PinContentOld({
 }: {
   course: CourseWithInstructor;
 }) {
-  const { isAddedToCartCourses, addCourseToCart } = useStore();
+  // const { isAddedToCartCourses, addCourseToCart } = useStore();
   const { isSignedIn, isLoaded } = useUser();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -226,9 +226,9 @@ export default function PinContentOld({
           <>
             <button
               className="button -md -purple-1 text-white w-1/1"
-              onClick={() => addCourseToCart(courseId)}
+            // onClick={() => addCourseToCart(courseId)}
             >
-              {isAddedToCartCourses(courseId) ? "Already Added" : "Add To Cart"}
+              {/* {isAddedToCartCourses(courseId) ? "Already Added" : "Add To Cart"} */}
             </button>
             <button
               className="button -md -outline-dark-1 text-dark-1 w-1/1 mt-10"

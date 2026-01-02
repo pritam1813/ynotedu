@@ -52,16 +52,16 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "Invalid callback" }, { status: 400 });
         }
 
-        // Find the enrollment by paymentId
-        const enrollment = await prisma.enrollment.findFirst({
+        // Find all enrollments with this paymentId (could be multiple for cart checkout)
+        const enrollments = await prisma.enrollment.findMany({
             where: { paymentId: orderId },
             include: { course: true },
         });
 
-        if (!enrollment) {
-            console.error("Enrollment not found for order:", orderId);
+        if (enrollments.length === 0) {
+            console.error("No enrollments found for order:", orderId);
             return NextResponse.json(
-                { error: "Enrollment not found" },
+                { error: "Enrollments not found" },
                 { status: 404 }
             );
         }
@@ -72,30 +72,51 @@ export async function POST(request: NextRequest) {
         console.log("PhonePe status response:", statusResponse);
 
         if (statusResponse?.state === "COMPLETED") {
-            // Payment successful - activate enrollment
-            if (enrollment.status !== "ACTIVE") {
-                await prisma.enrollment.update({
-                    where: { id: enrollment.id },
-                    data: { status: "ACTIVE" },
-                });
+            // Payment successful - activate all enrollments
+            for (const enrollment of enrollments) {
+                if (enrollment.status !== "ACTIVE") {
+                    await prisma.enrollment.update({
+                        where: { id: enrollment.id },
+                        data: { status: "ACTIVE" },
+                    });
 
-                // Increment student count on the course
-                await prisma.course.update({
-                    where: { id: enrollment.courseId },
-                    data: { students: { increment: 1 } },
-                });
+                    // Increment student count on the course
+                    await prisma.course.update({
+                        where: { id: enrollment.courseId },
+                        data: { students: { increment: 1 } },
+                    });
 
-                console.log("Payment successful, enrollment activated:", enrollment.id);
+                    console.log("Payment successful, enrollment activated:", enrollment.id);
+                }
+            }
+
+            // Clear user's cart after successful payment
+            const userId = enrollments[0]?.userId;
+            if (userId) {
+                const cart = await prisma.cart.findUnique({
+                    where: { userId },
+                });
+                if (cart) {
+                    // Remove purchased courses from cart
+                    await prisma.courseOnCart.deleteMany({
+                        where: {
+                            cartId: cart.id,
+                            courseId: { in: enrollments.map((e) => e.courseId) },
+                        },
+                    });
+                }
             }
         } else if (statusResponse?.state === "PENDING") {
-            console.log("Payment pending for enrollment:", enrollment.id);
+            console.log("Payment pending for enrollments:", enrollments.map((e) => e.id));
         } else {
-            // Payment failed - mark as cancelled
-            await prisma.enrollment.update({
-                where: { id: enrollment.id },
-                data: { status: "CANCELLED" },
-            });
-            console.log("Payment failed, enrollment cancelled:", enrollment.id);
+            // Payment failed - mark all as cancelled
+            for (const enrollment of enrollments) {
+                await prisma.enrollment.update({
+                    where: { id: enrollment.id },
+                    data: { status: "CANCELLED" },
+                });
+            }
+            console.log("Payment failed, enrollments cancelled:", enrollments.map((e) => e.id));
         }
 
         // Return success to PhonePe (acknowledge callback received)
@@ -109,11 +130,13 @@ export async function POST(request: NextRequest) {
     }
 }
 
-// GET /api/payments/phonepe/callback - Check payment status
+// GET /api/payments/phonepe/callback - Check payment status (also used by success page)
 export async function GET(request: NextRequest) {
     try {
         const searchParams = request.nextUrl.searchParams;
-        const orderId = searchParams.get("orderId") || searchParams.get("transactionId");
+        const orderId = searchParams.get("orderId") ||
+            searchParams.get("transactionId") ||
+            searchParams.get("merchantOrderId");
 
         if (!orderId) {
             return NextResponse.json(
@@ -125,46 +148,74 @@ export async function GET(request: NextRequest) {
         // Check payment status with PhonePe
         const statusResponse = await checkPaymentStatus(orderId);
 
-        // Find the enrollment
-        const enrollment = await prisma.enrollment.findFirst({
+        // Find all enrollments with this paymentId
+        const enrollments = await prisma.enrollment.findMany({
             where: { paymentId: orderId },
             include: { course: true },
         });
 
-        if (!enrollment) {
+        if (enrollments.length === 0) {
             return NextResponse.json(
-                { error: "Enrollment not found" },
+                { error: "Enrollments not found" },
                 { status: 404 }
             );
         }
 
-        // Update enrollment based on status
+        // Update enrollments based on status
         if (statusResponse?.state === "COMPLETED") {
-            if (enrollment.status !== "ACTIVE") {
-                await prisma.enrollment.update({
-                    where: { id: enrollment.id },
-                    data: { status: "ACTIVE" },
-                });
-                await prisma.course.update({
-                    where: { id: enrollment.courseId },
-                    data: { students: { increment: 1 } },
-                });
+            let activatedCount = 0;
+            for (const enrollment of enrollments) {
+                if (enrollment.status !== "ACTIVE") {
+                    await prisma.enrollment.update({
+                        where: { id: enrollment.id },
+                        data: { status: "ACTIVE" },
+                    });
+                    await prisma.course.update({
+                        where: { id: enrollment.courseId },
+                        data: { students: { increment: 1 } },
+                    });
+                    activatedCount++;
+                }
             }
+
+            // Clear user's cart after successful payment
+            const userId = enrollments[0]?.userId;
+            if (userId) {
+                const cart = await prisma.cart.findUnique({
+                    where: { userId },
+                });
+                if (cart) {
+                    await prisma.courseOnCart.deleteMany({
+                        where: {
+                            cartId: cart.id,
+                            courseId: { in: enrollments.map((e) => e.courseId) },
+                        },
+                    });
+                }
+            }
+
             return NextResponse.json({
+                success: true,
                 status: "SUCCESS",
-                enrollment: { ...enrollment, status: "ACTIVE" },
+                enrolledCount: enrollments.length,
+                courses: enrollments.map((e) => ({
+                    id: e.course.id,
+                    title: e.course.title,
+                })),
             });
         } else if (statusResponse?.state === "PENDING") {
             return NextResponse.json({
+                success: false,
                 status: "PENDING",
-                enrollment,
+                enrolledCount: 0,
             });
         } else {
             return NextResponse.json({
+                success: false,
                 status: "FAILED",
                 state: statusResponse?.state,
                 message: statusResponse?.message,
-                enrollment,
+                error: "Payment failed",
             });
         }
     } catch (error) {

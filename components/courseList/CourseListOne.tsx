@@ -16,7 +16,7 @@ import Star from "../common/Star";
 
 import Image from "next/image";
 import Link from "next/link";
-import { useStore } from "@/store/useStore";
+// import { useStore } from "@/store/useStore";
 import PaginationTwo from "../common/PaginationTwo";
 
 export default function CourseListOne() {
@@ -28,7 +28,7 @@ export default function CourseListOne() {
   const [openLanguage, setOpenLanguage] = useState(true);
   const [durationOpen, setDurationOpen] = useState(true);
   const [filterOpen, setFilterOpen] = useState(false);
-  const { isAddedToCartCourses, addCourseToCart } = useStore();
+  // const { isAddedToCartCourses, addCourseToCart } = useStore();
 
   const [filterCategories, setFilterCategories] = useState([]);
   const [filterRatingRange, setFilterRatingRange] = useState([]);
@@ -217,9 +217,8 @@ export default function CourseListOne() {
                   <div className="sidebar__item">
                     <div className="accordion js-accordion">
                       <div
-                        className={`accordion__item js-accordion-item-active ${
-                          categoryOpen ? "is-active" : ""
-                        } `}
+                        className={`accordion__item js-accordion-item-active ${categoryOpen ? "is-active" : ""
+                          } `}
                       >
                         <div
                           className="accordion__button items-center"
@@ -315,9 +314,8 @@ export default function CourseListOne() {
                   <div className="sidebar__item">
                     <div className="accordion js-accordion">
                       <div
-                        className={`accordion__item js-accordion-item-active ${
-                          ratingOpen ? "is-active" : ""
-                        } `}
+                        className={`accordion__item js-accordion-item-active ${ratingOpen ? "is-active" : ""
+                          } `}
                       >
                         <div
                           className="accordion__button items-center"
@@ -421,9 +419,8 @@ export default function CourseListOne() {
                   <div className="sidebar__item">
                     <div className="accordion js-accordion">
                       <div
-                        className={`accordion__item js-accordion-item-active ${
-                          instractorOpen ? "is-active" : ""
-                        } `}
+                        className={`accordion__item js-accordion-item-active ${instractorOpen ? "is-active" : ""
+                          } `}
                       >
                         <div
                           className="accordion__button items-center"
@@ -518,9 +515,8 @@ export default function CourseListOne() {
                   <div className="sidebar__item">
                     <div className="accordion js-accordion">
                       <div
-                        className={`accordion__item js-accordion-item-active ${
-                          priceOpen ? "is-active" : ""
-                        } `}
+                        className={`accordion__item js-accordion-item-active ${priceOpen ? "is-active" : ""
+                          } `}
                       >
                         <div
                           className="accordion__button items-center"
@@ -584,9 +580,8 @@ export default function CourseListOne() {
                   <div className="sidebar__item">
                     <div className="accordion js-accordion">
                       <div
-                        className={`accordion__item js-accordion-item-active ${
-                          levelOpen ? "is-active" : ""
-                        }  `}
+                        className={`accordion__item js-accordion-item-active ${levelOpen ? "is-active" : ""
+                          }  `}
                       >
                         <div
                           className="accordion__button items-center"
@@ -670,9 +665,8 @@ export default function CourseListOne() {
                   <div className="sidebar__item">
                     <div className="accordion js-accordion">
                       <div
-                        className={`accordion__item js-accordion-item-active ${
-                          openLanguage ? "is-active" : ""
-                        } `}
+                        className={`accordion__item js-accordion-item-active ${openLanguage ? "is-active" : ""
+                          } `}
                       >
                         <div
                           className="accordion__button items-center"
@@ -765,9 +759,8 @@ export default function CourseListOne() {
                   <div className="sidebar__item">
                     <div className="accordion js-accordion">
                       <div
-                        className={`accordion__item js-accordion-item-active ${
-                          durationOpen ? "is-active" : ""
-                        } `}
+                        className={`accordion__item js-accordion-item-active ${durationOpen ? "is-active" : ""
+                          } `}
                       >
                         <div
                           className="accordion__button items-center"
@@ -820,7 +813,7 @@ export default function CourseListOne() {
                                       type="checkbox"
                                       defaultChecked={
                                         filterDuration.toString() ==
-                                        elm.range.toString()
+                                          elm.range.toString()
                                           ? true
                                           : false
                                       }
@@ -858,9 +851,8 @@ export default function CourseListOne() {
             <div className="col-xl-9 col-lg-8">
               <div className="accordion js-accordion">
                 <div
-                  className={`accordion__item ${
-                    filterOpen ? "is-active" : ""
-                  } `}
+                  className={`accordion__item ${filterOpen ? "is-active" : ""
+                    } `}
                 >
                   <div className="row y-gap-20 items-center justify-between pb-30">
                     <div className="col-auto">
@@ -925,11 +917,10 @@ export default function CourseListOne() {
                                       }}
                                     >
                                       <span
-                                        className={`d-block js-dropdown-link cursor ${
-                                          currentSortingOption == elm
+                                        className={`d-block js-dropdown-link cursor ${currentSortingOption == elm
                                             ? "activeMenu"
                                             : ""
-                                        } `}
+                                          } `}
                                       >
                                         {elm}
                                       </span>
@@ -1402,7 +1393,7 @@ export default function CourseListOne() {
                                       type="checkbox"
                                       defaultChecked={
                                         filterDuration.toString() ==
-                                        item.range.toString()
+                                          item.range.toString()
                                           ? true
                                           : false
                                       }
@@ -1684,7 +1675,7 @@ export default function CourseListOne() {
 
                           <div className="row x-gap-20 y-gap-15 items-center pt-30">
                             <div className="col">
-                              <button
+                              {/* <button
                                 style={{ padding: "0px 54px" }}
                                 className="button -md h-60 -purple-1 text-white col-12 py-54"
                                 onClick={() => addCourseToCart(elm.id)}
@@ -1692,7 +1683,7 @@ export default function CourseListOne() {
                                 {isAddedToCartCourses(elm.id)
                                   ? "Already Added"
                                   : "Add To Cart"}
-                              </button>
+                              </button> */}
                             </div>
                             <div className="col-auto">
                               <div className="d-flex items-center justify-center size-60 rounded-full border-light">

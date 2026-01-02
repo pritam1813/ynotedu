@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Star from "../common/Star";
-import { useStore } from "@/store/useStore";
+import { useCartStore } from "@/store/cartStore";
+import toast from "react-hot-toast";
 
 interface CourseCardProps {
   course: {
@@ -27,7 +28,30 @@ interface CourseCardProps {
 }
 
 const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
-  const { isAddedToCartCourses, addCourseToCart } = useStore();
+  const { isAddedToCartCourses, addCourseToCart, isLoading } = useCartStore();
+  const [isAdding, setIsAdding] = useState(false);
+  const isInCart = isAddedToCartCourses(course.id);
+
+  const handleAddToCart = async () => {
+    if (isInCart || isAdding) return;
+
+    setIsAdding(true);
+    try {
+      await addCourseToCart({
+        id: course.id,
+        title: course.title,
+        thumbnail: course.imageSrc,
+        price: course.discountedPrice || 0,
+        instructorName: course.authorName,
+      });
+      toast.success("Added to cart!");
+    } catch (error) {
+      console.error("Failed to add to cart:", error);
+      toast.error("Failed to add to cart");
+    } finally {
+      setIsAdding(false);
+    }
+  };
 
   return (
     <div className="side-content col-xl-4 col-lg-6 col-md-4 col-sm-6">
@@ -257,12 +281,11 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
             <div className="col">
               <button
                 style={{ padding: "0px 54px" }}
-                className="button -md h-60 -purple-1 text-white col-12 py-54"
-                onClick={() => addCourseToCart(course.id)}
+                className={`button -md h-60 -purple-1 text-white col-12 py-54 ${isAdding || isLoading ? "opacity-70" : ""}`}
+                onClick={handleAddToCart}
+                disabled={isInCart || isAdding || isLoading}
               >
-                {isAddedToCartCourses(course.id)
-                  ? "Already Added"
-                  : "Add To Cart"}
+                {isAdding ? "Adding..." : isInCart ? "Already Added" : "Add To Cart"}
               </button>
             </div>
             <div className="col-auto">

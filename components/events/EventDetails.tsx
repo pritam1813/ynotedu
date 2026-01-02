@@ -8,9 +8,9 @@ import Socials from "../common/Socials";
 import { instractorsNine } from "@/data/instractors";
 import Star from "../common/Star";
 import Link from "next/link";
-import { useStore } from "@/store/useStore";
+// import { useStore } from "@/store/useStore";
 export default function EventDetails({ id }) {
-  const { addEventToCart, isAddedToCartEvents } = useStore();
+  // const { addEventToCart, isAddedToCartEvents } = useStore();
   const data = events.filter((elm) => elm.id == id)[0] || events[0];
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -369,10 +369,10 @@ export default function EventDetails({ id }) {
                 </div>
 
                 <div
-                  onClick={() => addEventToCart(data.id)}
+                  // onClick={() => addEventToCart(data.id)}
                   className="button -md col-12 -purple-1 text-white mt-30 cursor"
                 >
-                  {isAddedToCartEvents(data.id) ? "Booked" : "Book Now"}
+                  {/* {isAddedToCartEvents(data.id) ? "Booked" : "Book Now"} */}
                 </div>
 
                 <div className="d-flex justify-center pt-25">

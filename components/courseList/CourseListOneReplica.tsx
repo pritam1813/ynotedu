@@ -15,7 +15,7 @@ import Star from "../common/Star";
 
 import Image from "next/image";
 import Link from "next/link";
-import { useStore } from "@/store/useStore";
+// import { useStore } from "@/store/useStore";
 import PaginationTwo from "../common/PaginationTwo";
 import type { Course, Category } from "@prisma/client";
 import CoursesSideBar from "./CoursesSideBar";
@@ -39,7 +39,7 @@ export default function CourseListOne({
   const [openLanguage, setOpenLanguage] = useState(true);
   const [durationOpen, setDurationOpen] = useState(true);
   const [filterOpen, setFilterOpen] = useState(false);
-  const { isAddedToCartCourses, addCourseToCart } = useStore();
+  // const { isAddedToCartCourses, addCourseToCart } = useStore();
 
   const [filterCategories, setFilterCategories] = useState([]);
   const [filterRatingRange, setFilterRatingRange] = useState([]);
@@ -231,9 +231,8 @@ export default function CourseListOne({
             <div className="col-xl-9 col-lg-8">
               <div className="accordion js-accordion">
                 <div
-                  className={`accordion__item ${
-                    filterOpen ? "is-active" : ""
-                  } `}
+                  className={`accordion__item ${filterOpen ? "is-active" : ""
+                    } `}
                 >
                   <div className="row y-gap-20 items-center justify-between pb-30">
                     <div className="col-auto">
@@ -775,7 +774,7 @@ export default function CourseListOne({
                                       type="checkbox"
                                       defaultChecked={
                                         filterDuration.toString() ==
-                                        item.range.toString()
+                                          item.range.toString()
                                           ? true
                                           : false
                                       }

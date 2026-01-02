@@ -3,24 +3,24 @@
 import React from "react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { useStore } from "@/store/useStore";
+// import { useStore } from "@/store/useStore";
 import Link from "next/link";
 
 const EventCart = () => {
-  const { cartEvents, setCartEvents } = useStore();
+  // const { cartEvents, setCartEvents } = useStore();
   const [totalPrice, setTotalPrice] = useState(0);
 
-  const handleRemoveCart = (index) => {
-    const item = cartEvents[index];
-    setCartEvents(cartEvents.filter((elm) => elm !== item));
-  };
+  // const handleRemoveCart = (index) => {
+  //   const item = cartEvents[index];
+  //   setCartEvents(cartEvents.filter((elm) => elm !== item));
+  // };
 
-  useEffect(() => {
-    const sum = cartEvents.reduce((accumulator, currentValue) => {
-      return accumulator + currentValue.price * currentValue.quantity;
-    }, 0);
-    setTotalPrice(sum);
-  }, [cartEvents]);
+  // useEffect(() => {
+  //   const sum = cartEvents.reduce((accumulator, currentValue) => {
+  //     return accumulator + currentValue.price * currentValue.quantity;
+  //   }, 0);
+  //   setTotalPrice(sum);
+  // }, [cartEvents]);
 
   return (
     <div className="header-cart bg-white -dark-bg-dark-1 rounded-8">
@@ -28,7 +28,7 @@ const EventCart = () => {
         className="px-30 pt-30 pb-10"
         style={{ maxHeight: "300px", overflowY: "scroll" }}
       >
-        {cartEvents.map((elm, i) => (
+        {/* {cartEvents.map((elm, i) => (
           <div key={i} className="row justify-between x-gap-40 pb-20">
             <Link
               style={{ textDecoration: "none" }}
@@ -57,12 +57,12 @@ const EventCart = () => {
 
             <div className="col-auto">
               <div
-                onClick={() => handleRemoveCart(i)}
+                // onClick={() => handleRemoveCart(i)}
                 className="icon-close text-dark-1"
               ></div>
             </div>
           </div>
-        ))}
+        ))} */}
       </div>
 
       <div className="px-30 py-20 border-top-light">
@@ -85,7 +85,7 @@ const EventCart = () => {
 
           <div className="col-auto">
             <div className="text-14 lh-16 text-light-1">
-              ${cartEvents.length * 10}
+              {/* ${cartEvents.length * 10} */}
             </div>
           </div>
         </div>
@@ -97,7 +97,7 @@ const EventCart = () => {
 
           <div className="col-auto">
             <div className="text-18 lh-12 fw-500 text-dark-1">
-              ${totalPrice + cartEvents.length * 10}
+              {/* ${totalPrice + cartEvents.length * 10} */}
             </div>
           </div>
         </div>

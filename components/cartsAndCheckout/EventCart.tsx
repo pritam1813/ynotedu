@@ -4,49 +4,49 @@ import React, { useState, useEffect } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus, faX } from "@fortawesome/free-solid-svg-icons";
-import { useStore } from "@/store/useStore";
+// import { useStore } from "@/store/useStore";
 import Link from "next/link";
 
 export default function EventCart() {
-  const { cartEvents, setCartEvents } = useStore();
+  // const { cartEvents, setCartEvents } = useStore();
   const [totalPrice, setTotalPrice] = useState(0);
 
   const handleSubmit = (e) => {
     e.preventDefault();
   };
 
-  const handleIncrease = (index) => {
-    const item = cartEvents[index];
+  // const handleIncrease = (index) => {
+  //   const item = cartEvents[index];
 
-    item.quantity += 1;
-    const updated = [...cartEvents];
-    updated[index] = item;
+  //   item.quantity += 1;
+  //   const updated = [...cartEvents];
+  //   updated[index] = item;
 
-    setCartEvents(updated);
-  };
-  const handleDecrease = (index) => {
-    const item = cartEvents[index];
+  //   setCartEvents(updated);
+  // };
+  // const handleDecrease = (index) => {
+  //   const item = cartEvents[index];
 
-    if (item.quantity > 1) {
-      item.quantity -= 1;
-      const updated = [...cartEvents];
-      updated[index] = item;
+  //   if (item.quantity > 1) {
+  //     item.quantity -= 1;
+  //     const updated = [...cartEvents];
+  //     updated[index] = item;
 
-      setCartEvents(updated);
-    }
-  };
+  //     setCartEvents(updated);
+  //   }
+  // };
 
-  const handleRemoveCart = (index: number) => {
-    const newCartEvents = cartEvents.filter((_, i) => i !== index);
-    setCartEvents(newCartEvents);
-  };
+  // const handleRemoveCart = (index: number) => {
+  //   const newCartEvents = cartEvents.filter((_, i) => i !== index);
+  //   setCartEvents(newCartEvents);
+  // };
 
-  useEffect(() => {
-    const sum = cartEvents.reduce((accumulator, currentValue) => {
-      return accumulator + currentValue.price * currentValue.quantity;
-    }, 0);
-    setTotalPrice(sum);
-  }, [cartEvents]);
+  // useEffect(() => {
+  //   const sum = cartEvents.reduce((accumulator, currentValue) => {
+  //     return accumulator + currentValue.price * currentValue.quantity;
+  //   }, 0);
+  //   setTotalPrice(sum);
+  // }, [cartEvents]);
 
   return (
     <>
@@ -98,7 +98,7 @@ export default function EventCart() {
               </div>
 
               <div className="px-30 pr-60 md:px-0">
-                {cartEvents.map((elm, i) => (
+                {/* {cartEvents.map((elm, i) => (
                   <div
                     key={i}
                     className="row y-gap-20 justify-between items-center pt-30 pb-30 border-bottom-light"
@@ -184,10 +184,10 @@ export default function EventCart() {
                       </div>
                     </div>
                   </div>
-                ))}
+                ))} */}
               </div>
 
-              <div className="shopCart-footer px-16 mt-30">
+              {/* <div className="shopCart-footer px-16 mt-30">
                 {cartEvents.length > 0 ? (
                   <div className="row justify-between y-gap-30">
                     <div className="col-xl-5">
@@ -226,7 +226,7 @@ export default function EventCart() {
                     </div>
                   </div>
                 )}
-              </div>
+              </div> */}
             </div>
 
             <div className="col-xl-4 col-lg-5 layout-pt-lg">

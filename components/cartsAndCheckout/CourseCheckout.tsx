@@ -1,24 +1,24 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useStore } from "@/store/useStore";
+// import { useStore } from "@/store/useStore";
 import Link from "next/link";
 
 export default function CourseCheckOut() {
-  const { cartCourses } = useStore();
+  // const { cartCourses } = useStore();
   const [totalPrice, setTotalPrice] = useState(0);
   const [shiping, setShiping] = useState(0);
 
-  useEffect(() => {
-    const sum = cartCourses.reduce((accumulator, currentValue) => {
-      return accumulator + currentValue.discountedPrice * currentValue.quantity;
-    }, 0);
-    const sumQuantity = cartCourses.reduce((accumulator, currentValue) => {
-      return accumulator + currentValue.quantity;
-    }, 0);
-    setShiping(sumQuantity * 10);
-    setTotalPrice(sum);
-  }, [cartCourses]);
+  // useEffect(() => {
+  //   const sum = cartCourses.reduce((accumulator, currentValue) => {
+  //     return accumulator + currentValue.discountedPrice * currentValue.quantity;
+  //   }, 0);
+  //   const sumQuantity = cartCourses.reduce((accumulator, currentValue) => {
+  //     return accumulator + currentValue.quantity;
+  //   }, 0);
+  //   setShiping(sumQuantity * 10);
+  //   setTotalPrice(sum);
+  // }, [cartCourses]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -220,7 +220,7 @@ export default function CourseCheckOut() {
                     <div className="py-15 fw-500 text-dark-1">Subtotal</div>
                   </div>
 
-                  {cartCourses.map((elm, i) => (
+                  {/* {cartCourses.map((elm, i) => (
                     <div
                       key={i}
                       className={`d-flex justify-between ${
@@ -242,7 +242,7 @@ export default function CourseCheckOut() {
                           "Free"}
                       </div>
                     </div>
-                  ))}
+                  ))} */}
 
                   <div className="d-flex justify-between border-top-dark px-30">
                     <div className="py-15 fw-500">Subtotal</div>
