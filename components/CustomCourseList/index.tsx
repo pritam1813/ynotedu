@@ -1,10 +1,12 @@
 import React from "react";
 import { getBaseUrl } from "@/utils/getBaseUrl";
-import type { Category, Course, Instructor } from "@prisma/client";
+import type { Category, Course, Instructor, Meeting, DemoLink } from "@prisma/client";
 import CourseListCategoryWise from "./CourseListCategoryWise";
 
 export interface CourseWithInstructor extends Course {
   instructor: Instructor;
+  meetings?: Meeting[];
+  demoLink?: DemoLink | null;
 }
 
 export interface CourseWithCategory extends Category {
@@ -14,8 +16,8 @@ export interface CourseWithCategory extends Category {
 export const revalidate = 3600;
 
 export default async function CustomCourseListHome() {
-  const url = `${getBaseUrl()}/api/courses/categories`;
-  let categories: CourseWithCategory[] = [];
+  const data = await fetch(`${getBaseUrl()}/api/courses/categories`);
+    let categories: CourseWithCategory[] = [];
 
   try {
     console.log(`[HOMEPAGE FETCH START] Requesting URL: ${url}`);
@@ -69,10 +71,10 @@ export default async function CustomCourseListHome() {
         </div>
       </div>
 
-      {categories.length > 0 && (
+      {categories.length >= 0 && (
         <CourseListCategoryWise
           categories={categories.filter(
-            (catgory) => catgory.courses && catgory.courses.length >= 7
+            (catgory) => catgory.courses.length >= 7
           )}
         />
       )}
