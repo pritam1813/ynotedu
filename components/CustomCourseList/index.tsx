@@ -1,12 +1,10 @@
 import React from "react";
-import { getBaseUrl } from "@/utils/getBaseUrl";
-import type { Category, Course, Instructor, Meeting, DemoLink } from "@prisma/client";
+import { prisma } from "@/lib/client";
+import type { Category, Course, Instructor } from "@prisma/client";
 import CourseListCategoryWise from "./CourseListCategoryWise";
 
 export interface CourseWithInstructor extends Course {
   instructor: Instructor;
-  meetings?: Meeting[];
-  demoLink?: DemoLink | null;
 }
 
 export interface CourseWithCategory extends Category {
@@ -16,10 +14,40 @@ export interface CourseWithCategory extends Category {
 export const revalidate = 3600;
 
 export default async function CustomCourseListHome() {
-  const data = await fetch(`${getBaseUrl()}/api/courses/categories`);
-  const categories: CourseWithCategory[] = await data.json();
+  let categories: CourseWithCategory[] = [];
 
-  // console.log(categories[0].courses);
+  try {
+    categories = (await prisma.category.findMany({
+      include: {
+        courses: {
+          include: {
+            instructor: {
+              select: {
+                id: true,
+                name: true,
+                image: true,
+                role: true,
+                rating: true,
+                reviews: true,
+                students: true,
+                courses: true,
+                userId: true,
+                createdAt: true,
+                updatedAt: true,
+              },
+            },
+          },
+        },
+      },
+    })) as unknown as CourseWithCategory[];
+  } catch (error) {
+    console.error(
+      "[Homepage Error] Failed to query categories from database:",
+      error
+    );
+  }
+
+  const safeCategories = Array.isArray(categories) ? categories : [];
 
   return (
     <section className="layout-pt-lg layout-pb-lg">
@@ -37,10 +65,10 @@ export default async function CustomCourseListHome() {
         </div>
       </div>
 
-      {categories.length >= 0 && (
+      {safeCategories.length > 0 && (
         <CourseListCategoryWise
-          categories={categories.filter(
-            (catgory) => catgory.courses.length >= 7
+          categories={safeCategories.filter(
+            (catgory) => catgory.courses && catgory.courses.length >= 7
           )}
         />
       )}
