@@ -2,9 +2,9 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { getBaseUrl } from "@/utils/getBaseUrl";
+import { safeFetchJson } from "@/utils/safeFetch";
 import { CourseWithInstructor } from "../CustomCourseList";
 import RatingStar from "../common/RatingStar";
-import CourseListAddToCartButton from "./CourseListAddToCartButton";
 
 interface CourseListProps {
   category: string;
@@ -42,16 +42,18 @@ export default async function CourseList({
   queryString += `page=${page}&limit=${limit.toString()}&sort=${sort}`;
   // console.log("final Query string: ", queryString);
 
-  const res = await fetch(queryString);
-  const coursesData: CourseDataProps = await res.json();
-
-  // console.log(coursesData);
+  const resData = await safeFetchJson<CourseDataProps>(
+    queryString,
+    {},
+    { courses: [] }
+  );
+  const courses = Array.isArray(resData?.courses) ? resData.courses : [];
 
   return (
     <div className="row y-gap-30 side-content__wrap">
-      {coursesData.courses.length > 0 ? (
+      {courses.length > 0 ? (
         <>
-          {coursesData.courses.map((elm, i) => (
+          {courses.map((elm, i) => (
             <div
               key={i}
               className="side-content col-xl-4 col-lg-6 col-md-4 col-sm-6"
@@ -276,13 +278,16 @@ export default async function CourseList({
 
                   <div className="row x-gap-20 y-gap-15 items-center pt-30">
                     <div className="col">
-                      <CourseListAddToCartButton
-                        courseId={elm.id}
-                        title={elm.title}
-                        thumbnail={elm.thumbnail}
-                        price={elm.price}
-                        instructorName={elm.instructor.name}
-                      />
+                      <button
+                        style={{ padding: "0px 54px" }}
+                        className="button -md h-60 -purple-1 text-white col-12 py-54"
+                        // onClick={() => addCourseToCart(elm.id)}
+                      >
+                        {/* {isAddedToCartCourses(elm.id)
+                                ? "Already Added"
+                                : "Add To Cart"} */}
+                        Add to Cart
+                      </button>
                     </div>
                     <div className="col-auto">
                       <div className="d-flex items-center justify-center size-60 rounded-full border-light">
