@@ -16,10 +16,10 @@ export interface CourseWithCategory extends Category {
 export const revalidate = 3600;
 
 export default async function CustomCourseListHome() {
-  const data = await fetch(`${getBaseUrl()}/api/courses/categories`);
-  const categories: CourseWithCategory[] = await data.json();
+  // const data = await fetch(`${getBaseUrl()}/api/courses/categories`);
+    let categories: CourseWithCategory[] = [];
 
-  // console.log(categories[0].courses);
+  // console.log(data);
 
   return (
     <section className="layout-pt-lg layout-pb-lg">
