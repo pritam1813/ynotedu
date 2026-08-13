@@ -19,41 +19,7 @@ export default async function CustomCourseListHome() {
   const data = await fetch(`${getBaseUrl()}/api/courses/categories`);
     let categories: CourseWithCategory[] = [];
 
-  try {
-    console.log(`[HOMEPAGE FETCH START] Requesting URL: ${url}`);
-    const res = await fetch(url);
-    console.log(
-      `[HOMEPAGE FETCH RESPONSE] Status: ${res.status} ${res.statusText}`
-    );
-
-    const contentType = res.headers.get("content-type");
-    console.log(`[HOMEPAGE FETCH RESPONSE] Content-Type: ${contentType}`);
-
-    if (!res.ok) {
-      const errorText = await res.text();
-      console.error(
-        `[HOMEPAGE FETCH ERROR] HTTP ${res.status} ${res.statusText} from ${url}:`
-      );
-      console.error(errorText);
-    } else if (!contentType || !contentType.includes("application/json")) {
-      const responseText = await res.text();
-      console.error(
-        `[HOMEPAGE FETCH ERROR] Expected JSON but received Content-Type '${contentType}' from ${url}:`
-      );
-      console.error(responseText);
-    } else {
-      const data = await res.json();
-      categories = Array.isArray(data) ? data : [];
-      console.log(
-        `[HOMEPAGE FETCH SUCCESS] Received ${categories.length} categories.`
-      );
-    }
-  } catch (error) {
-    console.error(
-      `[HOMEPAGE FETCH EXCEPTION] Exception during fetch to ${url}:`,
-      error
-    );
-  }
+  console.log(data);
 
   return (
     <section className="layout-pt-lg layout-pb-lg">
