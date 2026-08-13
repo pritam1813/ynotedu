@@ -2,13 +2,21 @@ export function getBaseUrl() {
   // For server-side rendering
   if (typeof window === "undefined") {
     // In production on Vercel
-    if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
-      return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+    const vercelDomain =
+      process.env.VERCEL_URL ||
+      process.env.VERCEL_PROJECT_PRODUCTION_URL ||
+      process.env.NEXT_PUBLIC_VERCEL_URL;
+
+    if (vercelDomain) {
+      return vercelDomain.startsWith("http")
+        ? vercelDomain
+        : `https://${vercelDomain}`;
     }
 
     // Custom base URL (works for both dev and prod locally)
-    if (process.env.BASE_URL) {
-      return process.env.BASE_URL;
+    const customUrl = process.env.BASE_URL || process.env.NEXT_PUBLIC_API_URL;
+    if (customUrl) {
+      return customUrl.startsWith("http") ? customUrl : `https://${customUrl}`;
     }
 
     // Fallback to localhost (works for both dev and prod build locally)
@@ -18,3 +26,4 @@ export function getBaseUrl() {
   // For client-side, use relative URLs
   return "";
 }
+
