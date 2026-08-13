@@ -1,12 +1,10 @@
 import React from "react";
 import { getBaseUrl } from "@/utils/getBaseUrl";
-import type { Category, Course, Instructor, Meeting, DemoLink } from "@prisma/client";
+import type { Category, Course, Instructor } from "@prisma/client";
 import CourseListCategoryWise from "./CourseListCategoryWise";
 
 export interface CourseWithInstructor extends Course {
   instructor: Instructor;
-  meetings?: Meeting[];
-  demoLink?: DemoLink | null;
 }
 
 export interface CourseWithCategory extends Category {
@@ -16,10 +14,44 @@ export interface CourseWithCategory extends Category {
 export const revalidate = 3600;
 
 export default async function CustomCourseListHome() {
-  const data = await fetch(`${getBaseUrl()}/api/courses/categories`);
-  const categories: CourseWithCategory[] = await data.json();
+  const url = `${getBaseUrl()}/api/courses/categories`;
+  let categories: CourseWithCategory[] = [];
 
-  // console.log(categories[0].courses);
+  try {
+    console.log(`[HOMEPAGE FETCH START] Requesting URL: ${url}`);
+    const res = await fetch(url);
+    console.log(
+      `[HOMEPAGE FETCH RESPONSE] Status: ${res.status} ${res.statusText}`
+    );
+
+    const contentType = res.headers.get("content-type");
+    console.log(`[HOMEPAGE FETCH RESPONSE] Content-Type: ${contentType}`);
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error(
+        `[HOMEPAGE FETCH ERROR] HTTP ${res.status} ${res.statusText} from ${url}:`
+      );
+      console.error(errorText);
+    } else if (!contentType || !contentType.includes("application/json")) {
+      const responseText = await res.text();
+      console.error(
+        `[HOMEPAGE FETCH ERROR] Expected JSON but received Content-Type '${contentType}' from ${url}:`
+      );
+      console.error(responseText);
+    } else {
+      const data = await res.json();
+      categories = Array.isArray(data) ? data : [];
+      console.log(
+        `[HOMEPAGE FETCH SUCCESS] Received ${categories.length} categories.`
+      );
+    }
+  } catch (error) {
+    console.error(
+      `[HOMEPAGE FETCH EXCEPTION] Exception during fetch to ${url}:`,
+      error
+    );
+  }
 
   return (
     <section className="layout-pt-lg layout-pb-lg">
@@ -37,10 +69,10 @@ export default async function CustomCourseListHome() {
         </div>
       </div>
 
-      {categories.length >= 0 && (
+      {categories.length > 0 && (
         <CourseListCategoryWise
           categories={categories.filter(
-            (catgory) => catgory.courses.length >= 7
+            (catgory) => catgory.courses && catgory.courses.length >= 7
           )}
         />
       )}
